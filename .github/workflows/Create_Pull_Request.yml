@@ -31,7 +31,7 @@ jobs:
         if: steps.check-keywords.outputs.keywords == 'true'
         uses: peter-evans/create-pull-request@v5
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.FOODREC_TOKEN }}
           base: main
           head: ${{ github.ref }}
           title: ${{ github.actor }} - ${{ steps.commit.outputs.message }}
