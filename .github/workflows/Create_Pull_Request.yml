@@ -1,34 +1,41 @@
-name: Create Pull Request on Direct Push to Main
+name: Create Pull Request on Commit Keywords
 
 on:
   push:
     branches:
-      - main
+      - '*'
 
 jobs:
   create-pull-request:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.head.repo.full_name == github.repository
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Get the commit message and committer username
+      - name: Get commit message
         id: commit
+        run: echo "::set-output name=message::$(git log --format=%B -n 1 ${{ github.sha }})"
+
+      - name: Check commit message keywords
+        id: check-keywords
         run: |
-          COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{ github.sha }})
-          COMMITTER_USERNAME=$(git log --format=%an -n 1 ${{ github.sha }})
-          echo "::set-output name=message::[${COMMITTER_USERNAME}] ${COMMIT_MESSAGE}"
+          COMMIT_MESSAGE=$(echo "${{ steps.commit.outputs.message }}")
+          if [[ $COMMIT_MESSAGE =~ ^(feat|fix|docs|chore|style|test) ]]; then
+            echo "::set-output name=keywords::true"
+          else
+            echo "::set-output name=keywords::false"
+          fi
 
       - name: Create Pull Request
+        if: steps.check-keywords.outputs.keywords == 'true'
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           base: main
           head: ${{ github.ref }}
-          title: ${{ steps.commit.outputs.message }}
+          title: ${{ github.actor }} - ${{ steps.commit.outputs.message }}
           body: |
             This is an automatically created Pull Request.
-            It was triggered by a direct push to the main branch.
+            It was triggered by a push to the branch ${{ github.ref }}.
 
