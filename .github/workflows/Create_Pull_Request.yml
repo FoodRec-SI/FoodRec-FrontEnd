@@ -1,4 +1,4 @@
-name: Create Pull Request
+name: Create Pull Request on Direct Push to Main
 
 on:
   push:
@@ -13,13 +13,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Get the commit message and committer username
+        id: commit
+        run: |
+          COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{ github.sha }})
+          COMMITTER_USERNAME=$(git log --format=%an -n 1 ${{ github.sha }})
+          echo "::set-output name=message::[${COMMITTER_USERNAME}] ${COMMIT_MESSAGE}"
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           base: main
           head: ${{ github.ref }}
-          title: Automatically created Pull Request
+          title: ${{ steps.commit.outputs.message }}
           body: |
             This is an automatically created Pull Request.
             It was triggered by a direct push to the main branch.
