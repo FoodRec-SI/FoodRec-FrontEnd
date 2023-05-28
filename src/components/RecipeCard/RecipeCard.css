@@ -1,4 +1,4 @@
-.recipeCart{
+.recipeCard{
     height: 100%;
     max-width: 230px;
     padding: 10px;
@@ -7,24 +7,24 @@
 }
 
 
-.recipeCart:hover{
+.recipeCard:hover{
     background-color: #e0e0e0;
     cursor: pointer;
 }
 
 
-.recipeCart img{
+.recipeCard img{
     max-width: 230px;
     max-height: 100%;
     border-radius: 10px;
 }
 
-.recipeCart p{
+.recipeCard p{
     max-height: 77px;
     overflow: hidden;
 }
 
-.recipeCart__info{
+.recipeCard__info{
     display: flex;
     flex-direction: column;
     max-height: 178px;
@@ -32,18 +32,18 @@
     justify-content: space-around;
 }
 
-.recipeCart__info h3{
+.recipeCard__info h3{
     margin-top: 3px;
     margin-bottom: 3px;
 }
 
-.recipeCart__info p{
+.recipeCard__info p{
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
 
-.recipeCart__rating{
+.recipeCard__rating{
     /* width: 318px;
     height: 18px;  */
     border-top: 1px solid #A29E9E;
@@ -54,12 +54,12 @@
 
 }
 
-.recipeCart__time{
+.recipeCard__time{
     display: flex;
     align-items: center;
 }
 
-.recipeCart__time p{
+.recipeCard__time p{
     padding-left: 2px;
     font-size: 14px;
 }
