@@ -1,0 +1,108 @@
+.sidebar-container {
+  display: flex;
+  position: fixed;
+}
+
+.open-menu {
+  background-color: #0f1b3e;
+  color: white;
+  height: 100vh;
+  width: 224px;
+}
+
+.close-menu {
+  background-color: #0f1b3e;
+  color: white;
+  height: 100vh;
+  width: 64px;
+}
+
+.top-section {
+  height: 56px;
+  padding-left: 16px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-bottom: 5px;
+}
+
+.sidebar-logo {
+  display: flex;
+  flex-direction: row;
+  padding-left: 40px;
+  
+}
+
+.food{
+  font-size: 1.5rem;
+}
+
+.rec{
+  font-size: 1.5rem;
+  color: rgb(122, 210, 122);
+}
+
+.body-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px 0px 0px 0px;
+}
+
+.bl-text{
+  padding: 10px 15px;
+}
+
+.bl{
+  width: 10px;
+  border-bottom: 1px solid white ;
+  padding: 19px 15px;
+  opacity: 0.5;
+  margin: 0 auto;
+}
+
+
+.bars {
+  display: flex;
+  padding: 5px;
+  box-sizing: border-box;
+  flex-direction: row;
+}
+.link {
+  display: flex;
+  color: white;
+  padding: 5px 15px;
+  gap: 20px;
+  transition: all 0.5s;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.link:hover {
+  background-color:  #1D428F;;
+  color: rgb(255, 255, 255);
+  transition: all 0.5s;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.name {
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 20px;
+}
+.active {
+  background-color:  #1D428F;;
+  display: flex;
+  color: white;
+  padding: 10px 15px;
+  gap: 15px;
+  transition: all 0.5s;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
