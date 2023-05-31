@@ -22,4 +22,5 @@ function RecipeCard({image,recipeName,description,cookingTime,ratingPoint}) {
     )
 }
 
+
 export default RecipeCart;

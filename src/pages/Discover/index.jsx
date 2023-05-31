@@ -1,4 +1,4 @@
-import RecipeDetail from "../../components/recipeDetail/RecipeDetail";
+import Profile from "../../components/Profile/Profile";
 
 const Discover = () => {
 
@@ -6,7 +6,7 @@ const Discover = () => {
     <>
       <h1>Discover</h1>
       ---------------------------------
-      <RecipeDetail />
+      <Profile/>
     </>
    );
 }

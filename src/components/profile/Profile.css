@@ -1,0 +1,12 @@
+.profile{
+    width: 1600px;
+    height: 100%;
+    border: 1px solid #000000;
+}
+
+.profile img{
+    width: 1200px;
+    height: 500px;
+    image-orientation: from-image;
+    
+}
