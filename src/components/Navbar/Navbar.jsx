@@ -1,10 +1,14 @@
+
 import "./Navbar.css";
 import Avatar from "@mui/material/Avatar";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 
 
-const Navbar = () => {
+const Navbar = ({title}) => {
+
+ 
+
   return (
     <header className="navbar-container">
       <div className="navbar-start">
@@ -12,8 +16,8 @@ const Navbar = () => {
         <span className="rec">Rec.</span>
       </div>
       <div className="greeting">
-          <h5>Hello, </h5>
-          <h3>Discover Recipe</h3>
+          <h5 className="hello">Hello, </h5>
+          <h3 className="title">{title}</h3>
         </div>
       <div className="navbar-middle">
         
@@ -29,7 +33,7 @@ const Navbar = () => {
           <NotificationsOutlinedIcon />
         </div>
         <div className="avatar">
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+          <Avatar alt="Remy Sharp" src="" />
         </div>
       </div>
     </header>
