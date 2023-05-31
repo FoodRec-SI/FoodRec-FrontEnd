@@ -3,15 +3,15 @@ import { Rating } from '@mui/material';
 import './RecipeCart.css';
 
 
-function RecipeCart({image,recipeName,description,cookingTime,ratingPoint}) {
+function RecipeCard({image,recipeName,description,cookingTime,ratingPoint}) {
     return (
-        <div className="recipeCart">
+        <div className="recipeCard">
             <img src={image} alt="" />
-            <div className="recipeCart__info">
+            <div className="recipeCard__info">
                 <h3>{recipeName}</h3>
                 <p>{description}</p>
-                <div className="recipeCart__rating">
-                    <div className="recipeCart__time">
+                <div className="recipeCard__rating">
+                    <div className="recipeCard__time">
                         <AccessTimeIcon fontSize = "small"></AccessTimeIcon>
                         <p>{cookingTime}</p>
                     </div>
