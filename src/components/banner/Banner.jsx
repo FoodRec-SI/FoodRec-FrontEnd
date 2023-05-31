@@ -1,7 +1,19 @@
 import './Banner.css'
 
-function Banner(){
-    return{
+function Banner() {
+    const myString = 'WHEN YOU ARE HOME ALONE AND HUNGRY ?';
+
+    // Find the index of 'HOME ALONE' in the string
+    const startIndex = myString.indexOf('HOME ALONE');
+    const endIndex = startIndex + 'HOME ALONE'.length;
+
+    // Split the string into three parts: before, target, and after
+    const beforeText = myString.substring(0, startIndex);
+    const targetText = myString.substring(startIndex, endIndex);
+    const afterText = myString.substring(endIndex);
+    var captionDescription = 'The FoodRec is the best website for explore new Snacks and Recipes of food and Smoothies it is very simple to use and the best way to find new wih the help of us';
+    return (
+
         <div className="banner">
             <div className="banner__info">
                 <img className='backgroundBanner' src="src/assets/banner-marble-bkg.jpg" alt="" />
