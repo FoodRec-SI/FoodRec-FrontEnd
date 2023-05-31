@@ -1,0 +1,85 @@
+
+
+
+.chip {
+  background-color: #e0e0e0;
+  color: #666;
+  font-size: 16px;
+  border-radius: 16px;
+  padding: 4px 8px;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.chip:hover {
+  background-color: #ccc;
+}
+
+.chips-banner {
+  display: flex;
+  justify-content: flex-start;
+  overflow-x: hidden;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  margin-right: 30px;
+  margin-left: 30px;
+  scroll-behavior: smooth;
+  
+}
+
+.chips-wrapper::-webkit-scrollbar {
+  height: 6px;
+  
+}
+ 
+.chips-wrapper::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+
+}
+
+.chips-wrapper {
+  
+  border-radius: 16px;
+  padding: 8px;
+  margin-top: 16px;
+  width: 94%;
+  overflow: auto;
+  position: relative;
+}
+
+#btn-scroll-right{
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 30px;
+  background-color: transparent;
+  border-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+#btn-scroll-left{
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 30px;
+  border-style: none;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+#btn-scroll-right:hover{
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+#btn-scroll-left:hover{
+  background-color: rgba(0, 0, 0, 0.1);
+}

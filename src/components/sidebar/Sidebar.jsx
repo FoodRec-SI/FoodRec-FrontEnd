@@ -1,6 +1,6 @@
 
 import "./Sidebar.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 import DehazeOutlinedIcon from '@mui/icons-material/DehazeOutlined';
@@ -9,16 +9,23 @@ import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 
-const Sidebar = () => {
+const Sidebar = ({setTitle}) => {
 
+  const [name, setName] = useState(""); 
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
+  
+  useEffect(() => {
+     setTitle(name)
+  }, [name,setTitle])
+
 
   const menuItems = [
     {
       name: "Discover Recipes",
       icon: <SearchRoundedIcon sx={{fontSize:"1.3rem"}}/>,
       path: "/",
+      
     },
     {
       name: "Meal planner",
@@ -32,10 +39,12 @@ const Sidebar = () => {
     },
     {
       name: "My Collection",
-      icon: <PlaylistAddRoundedIcon sx={{fontSize:"1.4rem"}}/>,
+      icon: <PlaylistAddRoundedIcon sx={{fontSize:"1.5rem"}}/>,
       path: "/collection",
     }
   ]
+
+  
 
   return (
     <div className="sidebar-container">
@@ -54,8 +63,8 @@ const Sidebar = () => {
         <div className="body-section">
         {
           menuItems.map((item,index) => (
-            <NavLink to={item.path} key={index} className={(link) => (link.isActive ? "active" : "link")} >
-               <div className="icon" >{item.icon}</div>
+            <NavLink to={item.path} key={index}  className={(link) => (link.isActive ? "active" : "link")} onClick={() => setName(item.name)} >
+               <div className="icon" >{item.icon}</div>           
                 <div style={{display: isOpen ? "block" : "none" ,  transition: "all 0.5s ease-out"}} className="name">{item.name}</div>
             </NavLink>
           ))

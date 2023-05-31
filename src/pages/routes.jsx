@@ -1,28 +1,33 @@
+
+
 import  Discover from "./Discover";
 import  Meal from "./Meal";
 import  Liked from "./Liked";
 import  Collection from "./Collection";
 
 
+
+
 export default  [
   {
     path: "/",
-    element: <Discover />,
+    element: <Discover name="Discover Recipe"/>,
     title: "Discover",
+    
   },
   {
     path: "/meal",
-    element: <Meal />,
+    element: <Meal name="Meal Planner"/>,
     title: "Meal",
   },
   {
     path: "/liked",
-    element: <Liked />,
+    element: <Liked  />,
     title: "Liked",
   },
   {
     path: "/collection",
-    element: <Collection />,
+    element: <Collection  />,
     title: "Collection",
   },
   
