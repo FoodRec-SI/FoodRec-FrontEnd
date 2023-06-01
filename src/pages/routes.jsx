@@ -11,13 +11,13 @@ import  Collection from "./Collection";
 export default  [
   {
     path: "/",
-    element: <Discover name="Discover Recipe"/>,
+    element: <Discover />,
     title: "Discover",
     
   },
   {
     path: "/meal",
-    element: <Meal name="Meal Planner"/>,
+    element: <Meal />,
     title: "Meal",
   },
   {
@@ -30,6 +30,11 @@ export default  [
     element: <Collection  />,
     title: "Collection",
   },
+  {
+    path: "*",
+    element: <Discover />,
+    title: "Discover",
+  }
   
 ];
 
