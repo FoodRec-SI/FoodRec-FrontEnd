@@ -1,0 +1,102 @@
+.profile{
+    width: 1600px;
+    height: 100%;
+    border: 1.5px solid #000000;
+    border-radius: 16px;
+    margin: 0 auto;
+    padding: 0;
+    background-color: white;
+}
+
+.profile__cover{
+    height: fit-content;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    max-height: 650px;
+}
+
+.profile__cover img{
+    width: 100%;
+    height: 450px;
+    object-fit: cover;
+    object-position: top;
+    image-orientation: from-image;
+    border-radius: 16px 16px 0px 0px;
+    position: relative;
+}
+
+.profile__cover__avatar{
+    position: relative;
+    top:-100px;
+    left: 100px;
+        /* display: flex;
+        align-items: end;
+        justify-content: flex-start; */
+    display: grid;
+    grid-template-columns: auto 1fr 1fr;
+}
+
+.profile__cover__avatar img{
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    border: 10px solid white;
+    background-color: white;
+    /* position: relative;
+    top: 500px;
+    left: 300px; */
+}
+
+.profile__cover__name{
+    font-weight: lighter;
+    /* position: relative;
+    top: 600px;
+    left: 580px; */
+    font-size: 30px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+
+    
+}
+
+.profile__cover__avatar__buttonAdd{
+    margin: auto auto ;
+}
+
+.profile__info{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.profile__info__preference{
+    background-color: #f4f4f4;
+    width: 500px;
+    border-radius: 16px; 
+    padding: 20px;
+    height: fit-content;
+}
+
+.profile__info__preference h6{
+    font-weight: lighter;
+    font-size: 20px;
+    margin: 0;
+    padding: 0;
+}
+
+.profile__info__yourRecipe{
+    background-color: #f4f4f4;
+    width: 1000px;
+    border-radius: 16px; 
+    padding: 20px;
+}
+
+.profile__info__yourRecipe h6{
+    font-weight: lighter;
+    font-size: 20px;
+    margin: 0;
+    padding: 0;
+}
+

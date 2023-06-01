@@ -64,14 +64,32 @@ function Statistic({amount, nameOfStatisic}) {
 }
 
 function Ingredients (){
-   let listOfIngredients = ['ingredient 1', 'ingredient 2', 'ingredient 3', 'ingredient 4', 'ingredient 5', 'ingredient 6', 'ingredient 7', 'ingredient 8', 'ingredient 9'];
+   let listOfIngredients = ['1/2 cup butter, softened' , '1½ cup Basmati rice',
+
+   '100 grams bell peppers (cut in long strips)',
+   
+   '150 grams cabbage (finely chopped)',
+   
+   '50 grams French beans (finely chopped)',
+   
+   '6 tbsp. salad oil',
+   
+   '1/2 tsp. aginomotto',
+   
+   '1/2 tbsp. chili sauce',
+   
+   '1-tbsp. white vinegar',
+   
+   '3 tbsp. Sugar',
+   
+   'salt'];
     
     return(
         <div className="ingredients">
             <h1>Ingredients</h1>
             <ul>
             {listOfIngredients.map((ingredient,index) => 
-                <li key = {ingredient}> {index+1}. {ingredient}  </li>
+                <li key = {ingredient}> {ingredient}  </li>
             )}
             </ul>
         </div>
@@ -80,17 +98,19 @@ function Ingredients (){
 }
 
 function Description(){
+let description = 'Ive rented a car in Las Vegas and have reserved a hotel in Twentynine Palms which is just north of Joshua Tree. Well drive from Las Vegas through Mojave National Preserve and possibly do a short hike on our way down. Then spend all day on Monday at Joshua Tree. We can decide the next morning if we want to do more in Joshua Tree or Mojave before we head back.';
+
     return(
         <div className="description">
             <h1>Description</h1>
-            <p>description</p>
+            <p>{description}</p>
         </div>
     )
 }
 
 function Instruction(){
 
-let instruction = 'The bridge spanning a 100-foot gully stood in front of him as the last obstacle blocking him from reaching his destination. While people may have called it a "bridge", the reality was it was nothing more than splintered wooden planks held together by rotting ropes. It was questionable whether it would hold the weight of a child, let alone the weight of a grown man. The problem was there was no other way across the gully, and this played into his calculations of whether or not it was worth the risk of trying to cross it.'
+let instruction = "Wash and soak rice in cold water. After 2 hour boiled water, add salt and rice. Cook the rice. Spread the rice in a plate.Put all chopped vegetables in a cold water for 2 hours. In a pot, heat oil and add squeezed beans, and aginomotto. Cover with a lid and cook for 10 minutes on a low heat. Mix squeezed beans and bell pepper. Stir for 10 minutes. Add salt and mix.Take 3 tbsp. oil in a frying pan. Heat the oil and add sugar. Don 1/2t stir the sugar. Heat until the oil turns brown.Mix rice, vinegar, chili sauce, Soya sauce. Mix all vegetables, and spread chopped spring.Serve with spring in an oval plate.It can be served with curry, chutney or soy sauce.";
 
     return(
         <div className="instruction">

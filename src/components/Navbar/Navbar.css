@@ -1,6 +1,6 @@
 .navbar-container {
   height: 56px;
-  width: 94vw;
+  width: 100%;
   position: fixed;
   display: flex;
   flex-direction: row;
