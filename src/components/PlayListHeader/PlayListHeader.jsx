@@ -1,9 +1,12 @@
 import "./PlayListHeader.css";
 
+
 const PlayListHeader = () => {
+  
   return (
     <div className="playlist-header" >
       <div className="playlist-wrapper">
+        <div className="playlist-not-scroll">
         <div className="playlist-header-image">
           <img src="./src/assets/healthyFood.jpg" alt="" />
         </div>
@@ -15,6 +18,7 @@ const PlayListHeader = () => {
           <div className="playlist-update-time">Last update on 1 June 2023</div>
           </div>  
         </div>
+      </div>
       </div>
     </div>
   );

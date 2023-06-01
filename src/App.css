@@ -25,6 +25,7 @@
 }
 
 .content {
+  
   grid-area: content;
   padding: 16px;
   width: 100%;
@@ -33,6 +34,8 @@
 .App {
   height: 100%;
   background-image: url("./src/assets/banner-marble-bkg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
   width: 100%;
   display: grid;
   /* grid-template-rows: [sidebar header] auto [content] auto; */
@@ -45,7 +48,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  height: calc(100vh - 86px);
   background: #ffffff;
   box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 30px;
