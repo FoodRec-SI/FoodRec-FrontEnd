@@ -1,6 +1,6 @@
 import './Banner.css'
 
-function Banner(){
+const Banner = () =>{
     return(
         <div className="banner">
             <div className="banner__info">
@@ -10,3 +10,5 @@ function Banner(){
         </div>
     )
 }
+
+export default Banner

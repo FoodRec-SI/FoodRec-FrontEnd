@@ -1,7 +1,6 @@
 import { Rating, IconButton } from '@mui/material';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import ReplyIcon from '@mui/icons-material/Reply';
 import ShareIcon from '@mui/icons-material/Share';
 import './RecipeDetail.css';
 
