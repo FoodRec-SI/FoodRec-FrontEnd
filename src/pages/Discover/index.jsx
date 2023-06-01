@@ -7,7 +7,7 @@ const Discover = () => {
     {
       id: 1,
       recipeName: 'Spaghetti Bolognese',
-      description: 'Classic Italian dish made with ground beef, tomato sauce and herbs.',
+      description: 'The murder hornet was disappointed by the preconceived ideas people had of him A quiet house is nice until you are ordered to stay in it for months.They say people remember important moments in their life well, yet no one even remembers their own birth.Nothing is as cautiously cuddly as a pet porcupine.',
       image: './src/assets/healthyFood.jpg',
       cookingTime: '1 hour',
       ratingPoint: 4.5
