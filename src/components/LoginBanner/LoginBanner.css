@@ -1,10 +1,24 @@
-.login-banner{
+.login-banner {
   width: 1793px;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 0 auto;
-  
+}
+
+
+
+.block{
+  content: '';
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  height: 30px;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgb(112, 112, 112);
+  opacity: 0.5;
 }
 
 
@@ -22,6 +36,8 @@
   background-repeat: no-repeat;
   background-position: center center;
 }
+
+
 
 .popular {
   position: absolute;
@@ -56,5 +72,3 @@ h6 {
 .recipe-name {
   color: #ffffff;
 }
-
-
