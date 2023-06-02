@@ -1,5 +1,6 @@
 import LoginBanner from "../../components/LoginBanner/LoginBanner";
 import RecipeCardList from "../../components/RecipeCardList/RecipeCardList";
+import ChipsBanner from "../../components/ChipsBanner/ChipsBanner.jsx"
 
 const Discover = () => {
 
@@ -36,27 +37,10 @@ const Discover = () => {
       cookingTime: '45 minutes',
       ratingPoint: 4.7
     },
-    {
-      id: 4,
-      recipeName: 'Chicken Tikka Masala',
-      description: 'Indian-inspired dish made with marinated chicken and creamy tomato sauce.',
-      image: './src/assets/healthyFood.jpg',
-      cookingTime: '45 minutes',
-      ratingPoint: 4.7
-    },
-    {
-      id: 4,
-      recipeName: 'Chicken Tikka Masala',
-      description: 'Indian-inspired dish made with marinated chicken and creamy tomato sauce.',
-      image: './src/assets/healthyFood.jpg',
-      cookingTime: '45 minutes',
-      ratingPoint: 4.7
-    },
     // Add more recipes here
   ];
   return ( 
     <>
-    <LoginBanner/>
     <RecipeCardList props={recipes}/>
     </>
    );

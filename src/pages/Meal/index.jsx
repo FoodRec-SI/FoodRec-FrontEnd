@@ -1,7 +1,8 @@
+import MealPlan from "../../components/MealPlan/MealPlan.jsx";
 const Meal = () => {
   return ( 
     <>
-      <h1>Meal</h1>
+      <MealPlan />
     </>
    );
 }
