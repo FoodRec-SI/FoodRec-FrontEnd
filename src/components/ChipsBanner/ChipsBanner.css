@@ -5,15 +5,18 @@
   background-color: #e0e0e0;
   color: #666;
   font-size: 16px;
-  border-radius: 16px;
+  border-radius: 10px;
   padding: 4px 8px;
   margin-right: 8px;
   cursor: pointer;
 }
 
 .chip:hover {
-  background-color: #ccc;
+  background-color: #01b622;
+  color: white;
 }
+
+
 
 .chips-banner {
   display: flex;
@@ -39,14 +42,14 @@
 }
 
 .chips-wrapper {
-  
   border-radius: 16px;
   padding: 8px;
   margin-top: 16px;
   width: 94%;
-  overflow: auto;
+  overflow-x: auto;
   position: relative;
 }
+
 
 #btn-scroll-right{
   position: absolute;

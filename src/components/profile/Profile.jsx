@@ -4,7 +4,7 @@ import AddIcon from '@mui/icons-material/Add';
 import RecipeCardList from '../RecipeCardList/RecipeCardList'
 import './Profile.css'
 
-const Profile = ({Props}) => {
+const Profile = () => {
 
     const recipes = [
         {

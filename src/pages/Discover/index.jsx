@@ -55,10 +55,10 @@ const Discover = () => {
     // Add more recipes here
   ];
   return ( 
-    <>
+    <div className="page-container">
     <LoginBanner/>
     <RecipeCardList props={recipes}/>
-    </>
+    </div>
    );
 }
  
