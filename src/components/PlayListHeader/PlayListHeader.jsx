@@ -8,7 +8,7 @@ const PlayListHeader = () => {
       <div className="playlist-wrapper">
         <div className="playlist-not-scroll">
         <div className="playlist-header-image">
-          <img src="./src/assets/healthyFood.jpg" alt="" />
+          <img src="/src/assets/healthyFood.jpg" alt="" />
         </div>
         <div className="playlist-header-title">Liked Recipes</div>
         <div className="playlist-detail">

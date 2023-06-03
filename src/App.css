@@ -25,15 +25,14 @@
 }
 
 .content {
-  
   grid-area: content;
   padding: 16px;
   width: 100%;
 }
 
 .App {
-  height: 100%;
-  background-image: url("./src/assets/banner-marble-bkg.jpg");
+  height: 100vh;
+  background-image: url("./assets/banner-marble-bkg.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   width: 100%;
@@ -46,15 +45,13 @@
 .page-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: calc(100vh - 86px);
+  height: 100%;
   background: #ffffff;
   box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 30px;
 }
 
-.like-page-container{
+.like-page-container {
   display: grid;
-  grid-template-columns: 1fr 2fr;  
+  grid-template-columns: 1fr 2fr;
 }

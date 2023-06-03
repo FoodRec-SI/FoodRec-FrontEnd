@@ -52,6 +52,7 @@ const Discover = () => {
       cookingTime: '45 minutes',
       ratingPoint: 4.7
     },
+    
     // Add more recipes here
   ];
   return ( 
