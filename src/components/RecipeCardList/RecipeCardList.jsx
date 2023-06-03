@@ -2,7 +2,7 @@ import "./RecipeCardList.css";
 
 import RecipeCard from "../RecipeCard/RecipeCard";
 
-const RecipeCardList = ({ props }) => {
+const RecipeCardList = ({props}) => {
   return (
     <div className="recipe-list">
       {props.map((item) => (

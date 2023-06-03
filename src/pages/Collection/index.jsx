@@ -1,11 +1,12 @@
 
+import CollectionCards from "../../components/CollectionCards/CollectionCards";
 
 const Collection = () => {
   return ( 
-    <>
-      <h1>Collection</h1>
-      
-    </>
+    <div className="page-container">
+      <h1>Collections</h1>
+      <CollectionCards/>
+    </div>
    );
 }
  

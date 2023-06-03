@@ -47,6 +47,7 @@ const LoginBanner = () => {
           </div>
         </div>
       </div>
+      <div className="block"></div>
         <ChipsBanner items={items} onItemClick={onItemClick}/>       
     </div>
   );

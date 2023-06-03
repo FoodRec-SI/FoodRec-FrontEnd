@@ -1,7 +1,9 @@
+import Banner from "../../components/Banner/Banner";
+
 const Meal = () => {
   return ( 
     <>
-      <h1>Meal</h1>
+      <Banner/>
     </>
    );
 }

@@ -52,13 +52,14 @@ const Discover = () => {
       cookingTime: '45 minutes',
       ratingPoint: 4.7
     },
+    
     // Add more recipes here
   ];
   return ( 
-    <>
+    <div className="page-container">
     <LoginBanner/>
     <RecipeCardList props={recipes}/>
-    </>
+    </div>
    );
 }
  

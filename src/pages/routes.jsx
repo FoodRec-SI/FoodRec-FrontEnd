@@ -4,6 +4,7 @@ import  Discover from "./Discover";
 import  Meal from "./Meal";
 import  Liked from "./Liked";
 import  Collection from "./Collection";
+import CollectionDetail from "./CollectionDetail";
 
 
 
@@ -11,13 +12,13 @@ import  Collection from "./Collection";
 export default  [
   {
     path: "/",
-    element: <Discover name="Discover Recipe"/>,
+    element: <Discover />,
     title: "Discover",
     
   },
   {
     path: "/meal",
-    element: <Meal name="Meal Planner"/>,
+    element: <Meal />,
     title: "Meal",
   },
   {
@@ -29,7 +30,17 @@ export default  [
     path: "/collection",
     element: <Collection  />,
     title: "Collection",
+    
   },
-  
+  {
+    path: "/collection/:id",
+    element: <CollectionDetail  />,
+    title: "Collection Detail",
+  },  
+  {
+    path: "*",
+    element: <h1>Not Found</h1>,
+    title: "Not Found",
+  }
 ];
 
