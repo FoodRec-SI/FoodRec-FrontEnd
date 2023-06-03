@@ -1,10 +1,11 @@
-import Profile from "../../components/Profile/Profile";
+import CollectionCards from "../../components/CollectionCards/CollectionCards";
 
 const Collection = () => {
   return ( 
-    <>
-      <Profile/>
-    </>
+    <div className="page-container">
+      <h1>Collections</h1>
+      <CollectionCards/>
+    </div>
    );
 }
  

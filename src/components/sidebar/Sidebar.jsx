@@ -25,13 +25,13 @@ const Sidebar = ({setTitle}) => {
     // Here, you can implement your logic to match the pathname with the page names
 
     // Example logic:
-    if (pathname === '/') {
+    if (pathname.includes('/')) {
       setName('Discover Recipes');
-    } else if (pathname === '/meal') {
+    } else if (pathname.includes('/meal')) {
       setName('Meal planner');
-    } else if (pathname === '/liked') {
+    } else if (pathname.includes('/liked')) {
       setName('Liked Recipes');
-    } else if (pathname === '/collection') {
+    } else if (pathname.includes('/collection')) {
       setName('My Collection');
     } else {
       setName('');
