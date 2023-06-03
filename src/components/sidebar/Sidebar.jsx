@@ -9,6 +9,7 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
+import { render } from "react-dom";
 
 const Sidebar = ({setTitle}) => {
 
@@ -16,6 +17,7 @@ const Sidebar = ({setTitle}) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
   const location = useLocation();
+
 
   useEffect(() => {
     // Get the current pathname from the location object
@@ -27,11 +29,11 @@ const Sidebar = ({setTitle}) => {
     // Example logic:
     if (pathname === '/') {
       setName('Discover Recipes');
-    } else if (pathname === '/meal') {
+    } else if (pathname.includes('/meal')) {
       setName('Meal planner');
-    } else if (pathname === '/liked') {
+    } else if (pathname.includes('/liked')) {
       setName('Liked Recipes');
-    } else if (pathname === '/collection') {
+    } else if (pathname.includes('/collection')) {
       setName('My Collection');
     } else {
       setName('');
@@ -42,8 +44,9 @@ const Sidebar = ({setTitle}) => {
     setTitle(name);
   }, [name,setTitle]);
 
+  renderArray = []
 
-  const menuItems =[
+  const UserMenuItems =[
     {
       name: "Discover Recipes",
       icon: <SearchRoundedIcon sx={{fontSize:"1.3rem"}}/>,
@@ -66,8 +69,6 @@ const Sidebar = ({setTitle}) => {
       path: "/collection",
     }
   ]
-
-
   
 
   return (
@@ -86,7 +87,7 @@ const Sidebar = ({setTitle}) => {
         <div style={{display: isOpen ? "none" : "block" ,  transition: "all 0.5s ease-in-out"}} className="bl"></div>
         <div className="body-section">
         {
-          menuItems.map((item,index) => (
+          UserMenuItems.map((item,index) => (
             <NavLink to={item.path} key={index}  className={(link) => (link.isActive ? "active" : "link")} onClick={() => setName(item.name)} >
                <div className="icon" >{item.icon}</div>           
                 <div style={{display: isOpen ? "block" : "none" ,  transition: "all 0.5s ease-in-out"}} className="name">{item.name}</div>
