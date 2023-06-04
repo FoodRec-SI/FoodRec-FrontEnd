@@ -44,8 +44,6 @@ const Sidebar = ({setTitle}) => {
     setTitle(name);
   }, [name,setTitle]);
 
-  renderArray = []
-
   const UserMenuItems =[
     {
       name: "Discover Recipes",
@@ -83,14 +81,14 @@ const Sidebar = ({setTitle}) => {
           <span style={{display: isOpen ? "block" : "none",   }} className="rec">Rec.</span>
           </div>
         </div>
-        <div style={{display: isOpen ? "block" : "none" ,  transition: "all 0.5s ease-in-out"}}  className="bl-text">Menu</div>
+        <div style={{display: isOpen ? "block" : "none" ,  transition: "all 0.8s ease-in-out"}}  className="bl-text">Menu</div>
         <div style={{display: isOpen ? "none" : "block" ,  transition: "all 0.5s ease-in-out"}} className="bl"></div>
         <div className="body-section">
         {
           UserMenuItems.map((item,index) => (
             <NavLink to={item.path} key={index}  className={(link) => (link.isActive ? "active" : "link")} onClick={() => setName(item.name)} >
                <div className="icon" >{item.icon}</div>           
-                <div style={{display: isOpen ? "block" : "none" ,  transition: "all 0.5s ease-in-out"}} className="name">{item.name}</div>
+                <div style={{display: isOpen ? "block" : "none", transition: "all 0.5s ease-in-out"}} className="name">{item.name}</div>
             </NavLink>
           ))
         }

@@ -52,6 +52,7 @@
 
 .bl-text{
   padding: 10px 15px;
+  
 }
 
 .bl{
@@ -60,6 +61,7 @@
   padding: 19px 15px;
   opacity: 0.5;
   margin: 0 auto;
+  
 }
 
 
@@ -93,6 +95,7 @@
   font-weight: 500;
   font-size: 1rem;
   line-height: 20px;
+  white-space: nowrap;
 }
 .active {
   background-color:  #1D428F;;
