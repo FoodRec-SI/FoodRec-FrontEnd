@@ -104,7 +104,7 @@ export default CollectionCards;
 const CollectionCard = (props) => {
   return (
     <div className="collection-card">
-      <div className="content">
+      <div className="collection-card-content">
         <a
           title={props.collectionName}
           aria-label={props.collectionName}

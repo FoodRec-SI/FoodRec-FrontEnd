@@ -3,6 +3,7 @@ import "./Sidebar.css";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import ClickAwayListener from '@mui/base/ClickAwayListener';
 
 import DehazeOutlinedIcon from '@mui/icons-material/DehazeOutlined';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
@@ -25,7 +26,7 @@ const Sidebar = ({setTitle}) => {
     // Here, you can implement your logic to match the pathname with the page names
 
     // Example logic:
-    if (pathname.includes('/')) {
+    if (pathname==='/') {
       setName('Discover Recipes');
     } else if (pathname.includes('/meal')) {
       setName('Meal planner');
@@ -71,6 +72,7 @@ const Sidebar = ({setTitle}) => {
   
 
   return (
+    <ClickAwayListener onClickAway={() => setIsOpen(false)}>
     <div className="sidebar-container">
       <div style={{width: isOpen ? "224px" : "64px" ,  transition: "all 0.3s ease-in-out"}} className="open-menu">
         <div className="top-section">
@@ -97,6 +99,7 @@ const Sidebar = ({setTitle}) => {
       </div>
      
     </div>
+    </ClickAwayListener>
   );
 };
 

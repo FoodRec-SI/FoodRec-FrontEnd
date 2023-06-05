@@ -53,6 +53,8 @@ const Discover = () => {
       ratingPoint: 4.7
     },
     
+    
+    
     // Add more recipes here
   ];
   return ( 

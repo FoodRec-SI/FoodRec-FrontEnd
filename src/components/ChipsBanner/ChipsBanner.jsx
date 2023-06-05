@@ -7,8 +7,9 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 
 const Chip=(props) =>{
+
   return (
-    <div className="chip" onClick={() => props.onClick(props.label)}>
+    <div className="chip" onClick={() => props.onClick(props.label)} >
       {props.label}
     </div>
   );
@@ -58,6 +59,7 @@ const ChipsBanner = (props) => {
   };
 
   return (
+    
       <div className="chips-wrapper" >
         {scrollX!==0 && <button className = "btn-scroll" id = "btn-scroll-left" onClick={() => slide(-100)}>
           <NavigateBeforeIcon/>
