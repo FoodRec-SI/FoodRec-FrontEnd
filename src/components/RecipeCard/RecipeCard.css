@@ -110,6 +110,7 @@
 .recipeCard__infopending p{
   max-height: 54px;
   max-width: 1000px;
+  height: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   margin-bottom: 10px;

@@ -1,7 +1,25 @@
+import { useState } from 'react'
+
+
 import RecipeCardList from "../RecipeCardList/RecipeCardList"
+import IconButton from '@mui/material/IconButton';
+import SortIcon from '@mui/icons-material/Sort';
 
 
-const PendingList = () =>{
+import './PendingList.css'
+import { NavLink } from 'react-router-dom';
+
+const PendingList = () => {
+
+    const [soft, setSoft] = useState(true);
+
+    const handleClck = () => {
+        setSoft(!soft);
+    }
+
+    const handlePendingClick = () => {
+        document.getElementById('navigateButton').click();
+    }
 
     const recipes = [
         {
@@ -56,11 +74,22 @@ const PendingList = () =>{
         // Add more recipes here
     ];
 
-    return(
+    return (
         <>
             <div className="pendingPage">
-                <RecipeCardList props={recipes} pending="pending"/>
+                <div className="pendingPage__header">
+                    {soft == true ? <h1>Newest</h1> : <h1>Oldest</h1>}
+                    <IconButton aria-label="delete" onClick={handleClck}>
+                        {soft==true ? <SortIcon fontSize="large"/> :<SortIcon fontSize="large" sx={{transform: "scaleY(-1)"}}/>}
+                    </IconButton>
+                </div>
+
+                <RecipeCardList props={recipes} pending="pending" handleClick={handlePendingClick}/>
                 {/* <RecipeCard props={recipes[0]} pending="pending" /> */}
+
+                <NavLink to="/meal" className="pendingPage__button">
+                    <button id='navigateButton' style={{display: "none"}}>Discover</button>
+                </NavLink>
             </div>
         </>
     )

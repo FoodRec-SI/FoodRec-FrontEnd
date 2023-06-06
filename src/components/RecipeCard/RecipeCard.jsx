@@ -3,11 +3,10 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { Rating } from '@mui/material';
 
 
-function RecipeCard({props,pending}) {
+function RecipeCard({props,pending,handleClick}) {
     
-
     return (
-        <div className={"recipeCard" + pending}>
+        <div className={"recipeCard" + pending} onClick={handleClick}>
             <img src={props.image} alt="" />
             <div className={"recipeCard__info" + pending}>
                 <h3>{props.recipeName}</h3>

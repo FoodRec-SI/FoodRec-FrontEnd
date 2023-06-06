@@ -5,13 +5,13 @@ import ShareIcon from '@mui/icons-material/Share';
 import './RecipeDetail.css';
 
 
-function RecipeDetail() {
+const RecipeDetail = () => {
     let imageFood = "src/assets/healthyFood.jpg";
     return (
         <>
             <div className="recipeDetail">
                 <img src={imageFood} alt="" />
-                <Introduction />
+                <Introduction ratingPoint = {5}/>
                 <Ingredients />
                 <Description />
                 <Instruction />
@@ -21,12 +21,12 @@ function RecipeDetail() {
     )
 }
 
-function Introduction() {
+function Introduction({props, ratingPoint}) {
     return (
         <div className="introduction">
             <h1>Recipe Name</h1>
             <p>Author</p>
-            <Rating name="ratingPoint" defaultValue={5} precision={0.1} readOnly  />
+            {ratingPoint && <Rating name="ratingPoint" defaultValue={ratingPoint} precision={0.1} readOnly  />}
             <div className="showTag">
                 tag x 3
             </div>
