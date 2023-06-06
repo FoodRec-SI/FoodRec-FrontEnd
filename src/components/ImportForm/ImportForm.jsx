@@ -103,7 +103,7 @@ const ImportForm = () => {
                 </div>
                 <br />
                 <div className="import-form__Detail__RecipeDescription">
-                    <h2>Recipe Description</h2>
+                    <h2 style={{marginBottom: "10px"}}>Recipe Description</h2>
                     
                     <TextField
                         label="Enter Your Recipe Description"
@@ -133,23 +133,26 @@ const ImportForm = () => {
                     </div> */}
                     <div className="import-form__Detail__RecipeImage__upload__preview">
                         <h2>Upload Your Image</h2>
-                        <div className="import-form__Detail__RecipeImage__upload__preview__dragArea" onDragOver={handleDragOver} onDrop={handleDrop}>
+                        <p>Uploading a picture to illustrate your recipe
+                            SVG, JPG, PNG ,... resolustion 1920x1080px</p>
+                        <div className="import-form__Detail__RecipeImage__upload__preview__dragArea" onDragOver={handleDragOver} onDrop={handleDrop} >
                             {/* <p>Drag and drop your image here</p> */}
 
                             {!previewImg && <ImageIcon fontSize='large' />}
-                            {!previewImg && <span> Darg and Drop</span>}
+                            {!previewImg && <span> Drag and Drop</span>}
                             {!previewImg && <span> or</span>}
                             
                             {!previewImg && <Button onClick={handleBrowseOnClick} variant="text">Browes</Button>}
                             {!previewImg && <input type='file' hidden onChange={handleInputFileChange}/>}
                         
                             {previewImg && <img src={previewImg} alt="" />}
-                            {previewImg && <div className="import-form__Detail__RecipeImage__upload__preview__dragArea__clearImg">
+                            
+                        </div>
+                        {previewImg && <div className="import-form__Detail__RecipeImage__upload__preview__dragArea__clearImg">
                             <IconButton aria-label="delete" size="large" color='error' onClick={() => setPreviewImg(null)}>
                                 <CancelIcon />
                             </IconButton>
                         </div>}
-                        </div>
                     </div>
                 </div>
 

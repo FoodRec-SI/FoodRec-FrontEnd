@@ -3,22 +3,21 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { Rating } from '@mui/material';
 
 
-function RecipeCard({props}) {
+function RecipeCard({props,pending}) {
     
 
     return (
-        <div className="recipeCard">
-            
+        <div className={"recipeCard" + pending}>
             <img src={props.image} alt="" />
-            <div className="recipeCard__info">
+            <div className={"recipeCard__info" + pending}>
                 <h3>{props.recipeName}</h3>
                 <p>{props.description}</p>
-                <div className="recipeCard__rating">
-                    <div className="recipeCard__time">
+                <div className= {"recipeCard__rating" + pending}>
+                    <div className={"recipeCard__time" + pending}>
                         <AccessTimeIcon fontSize = "small"></AccessTimeIcon>
                         <p>{props.cookingTime}</p>
                     </div>
-                    <Rating name="ratingPoint" defaultValue={props.ratingPoint} precision={0.1} readOnly size="small"/>
+                    {props.ratingPoint && <Rating name="ratingPoint" defaultValue={props.ratingPoint} precision={0.1} readOnly size="small"/>}
                 </div>
             </div>
         </div>

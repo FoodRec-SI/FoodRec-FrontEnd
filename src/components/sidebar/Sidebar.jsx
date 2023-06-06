@@ -9,6 +9,8 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+
 import { render } from "react-dom";
 
 const Sidebar = ({setTitle}) => {
@@ -65,7 +67,13 @@ const Sidebar = ({setTitle}) => {
       name: "My Collection",
       icon: <PlaylistAddRoundedIcon sx={{fontSize:"1.5rem"}}/>,
       path: "/collection",
-    }
+    },
+    {
+      name: "Pending Recipe",
+      icon: <AccessTimeIcon sx={{fontSize:"1.5rem"}}/>,
+      path: "/pendingRecipe",
+    },
+
   ]
   
 
