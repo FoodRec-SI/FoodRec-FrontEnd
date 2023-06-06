@@ -87,8 +87,8 @@ const PendingList = () => {
                 <RecipeCardList props={recipes} pending="pending" handleClick={handlePendingClick}/>
                 {/* <RecipeCard props={recipes[0]} pending="pending" /> */}
 
-                <NavLink to="/meal" className="pendingPage__button">
-                    <button id='navigateButton' style={{display: "none"}}>Discover</button>
+                <NavLink to="/recipeDetail" className="pendingPage__button">
+                    <button id='navigateButton' style={{display: "none"}}></button>
                 </NavLink>
             </div>
         </>

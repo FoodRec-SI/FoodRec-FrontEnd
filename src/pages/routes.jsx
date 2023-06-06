@@ -6,6 +6,7 @@ import  Liked from "./Liked";
 import  Collection from "./Collection";
 import CollectionDetail from "./CollectionDetail";
 import PendingRecipe from "./PendingRecipe";
+import RecipeDetail from "../components/RecipeDetail/RecipeDetail";
 
 
 
@@ -41,8 +42,13 @@ export default  [
   {
     path: "/pendingRecipe",
     element: <PendingRecipe/>,
-    title: "Not Found",
+    title: "Pending Recipe",
   } ,
+  {
+    path: "/recipeDetail",
+    element: <RecipeDetail/>,
+    title: "Recipe Detail",
+  },
   {
     path: "*",
     element: <h1>Not Found</h1>,
