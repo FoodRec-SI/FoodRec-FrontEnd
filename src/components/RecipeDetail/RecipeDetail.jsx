@@ -4,9 +4,17 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShareIcon from '@mui/icons-material/Share';
 import './RecipeDetail.css';
 
+import { useParams } from 'react-router-dom';
+
 
 const RecipeDetail = () => {
-    let imageFood = "src/assets/healthyFood.jpg";
+    let imageFood = "/src/assets/healthyFood.jpg";
+
+    const {recipeID} = useParams();
+
+    
+
+
     return (
         <>
             <div className="recipeDetail">

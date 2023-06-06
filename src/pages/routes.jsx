@@ -45,7 +45,7 @@ export default  [
     title: "Pending Recipe",
   } ,
   {
-    path: "/recipeDetail",
+    path: "/recipeDetail/:id",
     element: <RecipeDetail/>,
     title: "Recipe Detail",
   },
