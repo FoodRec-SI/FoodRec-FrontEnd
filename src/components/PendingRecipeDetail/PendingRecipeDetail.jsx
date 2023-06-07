@@ -19,22 +19,27 @@ const PendingRecipeDetail = () => {
     const [selectedValue, setSelectedValue] = useState([]);
 
     const handleApproveAndReject = async (status) => {
-        if (status === 'approve') {
+        let state = status;
+        
+        if (state === 'approve') {
+            
             // Process for approve goes here
+            navigate('/pendingRecipe', { state: state  });
         }
 
-        if (status === 'reject') {
+        if (state === 'reject') {
             try {
                 await new Promise((resolve) => {
-                    document.getElementById('openDialog').click();
+                    document.getElementById('openDialog').click();   
+                        
                 });
             } catch (error) {
                 // Handle any errors that occur during the rejection process
                 console.error('Error occurred during rejection:', error);
+                
             }
+            
         }
-
-        navigate('/pendingRecipe');
     };
 
 
@@ -44,7 +49,7 @@ const PendingRecipeDetail = () => {
         if (value.length != 0) {
             setSelectedValue(filteredValue);
             console.log(filteredValue);
-            navigate('/pendingRecipe');
+            navigate('/pendingRecipe',{ state: 'reject' }); 
             // props?.navigate('/pendingRecipe');
         }
     };
