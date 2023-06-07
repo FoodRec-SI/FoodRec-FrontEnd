@@ -123,7 +123,7 @@ const CollectionCard = (props) => {
           <p className="count">
             <span>
               {props.numberOfRecipes}
-              <span className="count-recipes"> RECIPE</span>
+              <span className="count-recipes"> RECIPE </span>
             </span>
           </p>
         </div>

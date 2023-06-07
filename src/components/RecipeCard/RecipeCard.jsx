@@ -26,7 +26,7 @@ function RecipeCard({props,pending}) {
                     {props.ratingPoint && <Rating name="ratingPoint" defaultValue={props.ratingPoint} precision={0.1} readOnly size="small"/>}
                 </div>
             </div>
-            <NavLink to= {'/recipeDetail/' + props.id} className="pendingPage__button">
+            <NavLink to= {'/recipeDetail/' + props.id} className="pendingPage__button" state={{pending:"pending"}}>
                     <button id='navigateButton' style={{display: "none"}}></button>
             </NavLink>
         </div>

@@ -1,3 +1,26 @@
+.recipeDetailContainer{
+    max-width: calc(100vw - 40px);
+    display: flex;
+    flex-direction: column;
+}
+
+.recipeDetailPending{
+    max-width: 1254px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    background-color: #CFFFD3;
+    border-radius: 25px;
+    position: sticky;
+    top: 60px;
+    margin-bottom: 10px;
+    z-index: 1;
+}
+
+
 .recipeDetail{
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -5,7 +28,7 @@
     height: 100%;
     padding: 30px;
     border: 2px solid #000000;
-    border-radius: 8px;
+    border-radius: 25px;
     margin: 0 auto;
 }
 
