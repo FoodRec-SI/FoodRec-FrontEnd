@@ -45,10 +45,16 @@ export default  [
     title: "Pending Recipe",
   } ,
   {
-    path: "/recipeDetail/:id",
+    path: "/recipeDetail/:recipeID",
     element: <RecipeDetail/>,
     title: "Recipe Detail",
   },
+  {
+    path: "/PendingRecipeDetail/:recipeID",
+    element: <RecipeDetail/>,
+    title: "Recipe Detail",
+  },
+
   {
     path: "*",
     element: <h1>Not Found</h1>,

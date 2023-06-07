@@ -2,10 +2,7 @@ import { Rating, IconButton } from '@mui/material';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShareIcon from '@mui/icons-material/Share';
-import Button from '@mui/material/Button';
-
-import DialogPending from './PendingRecipeDetail';
-import { NavLink } from 'react-router-dom';
+import PendingRecipeDetail from '../PendingRecipeDetail/PendingRecipeDetail';
 import './RecipeDetail.css';
 
 import { useParams, useNavigate} from 'react-router-dom';
@@ -18,54 +15,20 @@ const RecipeDetail = ({ props, pending }) => {
 
     const { recipeID } = useParams();
 
-    const dialogRef = useRef(null);
+    // const dialogRef = useRef(null);
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const [recipe, setRecipe] = useState({ pending: true });
 
-    const handleApproveAndReject = async (status) => {
-        if (status === 'approve') {
-          // Process for approve goes here
-        }
-    
-        if (status === 'reject') {
-          try {
-            await new Promise((resolve) => dialogRef.current?.handleClickOpen(resolve));
-          } catch (error) {
-            // Handle any errors that occur during the rejection process
-            console.error('Error occurred during rejection:', error);
-          }
-        }
-    
-        document.getElementById('navigateButton').click();
-      };
 
 
     return (
         <>
             <div className="recipeDetailContainer">
                 {recipe.pending == true &&
-                    <div className="recipeDetailPending">
-                        <h1>Public this recipe ???</h1>
-                        <div className="recipeDetailPending__btn">
-                            <Button color='error' variant="outlined"  sx={{fontSize:"27px",height:"52px", width:"170px",borderRadius:"25px",margin:"10px"}}
-                                    onClick={() => handleApproveAndReject('reject')}
-                            >
-                                Reject
-                            </Button>
-                            
-                            <Button color='success' variant="outlined"  sx={{fontSize:"27px",height:"52px", width:"170px",borderRadius:"25px",margin:"10px"}}
-                                    onClick={() => handleApproveAndReject('approve')}
-                            >
-                                Approve
-                            </Button>
-                        </div>
-                        <DialogPending ref={dialogRef} navigate={navigate}/>
-                        <NavLink to='/pendingRecipe' className="pendingPage__button" >
-                            <button id='navigateButton' style={{ display: "none" }}></button>
-                        </NavLink>
-                    </div>
+                    // <DialogPending ref={dialogRef} navigate={navigate} />
+                    <PendingRecipeDetail />
                 }
                 <div className="recipeDetail">
                     <img src={imageFood} alt="" />

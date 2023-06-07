@@ -7,7 +7,7 @@ import SortIcon from '@mui/icons-material/Sort';
 
 
 import './PendingList.css'
-import { NavLink } from 'react-router-dom';
+
 
 const PendingList = () => {
 
@@ -15,10 +15,6 @@ const PendingList = () => {
 
     const handleClck = () => {
         setSoft(!soft);
-    }
-
-    const handlePendingClick = () => {
-        document.getElementById('navigateButton').click();
     }
 
     const recipes = [
@@ -84,12 +80,10 @@ const PendingList = () => {
                     </IconButton>
                 </div>
 
-                <RecipeCardList props={recipes} pending="pending" handleClick={handlePendingClick}/>
+                <RecipeCardList props={recipes} pending="pending"/>
                 {/* <RecipeCard props={recipes[0]} pending="pending" /> */}
 
-                <NavLink to="/recipeDetail" className="pendingPage__button">
-                    <button id='navigateButton' style={{display: "none"}}></button>
-                </NavLink>
+                
             </div>
         </>
     )
