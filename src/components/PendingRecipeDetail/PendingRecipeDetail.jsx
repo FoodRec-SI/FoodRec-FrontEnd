@@ -6,7 +6,7 @@ import Dialog from '@mui/material/Dialog';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { NavLink , useNavigate} from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 import './PendingRecipeDetail.css';
 
@@ -20,25 +20,25 @@ const PendingRecipeDetail = () => {
 
     const handleApproveAndReject = async (status) => {
         let state = status;
-        
+
         if (state === 'approve') {
-            
+
             // Process for approve goes here
-            navigate('/pendingRecipe', { state: state  });
+            navigate('/pendingRecipe', { state: state });
         }
 
         if (state === 'reject') {
             try {
                 await new Promise((resolve) => {
-                    document.getElementById('openDialog').click();   
-                        
+                    document.getElementById('openDialog').click();
+
                 });
             } catch (error) {
                 // Handle any errors that occur during the rejection process
                 console.error('Error occurred during rejection:', error);
-                
+
             }
-            
+
         }
     };
 
@@ -49,16 +49,9 @@ const PendingRecipeDetail = () => {
         if (value.length != 0) {
             setSelectedValue(filteredValue);
             console.log(filteredValue);
-            navigate('/pendingRecipe',{ state: 'reject' }); 
-            // props?.navigate('/pendingRecipe');
+            navigate('/pendingRecipe', { state: 'reject' });
         }
     };
-
-    // useImperativeHandle(ref, () => ({
-    //     handleClickOpen: () => {
-    //         setOpen(true);
-    //     }
-    // }));
 
 
     return (
@@ -77,7 +70,7 @@ const PendingRecipeDetail = () => {
                     Approve
                 </Button>
             </div>
-            <DialogPending handleClose={handleClose} selectedValue={selectedValue}/>
+            <DialogPending handleClose={handleClose} selectedValue={selectedValue} />
             {/* <NavLink to='/pendingRecipe' className="pendingPage__button" >
                 <button id='navigateButton' style={{ display: "none" }}></button>
             </NavLink> */}
@@ -90,10 +83,10 @@ const PendingRecipeDetail = () => {
 
 function DialogPending(props) {
 
-    const { handleClose , selectedValue} = props;
+    const { handleClose, selectedValue } = props;
 
     const [open, setOpen] = useState(false);
-    
+
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -108,7 +101,6 @@ function DialogPending(props) {
         <div>
             <button id='openDialog' style={{ display: "none" }} onClick={handleClickOpen}>Open simple dialog</button>
             <PopUpDialog
-                selectedValue={selectedValue}
                 open={open}
                 onClose={handleCloseDialog}
             />
@@ -119,7 +111,7 @@ function DialogPending(props) {
 };
 
 function PopUpDialog(props) {
-    const { onClose, open, selectedValue} = props;
+    const { onClose, open } = props;
 
     const [selectItem, setSelectItem] = useState([]);
 
@@ -138,13 +130,16 @@ function PopUpDialog(props) {
     const handleClose = (value) => {
         // console.log(selectItem);
         // onClose(selectedValue);
+
+
+
         if (value === 'OK') {
             onClose(selectItem);
-            
+
         }
         if (value === 'Cancel') {
             setSelectItem([]);
-            onClose(selectItem);
+            onClose([]);
         }
     };
 
@@ -176,12 +171,6 @@ function PopUpDialog(props) {
         </Dialog>
     );
 }
-
-PopUpDialog.propTypes = {
-    onClose: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired,
-    selectedValue: PropTypes.array.isRequired,
-};
 
 
 export default PendingRecipeDetail;
