@@ -2,6 +2,7 @@
   display: flex;
   flex-wrap: wrap;
   margin: 40px;
+  overflow-x: hidden;
 }
 
 .collection-card {
@@ -13,14 +14,13 @@
   margin-bottom: 40px;
 }
 
-.collection-card .content {
-  transition: width 50ms ease-in;
+.collection-card-content {
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.18) inset;
   border-radius: 8px;
   height: 220px;
 }
 
-.collection-card .content > a {
+.collection-card-content > a {
   display: block;
   height: 100%;
   border-radius: 8px;
@@ -37,7 +37,7 @@ a {
   transition: all 200ms ease;
 }
 
-.collection-card .content > a:hover {
+.collection-card-content > a:hover {
   color: rgb(47, 93, 0);
   text-decoration: none;
 }

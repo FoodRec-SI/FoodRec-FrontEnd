@@ -1,21 +1,16 @@
 .sidebar-container {
   display: flex;
   position: fixed;
+  height: 100%;
+  
 }
 
 .open-menu {
   background-color: #0f1b3e;
   color: white;
-  height: 100vh;
   width: 224px;
 }
 
-.close-menu {
-  background-color: #0f1b3e;
-  color: white;
-  height: 100vh;
-  width: 64px;
-}
 
 .top-section {
   height: 56px;
@@ -110,3 +105,6 @@
   margin-left: 5px;
   margin-right: 5px;
 }
+
+
+

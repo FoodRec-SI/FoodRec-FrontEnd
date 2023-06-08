@@ -1,10 +1,8 @@
 
-
-
 .chip {
   background-color: #e0e0e0;
   color: #666;
-  font-size: 16px;
+  font-size: 1rem;
   border-radius: 10px;
   padding: 4px 8px;
   margin-right: 8px;
@@ -17,39 +15,25 @@
 }
 
 
-
 .chips-banner {
   display: flex;
-  justify-content: flex-start;
+  flex-wrap: nowrap;
   overflow-x: hidden;
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
   margin-right: 30px;
   margin-left: 30px;
   scroll-behavior: smooth;
-  
-}
-
-.chips-wrapper::-webkit-scrollbar {
-  height: 6px;
-  
-}
- 
-.chips-wrapper::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-
 }
 
 .chips-wrapper {
   border-radius: 16px;
   padding: 8px;
   margin-top: 16px;
-  width: 94%;
+  width: 100%;
   overflow-x: auto;
   position: relative;
 }
-
 
 #btn-scroll-right{
   position: absolute;

@@ -20,24 +20,25 @@
 .header {
   grid-area: header;
   z-index: 1;
-  width: 100%;
   grid-column: sidebar / content;
 }
 
 .content {
   grid-area: content;
   padding: 16px;
-  width: 100%;
+  width: calc(100vw - 85px);
+  margin: 0 auto;
 }
 
 .App {
+
   height: 100%;
   object-fit: repeat;
   background-image: url("./assets/banner-marble-bkg.jpg");
   background-repeat: no-repeat;
   background-size: cover;
-  width: 100%;
   display: grid;
+  height: 100vh;
   /* grid-template-rows: [sidebar header] auto [content] auto; */
   grid-template-rows: [sidebar] 0px [header] 56px [content] auto;
   grid-template-columns: [sidebar] 64px [header content] auto;
@@ -46,7 +47,6 @@
 .page-container {
   display: flex;
   flex-direction: column;
-  height: 100%;
   background: #ffffff;
   box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 30px;
@@ -56,3 +56,6 @@
   display: grid;
   grid-template-columns: 1fr 2fr;
 }
+
+
+
