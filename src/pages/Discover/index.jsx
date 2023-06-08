@@ -60,7 +60,7 @@ const Discover = () => {
   return ( 
     <div className="page-container">
     <LoginBanner/>
-    <RecipeCardList props={recipes}/>
+    <RecipeCardList props={recipes} style="unwarp" pending=""/>
     </div>
    );
 }

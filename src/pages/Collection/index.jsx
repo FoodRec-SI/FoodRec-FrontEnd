@@ -1,3 +1,4 @@
+
 import CollectionCards from "../../components/CollectionCards/CollectionCards";
 
 const Collection = () => {

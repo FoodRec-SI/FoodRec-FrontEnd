@@ -1,3 +1,10 @@
+.recipeDetailContainer{
+    max-width: calc(100vw - 40px);
+    display: flex;
+    flex-direction: column;
+}
+
+
 .recipeDetail{
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -5,7 +12,7 @@
     height: 100%;
     padding: 30px;
     border: 2px solid #000000;
-    border-radius: 8px;
+    border-radius: 25px;
     margin: 0 auto;
 }
 
@@ -18,7 +25,7 @@
 }
 .introduction{
     max-width: 528px;
-    height: 590px;
+    max-height: 590px;
     display: grid;
     flex-direction: column;
     justify-content: start;
@@ -119,3 +126,82 @@
 }
 
 
+@media (max-width: 900px) {
+    .recipeDetail{
+        display: flex;
+        flex-direction: column;
+    }
+    .introduction h1{
+        font-size: 2em;
+    }
+
+    .ingredients{
+        margin: 0 auto;
+    }
+
+    .ingredients h1{
+        font-size: 1.5em;
+    }
+
+    .ingredients li{
+        font-size: 17px;
+    }
+
+    .description h1{
+        font-size: 1.5em;
+    }
+
+    .description p{
+        font-size: 16px;
+    }
+
+    .instruction h1{
+        font-size: 1.5em;
+    }
+
+    .instruction p{
+        font-size: 16px;
+    }
+}
+
+
+/* @media (max-width: 1536px) {
+  .container {
+    max-width: 1280px;
+  }
+}
+
+/ xl /
+@media (max-width: 1280px) {
+  .container {
+    max-width: 1024px;
+  }
+}
+
+/ lg /
+@media (max-width: 1024px) {
+  .container {
+    max-width: 768px;
+  }
+}
+
+/ md /
+@media (max-width: 768px) {
+  .container {
+    max-width: 640px;
+  }
+}
+
+/ sm /
+@media (max-width: 640px) {
+  .container {
+    max-width: 475px;
+  }
+}
+
+/ xs */
+/* @media (max-width: 475px) {
+    .container {
+      width: 100%;
+    }
+  }  */

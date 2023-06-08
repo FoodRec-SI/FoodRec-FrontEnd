@@ -10,6 +10,9 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+
+import { render } from "react-dom";
 
 const Sidebar = ({setTitle}) => {
 
@@ -17,6 +20,7 @@ const Sidebar = ({setTitle}) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
   const location = useLocation();
+
 
   useEffect(() => {
     // Get the current pathname from the location object
@@ -43,8 +47,7 @@ const Sidebar = ({setTitle}) => {
     setTitle(name);
   }, [name,setTitle]);
 
-
-  const menuItems =[
+  const UserMenuItems =[
     {
       name: "Discover Recipes",
       icon: <SearchRoundedIcon sx={{fontSize:"1.3rem"}}/>,
@@ -65,10 +68,14 @@ const Sidebar = ({setTitle}) => {
       name: "My Collection",
       icon: <PlaylistAddRoundedIcon sx={{fontSize:"1.5rem"}}/>,
       path: "/collection",
-    }
+    },
+    {
+      name: "Pending Recipe",
+      icon: <AccessTimeIcon sx={{fontSize:"1.5rem"}}/>,
+      path: "/pendingRecipe",
+    },
+
   ]
-
-
   
 
   return (
@@ -84,14 +91,14 @@ const Sidebar = ({setTitle}) => {
           <span style={{display: isOpen ? "block" : "none",   }} className="rec">Rec.</span>
           </div>
         </div>
-        <div style={{display: isOpen ? "block" : "none" ,  transition: "all 0.5s ease-in-out"}}  className="bl-text">Menu</div>
+        <div style={{display: isOpen ? "block" : "none" ,  transition: "all 0.8s ease-in-out"}}  className="bl-text">Menu</div>
         <div style={{display: isOpen ? "none" : "block" ,  transition: "all 0.5s ease-in-out"}} className="bl"></div>
         <div className="body-section">
         {
-          menuItems.map((item,index) => (
+          UserMenuItems.map((item,index) => (
             <NavLink to={item.path} key={index}  className={(link) => (link.isActive ? "active" : "link")} onClick={() => setName(item.name)} >
                <div className="icon" >{item.icon}</div>           
-                <div style={{display: isOpen ? "block" : "none" ,  transition: "all 0.5s ease-in-out"}} className="name">{item.name}</div>
+                <div style={{display: isOpen ? "block" : "none", transition: "all 0.5s ease-in-out"}} className="name">{item.name}</div>
             </NavLink>
           ))
         }

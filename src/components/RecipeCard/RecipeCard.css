@@ -1,8 +1,9 @@
 
 .recipeCard {
   height: fit-content;
-  max-width: 230px;
+  max-width: 260px;
   margin: 20px;
+  border-radius: 16px;
   
   /* border: 1px solid #000000; */
   /* border: 1px solid #A29E9E ; */
@@ -11,10 +12,15 @@
 .recipeCard:hover {
   background-color: #e0e0e0;
   cursor: pointer;
+  /* border: 1px solid; */
+  /* box-shadow: inset 0 0 20px rgba(255, 255, 255, .5), 0 0 20px rgba(255, 255, 255, .2); */
+  /* outline-color: rgba(255, 255, 255, 0);
+  outline-offset: 15px; */
+  /* text-shadow: 1px 1px 2px #427388;  */
 }
 
 .recipeCard img {
-  max-width: 230px;
+  max-width: 260px;
   max-height: 100%;
   border-radius: 10px;
 }
@@ -68,3 +74,60 @@
   padding-left: 2px;
   font-size: 14px;
 }
+
+
+
+/* -----------Pending recipe card format------------------------- */
+
+.recipeCardpending{
+  width: 100%;
+  max-height: 200px;
+  border: 1px solid #000;
+  border-radius: 10px;
+  display: flex;
+  margin: 10px;
+  height: fit-content;
+  object-fit: cover;
+  object-position: center;
+}
+
+.recipeCardpending:hover{
+  background-color: #e0e0e0;
+  cursor: pointer;
+}
+
+.recipeCardpending img{
+  width: fit-content;
+  max-width: 300px;
+  max-height: 200px;
+  border-radius: 10px;
+  padding-right: 20px;
+}
+
+.recipeCard__infopending h3{
+  margin-top: 3px;
+  margin-bottom: 3px;
+  height: 90px;
+  font-size: 30px;
+}
+
+.recipeCard__infopending p{
+  max-height: 54px;
+  max-width: 1000px;
+  height: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 10px;
+}
+
+.recipeCard__ratingpending {
+  display: flex;
+  align-items: center;
+}
+
+.recipeCard__timepending {
+  display: flex;
+}
+
+
+

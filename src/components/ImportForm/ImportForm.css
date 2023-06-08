@@ -1,0 +1,101 @@
+
+.import-form{
+    max-width: 1200px;
+    margin: 0 auto;
+    border: 1.5px solid #000000;
+    border-radius: 16px;
+    padding: 10px 15px;
+    background-color: white;
+}
+
+.import-form__title{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.import-form__title__buttons span{
+    /* margin: 20px; */
+}
+
+.import-form__Detail{
+    padding-top: 20px;;
+}
+
+.import-form__Detail p{
+    font-size: 0.9rem;
+    font-weight: lighter;
+    margin: 0px 0px 15px 0px;
+}
+
+/* .import-form__Detail__RecipeImage__upload{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    padding: 10px;
+    
+}
+
+.import-form__Detail__RecipeImage__upload p{
+    max-width: 400px;
+    white-space: wrap;
+    color: #ccc;
+} */
+
+.import-form__Detail__RecipeImage__upload__preview{
+    max-width: 700px;
+    max-height: max-content;
+    background-color: white;
+    padding: 30px;
+    border-radius: 25px;
+    border: #ccc 1.5px solid;
+    margin: 0 auto;
+}
+
+.import-form__Detail__RecipeImage__upload__preview p{
+    font-size: 0.9rem;
+    font-weight: lighter;
+    margin: 0px 0px 15px 0px;
+}
+
+.import-form__Detail__RecipeImage__upload__preview__dragArea{
+    max-width: 640px;
+    height: 100%;
+    max-height: 360px ;
+    min-height: 200px;
+    width: 100%;
+    border: 2.5px dashed #aaa9a9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.import-form__Detail__RecipeImage__upload__preview__dragArea img{
+    width: 100%;
+    height: 100%;
+    max-height: 360px ;
+    max-width: 640px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.import-form__Detail__RecipeImage__upload__preview__dragArea__clearImg{
+    position: relative;
+    top: -382px;
+    left: 610px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+

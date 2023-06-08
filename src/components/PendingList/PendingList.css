@@ -1,0 +1,11 @@
+
+
+.pendingPage{
+    max-width: 1400px;
+    height: fit-content;
+    margin: 0 auto;
+}
+
+.pendingPage__header{
+    display: flex;
+}
