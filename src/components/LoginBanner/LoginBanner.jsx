@@ -4,7 +4,6 @@ import ChipsBanner from "../ChipsBanner/ChipsBanner";
 import { Rating } from "@mui/material";
 
 const LoginBanner = () => {
-
   const items = [
     { id: 1, label: "Vegetarian" },
     { id: 2, label: "Vegan" },
@@ -28,11 +27,11 @@ const LoginBanner = () => {
     { id: 20, label: "Pescatarian" },
     { id: 21, label: "Pescatarian" },
     { id: 22, label: "Pescatarian" },
-  ]
+  ];
 
   const onItemClick = (item) => {
     console.log(item);
-  }
+  };
 
   return (
     <div className="login-banner">
@@ -48,7 +47,7 @@ const LoginBanner = () => {
         </div>
       </div>
       <div className="block"></div>
-        <ChipsBanner items={items} onItemClick={onItemClick}/>       
+      <ChipsBanner items={items} onItemClick={onItemClick} />
     </div>
   );
 };
