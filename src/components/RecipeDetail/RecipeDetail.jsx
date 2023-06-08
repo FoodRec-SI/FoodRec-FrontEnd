@@ -4,33 +4,38 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShareIcon from '@mui/icons-material/Share';
 import PendingRecipeDetail from '../PendingRecipeDetail/PendingRecipeDetail';
 import './RecipeDetail.css';
+import ChipList from '../ChipList/ChipList';
 
-import { useParams, useNavigate} from 'react-router-dom';
-import { useState, useRef } from 'react';
+import { useParams, useLocation} from 'react-router-dom';
 
 
 
-const RecipeDetail = ({ props, pending }) => {
+const RecipeDetail = () => {
     let imageFood = "/src/assets/healthyFood.jpg";
 
     const { recipeID } = useParams();
+
+    const location = useLocation();
+    const pending = location.state;
 
     // const dialogRef = useRef(null);
 
     // const navigate = useNavigate();
 
-    const [recipe, setRecipe] = useState({ pending: true });
+    // const [recipe, setRecipe] = useState({ pending: fasle });
 
+    const isPending = pending === "pending" ? true : false;
 
 
     return (
         <>
             <div className="recipeDetailContainer">
-                {recipe.pending == true &&
+                {isPending === true  &&
                     // <DialogPending ref={dialogRef} navigate={navigate} />
                     <PendingRecipeDetail />
                 }
                 <div className="recipeDetail">
+                    
                     <img src={imageFood} alt="" />
                     <Introduction ratingPoint={5} />
                     <Ingredients />
@@ -50,7 +55,7 @@ function Introduction({ props, ratingPoint }) {
             <p>Author</p>
             {ratingPoint && <Rating name="ratingPoint" defaultValue={ratingPoint} precision={0.1} readOnly />}
             <div className="showTag">
-                tag x 3
+                <ChipList />
             </div>
             <div className="userFeature">
                 {/* button x 3*/}
