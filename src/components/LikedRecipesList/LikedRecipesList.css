@@ -100,3 +100,10 @@
 .menu-button:hover svg path {
   fill: #666;
 }
+
+
+@media (max-width: 900px) {
+    .playlist-header {
+        position: static;
+    }
+}

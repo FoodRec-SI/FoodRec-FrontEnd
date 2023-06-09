@@ -49,3 +49,14 @@
   justify-content: space-between;
   
 }
+
+@media (max-width: 900px) {
+  .playlist-not-scroll{
+    position: static;
+  }
+
+  .playlist-header{
+    height: fit-content ;
+  }
+
+}
