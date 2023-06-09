@@ -4,7 +4,6 @@ import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import PendingList from "../../components/PendingList/PendingList";
 import { useLocation } from 'react-router-dom';
-import { HorizontalRule } from "@mui/icons-material";
 
 
 const PendingRecipe = () => {

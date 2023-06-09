@@ -1,0 +1,18 @@
+.like-page-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+  }
+
+
+@media (max-width: 1200px) {
+  .like-page-container {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .like-page-container {
+    grid-template-columns: 1fr;
+  }
+}
+    
