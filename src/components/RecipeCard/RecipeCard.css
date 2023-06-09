@@ -182,8 +182,35 @@
 }
 
 /* / sm / */
-@media (max-width: 640px) {
+@media (max-width: 660px) {
+  .recipeCardpending{
+    max-height: 150px;
+  }
 
+  .recipeCardpending img{
+    max-height: 150px;
+    width: fit-content;
+    max-width: 300px;
+    border-radius: 10px;
+    padding-right: 20px;
+  }
+
+  .recipeCard__infopending h3{
+    margin-top: 3px;
+    margin-bottom: 3px;
+    height: 55px;
+    font-size: 20px;
+  }
+  
+  .recipeCard__infopending p{
+    max-height: 54px;
+    max-width: 1000px;
+    height: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 10px;
+    font-size: 13px;
+  }
 }
 
 @media (max-width: 516px) {
