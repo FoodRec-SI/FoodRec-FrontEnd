@@ -1,0 +1,98 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.menuBar {
+    width: 25%;
+    height: 95%;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    margin: 0 0 0 0;
+    float: right;
+}
+
+.searchTitle{
+    margin: 20px 0 0 30px;
+    font-size: 30px;
+    font-weight: 500;
+}
+
+.searchForm{
+    width: 100%;
+}
+
+.inputSearch{
+    width: 80%;
+    height: 40px;
+    background-color: #f5f5f5;
+    border: none;
+    border-radius: 50px;
+    margin: 0 auto;
+}
+
+.food_list{
+    display: flex;
+    flex-flow: column wrap;
+    align-items: start;
+    justify-content: start;
+    background-color: #ffffff;
+    width: 95%;
+    height: 100px;
+    margin: 15px auto;
+}
+
+.food_list > img{
+    height: 90%;
+    aspect-ratio: 1/1;
+    margin: 5%;
+    border: none;
+    border-radius: 10px;
+}
+
+.food_list > h1{
+    font-size: 30px;
+    font-weight: 100px;
+}
+
+.food_list > h2{
+    font-size: 20px;
+    font-weight: 50px;
+}
+
+
+/* buttonAdd */
+.gg-add {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    width: 22px;
+    height: 22px;
+    border: 2px solid;
+    transform: scale(var(--ggs,1));
+    border-radius: 22px;
+    margin: auto auto;
+   }
+   
+   .gg-add::after,
+   .gg-add::before {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    width: 10px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 5px;
+    top: 8px;
+    left: 4px
+   }
+   
+   .gg-add::after {
+    width: 2px;
+    height: 10px;
+    top: 4px;
+    left: 8px
+   } 

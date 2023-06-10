@@ -8,14 +8,23 @@
     display: flex;
     flex-flow: column;
     align-items: start;
-    justify-content: center;
+    justify-content: start;
     width: 65%;
-    height: auto;
-    margin: 0 5%;
+    height: 95%;
+    margin: auto 5%;
     padding: 1%;
     border: none;
     border-radius: 30px;
     background-color: #FFFFFF;
+    float: left;
+}
+
+.searchForm{
+    display: flex;
+    width: 100%;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
 }
 
 .input{
@@ -31,5 +40,36 @@
 .title{
     font-size: 35px;
     margin: 30px 0px 10px 20px;
+}
+
+/* foodName */
+
+.foodName{
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: start;
+    width: 80%;
+    height: 75px;
+    padding: 0;
+    margin: 10px 0 0 30px;
+    border: none;
+    border-radius: 10px;
+    background-color: #9CB5FF ;
+    opacity: 0.6;
+}
+
+.foodName > img{
+    height: 80%;
+    aspect-ratio: 1/1;
+    margin: auto 10px;
+    padding: 0;
+}
+
+.foodName > h1{
+    font-size: 20px;
+    margin: auto 10px;
+    opacity: 0.9;
+    padding: 0;
 }
 
