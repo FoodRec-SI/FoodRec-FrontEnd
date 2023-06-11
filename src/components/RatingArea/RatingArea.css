@@ -1,0 +1,23 @@
+.rating_area{
+    display: flex;
+    flex-direction: column ;
+    justify-content: center   ;
+    align-items: flex-start;
+    margin: 0;
+    width: fit-content;
+    height: fit-content;
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 10px;
+}
+
+.rating_area_yourPoint{
+    display: flex;
+    align-items: center;
+}
+
+.rating_area_yourPoint h6{
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+}
