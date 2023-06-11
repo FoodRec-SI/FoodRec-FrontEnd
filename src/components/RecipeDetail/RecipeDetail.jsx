@@ -2,12 +2,13 @@ import { Rating, IconButton } from '@mui/material';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShareIcon from '@mui/icons-material/Share';
-import PendingRecipeDetail from '../PendingRecipeDetail/PendingRecipeDetail';
+import Tooltip from '@mui/material/Tooltip';
+
 import './RecipeDetail.css';
+import { useParams, useLocation } from 'react-router-dom';
+import PendingRecipeDetail from '../PendingRecipeDetail/PendingRecipeDetail';
 import ChipList from '../ChipList/ChipList';
-
-import { useParams, useLocation} from 'react-router-dom';
-
+import RatingArea from '../RatingArea/RatingArea';
 
 
 const RecipeDetail = () => {
@@ -30,17 +31,20 @@ const RecipeDetail = () => {
     return (
         <>
             <div className="recipeDetailContainer">
-                {isPending === true  &&
+                {isPending === true &&
                     // <DialogPending ref={dialogRef} navigate={navigate} />
                     <PendingRecipeDetail />
                 }
                 <div className="recipeDetail">
-                    
+
                     <img src={imageFood} alt="" />
                     <Introduction ratingPoint={5} />
                     <Ingredients />
                     <Description />
                     <Instruction />
+                    <div className="recipeDetail__rating">
+                        <RatingArea />
+                    </div>
                 </div>
             </div>
         </>
@@ -59,15 +63,23 @@ function Introduction({ props, ratingPoint }) {
             </div>
             <div className="userFeature">
                 {/* button x 3*/}
-                <IconButton aria-label="addToCollection">
-                    <PlaylistAddIcon fontSize="large" />
-                </IconButton>
-                <IconButton aria-label="addToFavorite">
-                    <FavoriteBorderIcon fontSize="large" />
-                </IconButton>
-                <IconButton aria-label="shareRecipe">
-                    <ShareIcon fontSize="large" />
-                </IconButton>
+                <Tooltip title="Add to collection" placement="top">
+                    <IconButton aria-label="addToCollection">
+                        <PlaylistAddIcon fontSize="large" />
+                    </IconButton>
+                </Tooltip>
+
+                <Tooltip title="Add to favorite" placement="top">
+                    <IconButton aria-label="addToFavorite">
+                        <FavoriteBorderIcon fontSize="large" />
+                    </IconButton>
+                </Tooltip>
+
+                <Tooltip title="Share recipe" placement="top">
+                    <IconButton aria-label="shareRecipe">
+                        <ShareIcon fontSize="large" />
+                    </IconButton>
+                </Tooltip>
             </div>
             <div className="recipeStatistic">
                 <Statistic amount={9} nameOfStatisic='ingredients' />

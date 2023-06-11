@@ -2,16 +2,15 @@ import { Button, IconButton } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { TextField } from '@mui/material';
-import WallpaperIcon from '@mui/icons-material/Wallpaper';
 import Stack from '@mui/material/Stack';
-import FolderIcon from '@mui/icons-material/Folder';
 import ImageIcon from '@mui/icons-material/Image';
 import CancelIcon from '@mui/icons-material/Cancel';
+import AddIcon from '@mui/icons-material/Add';
 
 
 import { useState } from 'react';
-
 import './ImportForm.css'
+import TagSelected from '../TagSelected/TagSelected';
 
 
 const ImportForm = () => {
@@ -85,7 +84,7 @@ const ImportForm = () => {
                         color='success'
                     >
 
-                        Publish
+                        Submit
                     </Button>
                 </Stack>
 
@@ -95,7 +94,7 @@ const ImportForm = () => {
                 <div className="import-form__Detail__RecipeTitle">
                     <h2>Recipe Title</h2>
                     <p>250 characters max</p>
-                    
+
                     <TextField label="Enter Your Recipe Title"
                         fullWidth
                         variant="outlined"
@@ -103,8 +102,8 @@ const ImportForm = () => {
                 </div>
                 <br />
                 <div className="import-form__Detail__RecipeDescription">
-                    <h2 style={{marginBottom: "10px"}}>Recipe Description</h2>
-                    
+                    <h2 style={{ margin: "10px",marginTop:"30px"}}>Recipe Description</h2>
+
                     <TextField
                         label="Enter Your Recipe Description"
                         multiline
@@ -115,8 +114,8 @@ const ImportForm = () => {
                 </div>
                 <br />
                 <div className="import-form__Detail__RecipeImage">
-                    <h2>Recipe Image</h2>
-                    
+                    <h2 style={{margin: "10px",marginTop:"30px"}}>Recipe Image</h2>
+
                     {/* <div className="import-form__Detail__RecipeImage__upload">
                         <WallpaperIcon fontSize='large'></WallpaperIcon>
                         <p> Uploading a picture to illustrate your recipe
@@ -141,12 +140,12 @@ const ImportForm = () => {
                             {!previewImg && <ImageIcon fontSize='large' />}
                             {!previewImg && <span> Drag and Drop</span>}
                             {!previewImg && <span> or</span>}
-                            
+
                             {!previewImg && <Button onClick={handleBrowseOnClick} variant="text">Browes</Button>}
-                            {!previewImg && <input type='file' hidden onChange={handleInputFileChange}/>}
-                        
+                            {!previewImg && <input type='file' hidden onChange={handleInputFileChange} />}
+
                             {previewImg && <img src={previewImg} alt="" />}
-                            
+
                         </div>
                         {previewImg && <div className="import-form__Detail__RecipeImage__upload__preview__dragArea__clearImg">
                             <IconButton aria-label="delete" size="large" color='error' onClick={() => setPreviewImg(null)}>
@@ -157,9 +156,73 @@ const ImportForm = () => {
                 </div>
 
             </div>
+            <h1>2-Detail</h1>
+            <div className="import-form__Detail">
+                <div className="import-form__Detail__Tag">
+                    <h2>Tag</h2>
+                    <div className="import-form__Detail__Tag__list">
+                        <TagSelected />
+                    </div>
+                </div>
+                <br />
+                <div className="import-form__Detail__Ingredient">
+                    <h2 style={{ margin: "10px",marginTop:"30px" }}>Ingredient</h2>
+                    <TextField
+                        label="Enter Your Recipe Ingredient"
+                        multiline
+                        fullWidth
+                        defaultValue="- Example Format
+- Example Format"
+                    />
+                </div>
+                <div className="import-form__Detail__Step">
+                    <h2 style={{ margin: "10px",marginTop:"30px" }}>Instruction</h2>
+                    {/* <TextField
+                        label="Enter Your Recipe Step"
+                        multiline
+                        fullWidth
+                        defaultValue="- Example Format
+- Example Format"
+                    /> */}
+                    <StepGenerate />
+                </div>
+
+            </div>
 
 
         </div >
+    )
+}
+
+function StepGenerate() {
+
+    const [step, setStep] = useState([]);
+    const [numberOfStep, setNumberOfStep] = useState(1);
+
+
+    const handleAddStep = () => {
+        setNumberOfStep((prevNumberOfStep) => prevNumberOfStep + 1);
+      };
+    
+      const handleChangeStep = (index, event) => {
+        const newSteps = [...step];
+        newSteps[index] = event.target.value;
+        setStep(newSteps);
+        console.log(step);
+      };
+
+    return (
+        <div className="stepGenerate">
+            {Array.from({ length: numberOfStep }).map((_,index) => (
+                <div key={index} style={{display:"flex", alignItems:"center"}} >
+                    <h3 style={{whiteSpace:"nowrap", margin:"20px"}}>Step {index+1} </h3>
+                    <TextField  variant="filled" fullWidth required type='search'/>
+                </div>
+            ))}
+            <IconButton size='large' sx={{ border: "1px solid #000000",width:"fit-content",margin:"20px",alignSelf:"center" }} onClick={handleAddStep}>
+                <AddIcon />
+            </IconButton>
+        </div>
     )
 }
 
