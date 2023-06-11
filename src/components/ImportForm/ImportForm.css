@@ -98,4 +98,14 @@
     z-index: 1;
 }
 
+.stepGenerate{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
 

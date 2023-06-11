@@ -19,6 +19,7 @@ const ChipList = () => {
     'Slow Cooker',
 ];
 
+
     return ( 
         <div className="chiplist">
             {tags.map((tag) => (
