@@ -20,9 +20,9 @@ const tags = [
 
 
 
-const TagSelected = () => {
+const TagSelected = (props) => {
 
-    const [tag, setTag] = useState([]);
+    const {tag, setTag} = props;
 
     return (
         <div className="tagSelected">
@@ -33,7 +33,7 @@ const TagSelected = () => {
             placeholder="Select Tags" 
             filter
             display='chip'
-            
+            required
             style={{width:"90%",padding:"10px"}}/>
         </div>
 

@@ -20,7 +20,7 @@ function RecipeCard({props,pending}) {
 
     return (
         <div className={"recipeCard" + pending} onClick={handleClick}>
-            <img src={props.image} alt="" />
+            <img src={props.image} alt="" loading='lazy' />
             <div className={"recipeCard__info" + pending}>
                 <h3>{props.recipeName}</h3>
                 <p>{props.description}</p>
