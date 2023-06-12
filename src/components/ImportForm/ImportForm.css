@@ -101,11 +101,13 @@
 .stepGenerate{
     display: flex;
     flex-direction: column;
-    width: 100%;
+    justify-content: space-between;
+    width: 90%;
     border: 1px solid #ccc;
     border-radius: 10px;
     margin-bottom: 20px;
     padding: 10px;
+    
 }
 
 

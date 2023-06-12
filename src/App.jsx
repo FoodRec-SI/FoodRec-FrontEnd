@@ -4,6 +4,14 @@ import Sidebar from './components/Sidebar/Sidebar'
 import Navbar  from './components/Navbar/Navbar'
 import { BrowserRouter, Routes , Route } from 'react-router-dom'
 
+import "primereact/resources/primereact.min.css";   
+
+import 'primeicons/primeicons.css';                                 
+import 'primeflex/primeflex.css';     
+
+import 'primereact/resources/themes/lara-light-indigo/theme.css';   // theme
+import 'primereact/resources/primereact.css';  
+
 
 import routes from './pages/routes'
 

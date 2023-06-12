@@ -10,8 +10,25 @@ import AddIcon from '@mui/icons-material/Add';
 
 import { useState } from 'react';
 import './ImportForm.css'
+
 import TagSelected from '../TagSelected/TagSelected';
 
+
+function debounce(fn, ms) {
+	let timer;
+	
+	return function() {
+		// Nhận các đối số
+		const args = arguments;
+		const context = this;
+		
+		if(timer) clearTimeout(timer);
+		
+		timer = setTimeout(() => {
+			fn.apply(context, args);
+		}, ms)
+	}
+}
 
 const ImportForm = () => {
 
@@ -166,25 +183,18 @@ const ImportForm = () => {
                 </div>
                 <br />
                 <div className="import-form__Detail__Ingredient">
-                    <h2 style={{ margin: "10px",marginTop:"30px" }}>Ingredient</h2>
-                    <TextField
-                        label="Enter Your Recipe Ingredient"
-                        multiline
-                        fullWidth
-                        defaultValue="- Example Format
-- Example Format"
-                    />
+                    
+                    <h2 style={{ margin: "10px",marginTop:"30px", }}>Ingredient</h2>
+                    <StepGenerate />
                 </div>
                 <div className="import-form__Detail__Step">
-                    <h2 style={{ margin: "10px",marginTop:"30px" }}>Instruction</h2>
-                    {/* <TextField
-                        label="Enter Your Recipe Step"
+                <h2 style={{ margin: "10px",marginTop:"30px" }}>Instruction</h2>
+                    <TextField
+                        label="Enter Your Recipe Instruction"
                         multiline
                         fullWidth
-                        defaultValue="- Example Format
-- Example Format"
-                    /> */}
-                    <StepGenerate />
+                        minRows={5}
+                    />
                 </div>
 
             </div>
@@ -204,22 +214,21 @@ function StepGenerate() {
         setNumberOfStep((prevNumberOfStep) => prevNumberOfStep + 1);
       };
     
-      const handleChangeStep = (index, event) => {
+      const handleChangeStep = debounce((index, event) => {
         const newSteps = [...step];
         newSteps[index] = event.target.value;
         setStep(newSteps);
-        console.log(step);
-      };
+      },500);
 
     return (
         <div className="stepGenerate">
             {Array.from({ length: numberOfStep }).map((_,index) => (
-                <div key={index} style={{display:"flex", alignItems:"center"}} >
-                    <h3 style={{whiteSpace:"nowrap", margin:"20px"}}>Step {index+1} </h3>
-                    <TextField  variant="filled" fullWidth required type='search'/>
+                <div key={index} style={{display:"flex", alignItems:"center",justifyContent:"space-between"}} >
+                    <h3 style={{whiteSpace:"nowrap", margin:"20px"}}>Ingredient {index+1} </h3>
+                    <TextField onChange={(event) => handleChangeStep(index, event)} variant="filled" sx={{width:"85%"}} required type='search'/>
                 </div>
             ))}
-            <IconButton size='large' sx={{ border: "1px solid #000000",width:"fit-content",margin:"20px",alignSelf:"center" }} onClick={handleAddStep}>
+            <IconButton size='large' sx={{ border: "1px solid #000000",width:"fit-content",margin:"10px",alignSelf:"center" }} onClick={handleAddStep}>
                 <AddIcon />
             </IconButton>
         </div>
