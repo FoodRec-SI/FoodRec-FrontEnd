@@ -7,7 +7,7 @@ import  Collection from "./Collection";
 import CollectionDetail from "./CollectionDetail";
 import PendingRecipe from "./PendingRecipe";
 import RecipeDetail from "../components/RecipeDetail/RecipeDetail";
-
+import ImportForm from "../components/ImportForm/ImportForm";
 
 
 
@@ -54,11 +54,17 @@ export default  [
     element: <RecipeDetail/>,
     title: "Recipe Detail",
   },
-
+  {
+    path: "/AddRecipe",
+    element: <ImportForm/>,
+    title: "Add Recipe",
+  },
   {
     path: "*",
     element: <h1>Not Found</h1>,
     title: "Not Found",
-  }
+  },
+
+
 ];
 

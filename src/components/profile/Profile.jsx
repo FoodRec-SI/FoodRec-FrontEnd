@@ -1,10 +1,15 @@
 import { Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
+import { useNavigate } from 'react-router-dom';
+
+import ChipList from '../ChipList/ChipList';
 import RecipeCardList from '../RecipeCardList/RecipeCardList'
 import './Profile.css'
 
 const Profile = () => {
+
+    const navigate = useNavigate();
 
     const recipes = [
         {
@@ -57,6 +62,10 @@ const Profile = () => {
         }
     ]
 
+    const handleAddRecipeNavigate = () => {
+        navigate('/AddRecipe');
+    }
+
     return (
         <>
             <div className="profile">
@@ -68,11 +77,7 @@ const Profile = () => {
                             <h2>Yae Sakura</h2>
                             <p>Thiên Hà</p>
                         </div>
-                        <div className='profile__cover__avatar__buttonAdd'>
-                            <Button variant="outlined" startIcon={<AddIcon />} size="large">
-                                Add your recipe
-                            </Button>
-                        </div>
+
                     </div>
                 </div>
                 <div className="profile__info">
@@ -80,13 +85,17 @@ const Profile = () => {
                         <h2>Preference</h2>
                         <h6>What do you like ?</h6>
                         <br></br>
-                        <p>Thích: Đồ ăn, đồ uống, đồ chơi,...</p>
-                        <p>Không thích: Đồ ăn, đồ uống, đồ chơi,T1 je jack...</p>
+                        <ChipList />
+                        
                     </div>
                     <div className="profile__info__yourRecipe">
-                        <h2>Your Recipe</h2>
-                        <h6>What do you like ?</h6>
-                        <RecipeCardList props={recipes} />
+                        <div className="profile__info__yourRecipe__title">
+                            <h2>Your Recipe</h2>
+                            <Button variant="outlined" startIcon={<AddIcon />} size="large" onClick={handleAddRecipeNavigate}>
+                                Add your recipe
+                            </Button>
+                        </div>
+                        <RecipeCardList props={recipes} pending="" />
                     </div>
                 </div>
             </div>
