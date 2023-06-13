@@ -6,24 +6,60 @@ import Stack from '@mui/material/Stack';
 import ImageIcon from '@mui/icons-material/Image';
 import CancelIcon from '@mui/icons-material/Cancel';
 import AddIcon from '@mui/icons-material/Add';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
-
-import { useState } from 'react';
+import { useState, forwardRef, useEffect } from 'react';
 import './ImportForm.css'
+
 import TagSelected from '../TagSelected/TagSelected';
 
 
+const Alert = forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
+function debounce(fn, ms) {
+    let timer;
+
+    return function () {
+        // Nhận các đối số
+        const args = arguments;
+        const context = this;
+
+        if (timer) clearTimeout(timer);
+
+        timer = setTimeout(() => {
+            fn.apply(context, args);
+        }, ms)
+    }
+}
+
 const ImportForm = () => {
+
+
+    const [newRecipe, setNewRecipe] = useState({});
 
     const [open, setOpen] = useState(false);
     const [previewImg, setPreviewImg] = useState(null);
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [tag, setTag] = useState([]);
+    const [ingredient, setIngredient] = useState([]);
+    const [instruction, setInstruction] = useState("");
 
-    const handleClickOpen = () => {
-        setOpen(true);
+    const [error, setError] = useState(null);
+
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenSnackbar(false);
     };
-    const handleClose = () => {
-        setOpen(false);
-    };
+
 
     const handleDragOver = (e) => {
         e.preventDefault();
@@ -61,7 +97,31 @@ const ImportForm = () => {
         handleDropImage(file);
     }
 
+    const handleSubmit = () => {
+        let tempRecipe = {
+            title: title ? title.trim() : "",
+            description: description ? description.trim() : "",
+            tag: tag || "",
+            ingredient: ingredient || [],
+            instruction: instruction ? instruction.trim() : "",
+            image: previewImg || ""
+        }
+        let errors = [];
+        for (const [key, value] of Object.entries(tempRecipe)) {
+            if (value === "" || value.length === 0) {
+                errors.push(key);
+            }
+        }
+        if (errors.length === 0 || errors.length === null) {
+            setNewRecipe(tempRecipe);
+        }
+        else {
+            console.log(errors);
+            setError(errors);
+            setOpenSnackbar(true);
+        }
 
+    }
 
     return (
         <div className="import-form">
@@ -78,6 +138,7 @@ const ImportForm = () => {
                     </Button>
                     <span></span>
                     <Button variant="outlined"
+                        onClick={handleSubmit}
                         startIcon={<CheckCircleOutlineIcon />}
                         size='large'
                         sx={{ borderRadius: '20px' }}
@@ -89,6 +150,22 @@ const ImportForm = () => {
                 </Stack>
 
             </div>
+
+
+            <Snackbar open={openSnackbar} autoHideDuration={1000 * 2} key={'top' + 'right'} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+                <Alert severity={'error'} sx={{ width: '100%' }}>
+                    <>
+                        {error && error.map((item, index) => (
+                            <span key={index}>
+                                {item.charAt(0).toUpperCase() + item.slice(1)}
+                                {index !== error.length - 1 ? ' , ' : ' '}
+                            </span>
+                        ))}
+                        {error && error.length !== 1 ? ' are' : ' is'} empty !!!
+                    </>
+                </Alert>
+            </Snackbar>
+
             <h1>1-Information</h1>
             <div className="import-form__Detail">
                 <div className="import-form__Detail__RecipeTitle">
@@ -98,23 +175,27 @@ const ImportForm = () => {
                     <TextField label="Enter Your Recipe Title"
                         fullWidth
                         variant="outlined"
-                        size="larger" />
+                        size="larger"
+                        required={true}
+                        onChange={(e) => debounce(setTitle(e.target.value), 500)}
+                    />
                 </div>
                 <br />
                 <div className="import-form__Detail__RecipeDescription">
-                    <h2 style={{ margin: "10px",marginTop:"30px"}}>Recipe Description</h2>
+                    <h2 style={{ margin: "10px", marginTop: "30px" }}>Recipe Description</h2>
 
                     <TextField
                         label="Enter Your Recipe Description"
                         multiline
                         fullWidth
                         minRows={5}
-
+                        required
+                        onChange={(e) => debounce(setDescription(e.target.value), 500)}
                     />
                 </div>
                 <br />
                 <div className="import-form__Detail__RecipeImage">
-                    <h2 style={{margin: "10px",marginTop:"30px"}}>Recipe Image</h2>
+                    <h2 style={{ margin: "10px", marginTop: "30px" }}>Recipe Image</h2>
 
                     {/* <div className="import-form__Detail__RecipeImage__upload">
                         <WallpaperIcon fontSize='large'></WallpaperIcon>
@@ -161,30 +242,25 @@ const ImportForm = () => {
                 <div className="import-form__Detail__Tag">
                     <h2>Tag</h2>
                     <div className="import-form__Detail__Tag__list">
-                        <TagSelected />
+                        <TagSelected tag={tag} setTag={setTag} />
                     </div>
                 </div>
                 <br />
                 <div className="import-form__Detail__Ingredient">
-                    <h2 style={{ margin: "10px",marginTop:"30px" }}>Ingredient</h2>
-                    <TextField
-                        label="Enter Your Recipe Ingredient"
-                        multiline
-                        fullWidth
-                        defaultValue="- Example Format
-- Example Format"
-                    />
+
+                    <h2 style={{ margin: "10px", marginTop: "30px", }}>Ingredient</h2>
+                    <StepGenerate step={ingredient} setStep={setIngredient} />
                 </div>
                 <div className="import-form__Detail__Step">
-                    <h2 style={{ margin: "10px",marginTop:"30px" }}>Instruction</h2>
-                    {/* <TextField
-                        label="Enter Your Recipe Step"
+                    <h2 style={{ margin: "10px", marginTop: "30px" }}>Instruction</h2>
+                    <TextField
+                        label="Enter Your Recipe Instruction"
                         multiline
                         fullWidth
-                        defaultValue="- Example Format
-- Example Format"
-                    /> */}
-                    <StepGenerate />
+                        minRows={5}
+                        required
+                        onChange={(e) => debounce(setInstruction(e.target.value), 500)}
+                    />
                 </div>
 
             </div>
@@ -194,32 +270,34 @@ const ImportForm = () => {
     )
 }
 
-function StepGenerate() {
+function StepGenerate(props) {
 
-    const [step, setStep] = useState([]);
+    const { step, setStep } = props;
     const [numberOfStep, setNumberOfStep] = useState(1);
 
 
     const handleAddStep = () => {
         setNumberOfStep((prevNumberOfStep) => prevNumberOfStep + 1);
-      };
-    
-      const handleChangeStep = (index, event) => {
+    };
+
+    const handleChangeStep = debounce((index, event) => {
         const newSteps = [...step];
-        newSteps[index] = event.target.value;
-        setStep(newSteps);
-        console.log(step);
-      };
+        if (event.target.value !== "") {
+            newSteps[index] = event.target.value;
+            setStep(newSteps);
+        }
+
+    }, 500);
 
     return (
         <div className="stepGenerate">
-            {Array.from({ length: numberOfStep }).map((_,index) => (
-                <div key={index} style={{display:"flex", alignItems:"center"}} >
-                    <h3 style={{whiteSpace:"nowrap", margin:"20px"}}>Step {index+1} </h3>
-                    <TextField  variant="filled" fullWidth required type='search'/>
+            {Array.from({ length: numberOfStep }).map((_, index) => (
+                <div key={index} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }} >
+                    <h3 style={{ whiteSpace: "nowrap", margin: "20px" }}>Ingredient {index + 1} </h3>
+                    <TextField onChange={(event) => handleChangeStep(index, event)} variant="filled" sx={{ width: "85%" }} required type='search' />
                 </div>
             ))}
-            <IconButton size='large' sx={{ border: "1px solid #000000",width:"fit-content",margin:"20px",alignSelf:"center" }} onClick={handleAddStep}>
+            <IconButton size='large' sx={{ border: "1px solid #000000", width: "fit-content", margin: "10px", alignSelf: "center" }} onClick={handleAddStep}>
                 <AddIcon />
             </IconButton>
         </div>
