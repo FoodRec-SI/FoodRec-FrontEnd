@@ -59,7 +59,32 @@ const Profile = () => {
             image: './src/assets/healthyFood.jpg',
             cookingTime: '45 minutes',
             ratingPoint: 4.7
+        },
+        {
+            id: 7,
+            recipeName: 'Chicken Tikka Masala',
+            description: 'Indian-inspired dish made with marinated chicken and creamy tomato sauce.',
+            image: './src/assets/healthyFood.jpg',
+            cookingTime: '45 minutes',
+            ratingPoint: 4.7
+        },
+        {
+            id: 8,
+            recipeName: 'Chicken Tikka Masala',
+            description: 'Indian-inspired dish made with marinated chicken and creamy tomato sauce.',
+            image: './src/assets/healthyFood.jpg',
+            cookingTime: '45 minutes',
+            ratingPoint: 4.7
+        },
+        {
+            id: 9,
+            recipeName: 'Chicken Tikka Masala',
+            description: 'Indian-inspired dish made with marinated chicken and creamy tomato sauce.',
+            image: './src/assets/healthyFood.jpg',
+            cookingTime: '45 minutes',
+            ratingPoint: 4.7
         }
+        
     ]
 
     const handleAddRecipeNavigate = () => {
