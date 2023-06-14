@@ -1,7 +1,13 @@
 import LoginBanner from "../../components/LoginBanner/LoginBanner";
 import RecipeCardList from "../../components/RecipeCardList/RecipeCardList";
 
+
+
+
 const Discover = () => {
+
+  
+
 
   const recipes = [
     {
