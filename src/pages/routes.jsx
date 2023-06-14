@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { useKeycloak } from "@react-keycloak/web";
-import { isModerator, isMember } from "../utills/Helper";
+import { isModerator } from "../utills/Helper";
 
 
 import Discover from "./Discover";
@@ -10,8 +10,9 @@ import Collection from "./Collection";
 import CollectionDetail from "./CollectionDetail";
 import PendingRecipe from "./PendingRecipe";
 import RecipeDetail from "../components/RecipeDetail/RecipeDetail";
-import Profile from "../components/profile/Profile";
 import ImportForm from "../components/ImportForm/ImportForm";
+import Profile from "../components/Profile/Profile";
+
 
 function AppRoutes() {
   const { keycloak } = useKeycloak();
@@ -28,7 +29,7 @@ function AppRoutes() {
     },
     {
       path: "/meal",
-      element: isLogin && isMember(keycloak) ? <Meal /> : <Login />,
+      element: isLogin  ? <Meal /> : <Login />,
       title: "Meal",
     },
     {
@@ -52,8 +53,21 @@ function AppRoutes() {
       title: "Not Found",
     },
     {
+      path: "/addRecipe",
+      element: isLogin ? <ImportForm /> : <Login />,
+      title: "Add Recipe",
+    },
+    {
+      path: "/profile",
+      element: isLogin ? <Profile /> : <Login />,
+      title: "Profile",
+    },
+  ];
+
+  const moderatorRoutes = [
+    {
       path: "/pendingRecipe",
-      element: isModerator(keycloak) ? <PendingRecipe /> : <Login />,
+      element: isLogin ? <PendingRecipe /> : <Login />,
       title: "Pending Recipe",
     },
     {
@@ -63,20 +77,14 @@ function AppRoutes() {
     },
     {
       path: "/PendingRecipeDetail/:recipeID",
-      element: isModerator(keycloak) ? <RecipeDetail/> : <Login />,
+      element: isLogin ? <RecipeDetail/> : <Login />,
       title: "Recipe Detail",
     },
-    {
-      path: "/profile",
-      element: isLogin ? <Profile/> : <Login />,
-      title: "Profile",
-    },
-    {
-      path: "/AddRecipe",
-      element: isLogin ? <ImportForm/> : <Login />,
-      title: "Add Recipe",
-    }
   ];
+
+  if (isModerator(keycloak)) {
+    routes.splice(0, routes.length, ...moderatorRoutes);
+  }
 
   return (
     <Routes>

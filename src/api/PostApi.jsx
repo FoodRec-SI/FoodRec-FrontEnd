@@ -1,9 +1,23 @@
 import axios from "axios";
+
+export const PostApi = {
+  getPostsByName,
+};
+
+function getPostsByName(recipeName, token) {
+  return instance.get(`/api/member/post/search`,  {
+    params: { recipeName },
+    headers: {
+      Authorization: bearerAuth(token),
+    },
+  });
+}
+
 // -- Axios
 
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_POST_API_URL
-})
+  baseURL: import.meta.env.VITE_POST_API_URL,
+});
 
 instance.interceptors.response.use(response => {
   return response;
@@ -17,5 +31,5 @@ instance.interceptors.response.use(response => {
 // -- Helper functions
 
 function bearerAuth(token) {
-  return `Bearer ${token}`
+  return `Bearer ${token}`;
 }

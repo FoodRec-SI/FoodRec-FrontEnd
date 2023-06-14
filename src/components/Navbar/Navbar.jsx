@@ -16,6 +16,13 @@ import {useNavigate} from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useKeycloak } from "@react-keycloak/web";
 import { Tooltip } from "@mui/material";
+import { Navigate } from "react-router-dom";
+
+
+import { PostApi } from "../../api/PostApi";
+
+
+
 
 const Navbar = ({ title }) => {
   const { keycloak } = useKeycloak();
@@ -25,8 +32,10 @@ const Navbar = ({ title }) => {
   const handleLogInOut = () => {
     if (keycloak.authenticated) {
       keycloak.logout();
+      <Navigate to="/" />
     } else {
       keycloak.login();
+
     }
   };
   const getLogInOutText = () => {
@@ -67,6 +76,18 @@ const Navbar = ({ title }) => {
     prevOpen.current = open;
   }, [open]);
 
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    const recipeName = e.target.recipeName.value;
+
+    const response = await PostApi.getPostsByName(recipeName, keycloak.token);
+    console.log(response.data);
+
+  };
+
+
+
+
   return (
     <header className="navbar-container">
       <div className="navbar-start">
@@ -78,12 +99,14 @@ const Navbar = ({ title }) => {
           <h5 className="hello">Hello, </h5>
           <h3 className="title">{title}</h3>
         </div>
-
+        <form onSubmit={handleSearch}>
         <input
           className="search-bar"
           type="text"
           placeholder="  Search for recipes"
+          name="recipeName"
         />
+        </form>
       </div>
       <div className="navbar-end">
         {keycloak.authenticated ? (
