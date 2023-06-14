@@ -1,6 +1,7 @@
 import "./CollectionCards.css";
 import { useState } from "react";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
+import { Link } from "react-router-dom";
 
 const CollectionCards = () => {
 
@@ -58,7 +59,7 @@ const CollectionCards = () => {
               <span >
                 <AddCircleOutlineRoundedIcon className="icon y-icon"/>
               </span>
-              <span className="create-collection-text font-bold">
+              <span className="create-collection-text font-bold" >
                 New Collection
               </span>
             </button>
@@ -105,17 +106,15 @@ const CollectionCard = (props) => {
   return (
     <div className="collection-card">
       <div className="collection-card-content">
-        <a
+        <Link to={`/collection/${props.id}`}
           title={props.collectionName}
           aria-label={props.collectionName}
-          href={`/collection/${props.id}`}
           style={{ backgroundImage: `url(${props.collectionImage})` }}
         />
       </div>
-      <a
+      <Link to={`/collection/${props.id}`}
         title={props.collectionName}
         aria-label={props.collectionName}
-        href={`/collection/${props.id}`}
       >
         <div className="bottom-content">
           <p>{props.collectionName}</p>
@@ -127,7 +126,7 @@ const CollectionCard = (props) => {
             </span>
           </p>
         </div>
-      </a>
+      </Link>
     </div>
   );
 };
