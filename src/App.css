@@ -31,14 +31,12 @@
 }
 
 .App {
-
   height: 100%;
   object-fit: repeat;
   background-image: url("./assets/banner-marble-bkg.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   display: grid;
-  height: 100vh;
   /* grid-template-rows: [sidebar header] auto [content] auto; */
   grid-template-rows: [sidebar] 0px [header] 56px [content] auto;
   grid-template-columns: [sidebar] 64px [header content] auto;
@@ -52,7 +50,19 @@
   border-radius: 30px;
 }
 
+.collection-page-container {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 30px;
+  height: 90.5vh;
+}
 
+.like-page-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+}
 
 
 

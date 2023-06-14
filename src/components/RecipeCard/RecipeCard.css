@@ -4,7 +4,7 @@
 
 .recipeCard {
   height: fit-content;
-  max-width: calc(var(--scale)*260px) ;
+  max-width: calc(var(--scale)*250px) ;
   margin: calc(var(--scale)*20px);
   border-radius:  16px
   
@@ -23,7 +23,7 @@
 }
 
 .recipeCard img {
-  max-width: calc(var(--scale)*260px);
+  max-width: calc(var(--scale)*250px);
   max-height: 100%;
   border-radius: 10px;
 }
