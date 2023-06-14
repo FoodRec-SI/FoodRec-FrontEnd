@@ -12,7 +12,10 @@ import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
-import { render } from "react-dom";
+import { isModerator } from "../../utills/Helper";
+import keycloak from "../../keycloak";
+import { Tooltip } from "@mui/material";
+
 
 const Sidebar = ({setTitle}) => {
 
@@ -50,7 +53,7 @@ const Sidebar = ({setTitle}) => {
   const UserMenuItems =[
     {
       name: "Discover Recipes",
-      icon: <SearchRoundedIcon sx={{fontSize:"1.3rem"}}/>,
+      icon: <SearchRoundedIcon sx={{fontSize:"1.3rem"}}/> ,
       path: "/",
       
     },
@@ -69,14 +72,22 @@ const Sidebar = ({setTitle}) => {
       icon: <PlaylistAddRoundedIcon sx={{fontSize:"1.5rem"}}/>,
       path: "/collection",
     },
+    
+  ]
+  
+  
+  const ModeratorMenuItems =[
     {
       name: "Pending Recipe",
       icon: <AccessTimeIcon sx={{fontSize:"1.5rem"}}/>,
       path: "/pendingRecipe",
     },
-
   ]
-  
+
+
+  if(isModerator(keycloak)){
+    UserMenuItems.splice(0,UserMenuItems.length,...ModeratorMenuItems)
+  }
 
   return (
     <ClickAwayListener onClickAway={() => setIsOpen(false)}>
@@ -97,14 +108,18 @@ const Sidebar = ({setTitle}) => {
         {
           UserMenuItems.map((item,index) => (
             <NavLink to={item.path} key={index}  className={(link) => (link.isActive ? "active" : "link")} onClick={() => setName(item.name)} >
-               <div className="icon" >{item.icon}</div>           
+               <div className="icon" >
+                <Tooltip title={item.name} placement="bottom-end" enterDelay={500} leaveDelay={200}>
+                {item.icon}
+                </Tooltip>
+                </div>           
                 <div style={{display: isOpen ? "block" : "none", transition: "all 0.5s ease-in-out"}} className="name">{item.name}</div>
             </NavLink>
           ))
         }
         </div>
       </div>
-     
+       
     </div>
     </ClickAwayListener>
   );
