@@ -116,7 +116,7 @@ const Profile = () => {
                     <div className="profile__info__yourRecipe">
                         <div className="profile__info__yourRecipe__title">
                             <h2>Your Recipe</h2>
-                            <Button variant="outlined" startIcon={<AddIcon />} size="large" onClick={handleAddRecipeNavigate}>
+                            <Button variant="outlined" startIcon={<AddIcon />}  onClick={handleAddRecipeNavigate}>
                                 Add your recipe
                             </Button>
                         </div>
