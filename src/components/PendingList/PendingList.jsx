@@ -79,7 +79,6 @@ const PendingList = () => {
                         {soft==true ? <SortIcon fontSize="large"/> :<SortIcon fontSize="large" sx={{transform: "scaleY(-1)"}}/>}
                     </IconButton>
                 </div>
-
                 <RecipeCardList props={recipes} pending="pending"/>
                 {/* <RecipeCard props={recipes[0]} pending="pending" /> */}
 

@@ -8,6 +8,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import AddIcon from '@mui/icons-material/Add';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 import { useState, forwardRef, useEffect } from 'react';
 import './ImportForm.css'
@@ -273,11 +274,10 @@ const ImportForm = () => {
 function StepGenerate(props) {
 
     const { step, setStep } = props;
-    const [numberOfStep, setNumberOfStep] = useState(1);
 
 
     const handleAddStep = () => {
-        setNumberOfStep((prevNumberOfStep) => prevNumberOfStep + 1);
+        setStep((prevStep) => [...prevStep, ""]);
     };
 
     const handleChangeStep = debounce((index, event) => {
@@ -289,12 +289,25 @@ function StepGenerate(props) {
 
     }, 500);
 
+    const handleDeleteStep = (index) => {
+        const tempStep = [...step];
+        tempStep.splice(index, 1);
+        setStep(tempStep);
+    };
+
+    useEffect(() => {
+        console.log(step);
+      }, [step]);
+
     return (
         <div className="stepGenerate">
-            {Array.from({ length: numberOfStep }).map((_, index) => (
+            {step.map((item, index) => (
                 <div key={index} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }} >
                     <h3 style={{ whiteSpace: "nowrap", margin: "20px" }}>Ingredient {index + 1} </h3>
-                    <TextField onChange={(event) => handleChangeStep(index, event)} variant="filled" sx={{ width: "85%" }} required type='search' />
+                    <TextField  onChange={(event) => handleChangeStep(index, event)} variant="filled" sx={{ width: "80%" }} required type='search'/>
+                    {step.length > 1 ? <IconButton  aria-label="delete" size="large" onClick={handleDeleteStep(index)}>
+                        <RemoveIcon />
+                    </IconButton> : null}
                 </div>
             ))}
             <IconButton size='large' sx={{ border: "1px solid #000000", width: "fit-content", margin: "10px", alignSelf: "center" }} onClick={handleAddStep}>
@@ -302,6 +315,10 @@ function StepGenerate(props) {
             </IconButton>
         </div>
     )
+
 }
+
+
+
 
 export default ImportForm;
