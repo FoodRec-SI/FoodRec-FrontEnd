@@ -11,23 +11,23 @@ function RecipeCard({props,pending}) {
 
     const handleClick = () => {
         if(pending == ""){
-            navigate('/recipeDetail/' + props.id);
+            navigate('/recipeDetail/' + props.recipeId);
         }
         if(pending == "pending"){
-            navigate('/pendingRecipeDetail/' + props.id, {state: "pending"});
+            navigate('/pendingRecipeDetail/' + props.recipeId, {state: "pending"});
         }
     }
 
     return (
-        <div className={"recipeCard" + pending} onClick={handleClick}>
-            <img src={props.image} alt="" loading='lazy' />
+        <div key={props.key} className={"recipeCard" + pending} onClick={handleClick}>
+            <img src='./src/assets/healthyFood.jpg' alt="" loading='lazy' />
             <div className={"recipeCard__info" + pending}>
                 <h3>{props.recipeName}</h3>
                 <p>{props.description}</p>
                 <div className= {"recipeCard__rating" + pending}>
                     <div className={"recipeCard__time" + pending}>
-                        <AccessTimeIcon fontSize = "small"></AccessTimeIcon>
-                        <p>{props.cookingTime}</p>
+                        <AccessTimeIcon fontSize = "medium"></AccessTimeIcon>
+                        <p style={{marginLeft:"5px"}}>{props.duration} min</p>
                     </div>
                     {props.ratingPoint && <Rating name="ratingPoint" defaultValue={props.ratingPoint} precision={0.1} readOnly size="small"/>}
                 </div>

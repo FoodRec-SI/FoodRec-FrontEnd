@@ -85,9 +85,6 @@ const Navbar = ({ title }) => {
 
   };
 
-
-
-
   return (
     <header className="navbar-container">
       <div className="navbar-start">

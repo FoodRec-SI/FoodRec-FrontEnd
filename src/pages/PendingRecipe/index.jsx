@@ -6,8 +6,14 @@ import PendingList from "../../components/PendingList/PendingList";
 import { useLocation } from 'react-router-dom';
 
 
-const PendingRecipe = () => {
 
+
+import { PendingApi } from "../../api/PendingApi";
+
+
+
+const PendingRecipe = () => {
+    
     const location = useLocation();
     const status = location.state;
 
@@ -15,13 +21,11 @@ const PendingRecipe = () => {
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
-          return;
+            return;
         }
-    
+
         setOpen(false);
-      };
-
-
+    };
 
     return (
         <>
@@ -30,7 +34,8 @@ const PendingRecipe = () => {
                     <Alert severity={status == "approve" ? 'success' : 'error'} sx={{ width: '100%' }}>
                         {status === "approve" ? "Recipe has been Approved !" : "Recipe has been Rejected !"}
                     </Alert>
-                </Snackbar>}
+                </Snackbar>
+            }
 
             <PendingList />
         </>
