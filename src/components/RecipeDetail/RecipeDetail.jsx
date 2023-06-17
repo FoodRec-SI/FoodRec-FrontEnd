@@ -9,6 +9,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import PendingRecipeDetail from '../PendingRecipeDetail/PendingRecipeDetail';
 import ChipList from '../ChipList/ChipList';
 import RatingArea from '../RatingArea/RatingArea';
+import RecommendeRcipe from '../RecommendRecipe/RecommendRecipe';
 
 
 const RecipeDetail = () => {
@@ -29,7 +30,7 @@ const RecipeDetail = () => {
 
 
     return (
-        <>
+        <div className="recipeDetail__wrapper">
             <div className="recipeDetailContainer">
                 {isPending === true &&
                     // <DialogPending ref={dialogRef} navigate={navigate} />
@@ -47,8 +48,10 @@ const RecipeDetail = () => {
                     </div>
                 </div>
             </div>
-        </>
-
+            <div className="recommendRecipe">
+                <RecommendeRcipe />
+            </div>
+            </div>
     )
 }
 

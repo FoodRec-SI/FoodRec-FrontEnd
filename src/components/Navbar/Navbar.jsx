@@ -12,6 +12,7 @@ import PersonAdd from "@mui/icons-material/PersonAdd";
 import Logout from "@mui/icons-material/Logout";
 import Settings from "@mui/icons-material/Settings";
 
+import {useNavigate} from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useKeycloak } from "@react-keycloak/web";
 import { Tooltip } from "@mui/material";
@@ -25,6 +26,8 @@ import { PostApi } from "../../api/PostApi";
 
 const Navbar = ({ title }) => {
   const { keycloak } = useKeycloak();
+
+  const navigate = useNavigate();
 
   const handleLogInOut = () => {
     if (keycloak.authenticated) {
@@ -81,9 +84,6 @@ const Navbar = ({ title }) => {
     console.log(response.data);
 
   };
-
-
-
 
   return (
     <header className="navbar-container">
@@ -150,7 +150,9 @@ const Navbar = ({ title }) => {
                         aria-labelledby="composition-button"
                         onKeyDown={handleListKeyDown}
                       >
-                        <MenuItem onClick={handleClose}>
+                        <MenuItem  onClick={()=>{
+                            navigate('/profile');
+                          }}>
                           <ListItemIcon>
                             <PersonAdd fontSize="small" />
                           </ListItemIcon>
