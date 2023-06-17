@@ -22,11 +22,12 @@ const PendingList = () => {
 
     const fetchPendingRecipes = async () => {
         const data = await PendingApi.getPendingRecipes(keycloak.token);
+        console.log(data);
         return data;
     }
 
     const { data, isLoading, isError } = useQuery({
-        queryKey: ['pending'],
+        queryKey: ["pendingRecipes"],
         queryFn: fetchPendingRecipes,
     });
 

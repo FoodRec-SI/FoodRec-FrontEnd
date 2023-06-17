@@ -4,11 +4,11 @@
     justify-content: center   ;
     align-items: flex-start;
     margin: 0;
-    width: fit-content;
+    width: 470px;
     height: fit-content;
-    background-color: #fff;
+    background-color: #f1f0f0;
     border-radius: 16px;
-    padding: 10px;
+    padding: 20px;
 }
 
 .rating_area_yourPoint{
@@ -20,4 +20,17 @@
     font-family: 'Roboto', sans-serif;
     font-size: 18px;
     font-weight: 400;
+}
+
+.rating_area_countRatingPoint{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: space-evenly;
+    margin: 7px 0;
+}
+
+.rating_area_countRatingPoint p{
+    font-size: 16px;
 }

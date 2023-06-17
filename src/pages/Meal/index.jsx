@@ -10,8 +10,8 @@ const Meal = () => {
     <>
 
       {/* <Banner/> */}
-      <Profile/>
-      {/* <RecipeDetail/> */}
+      {/* <Profile/> */}
+      <RecipeDetail/>
       {/* <ImportForm/> */}
       {/* <RecipeDetail pending="pending"/> */}
       {/* <RatingArea/> */}
