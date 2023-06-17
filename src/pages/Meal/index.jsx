@@ -11,8 +11,8 @@ const Meal = () => {
 
       {/* <Banner/> */}
       {/* <Profile/> */}
-      <RecipeDetail/>
-      {/* <ImportForm/> */}
+      {/* <RecipeDetail/> */}
+      <ImportForm/>
       {/* <RecipeDetail pending="pending"/> */}
       {/* <RatingArea/> */}
 
