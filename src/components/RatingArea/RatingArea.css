@@ -4,7 +4,7 @@
     justify-content: center   ;
     align-items: flex-start;
     margin: 0;
-    width: 470px;
+    width: 100%;
     height: fit-content;
     background-color: #f1f0f0;
     border-radius: 16px;
@@ -18,7 +18,7 @@
 
 .rating_area_yourPoint h6{
     font-family: 'Roboto', sans-serif;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 400;
 }
 
@@ -32,5 +32,5 @@
 }
 
 .rating_area_countRatingPoint p{
-    font-size: 16px;
+    font-size: 14px;
 }

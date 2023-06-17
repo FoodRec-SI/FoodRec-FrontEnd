@@ -33,6 +33,7 @@
 .recipeDetail__rating{
     grid-column: 1 / 3;
     margin: 0 auto;
+    width: 60%;
 }
 
 .introduction{
@@ -162,6 +163,9 @@
     .recipeDetail{
         width: 100%;
     }
+    .recipeDetail__rating{
+        width: 90%;
+    }
     
 }
 
@@ -200,6 +204,9 @@
 
     .instruction p{
         font-size: 16px;
+    }
+    .recipeDetail__rating{
+        width: 90%;
     }
 }
 
