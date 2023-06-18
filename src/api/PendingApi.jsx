@@ -16,6 +16,7 @@ function getPendingRecipes(token) {
         headers: {
             Authorization: bearerAuth(token),
         },
+        method: "POST",
         params: {
             postStatuses: postStatus.PENDING
         }

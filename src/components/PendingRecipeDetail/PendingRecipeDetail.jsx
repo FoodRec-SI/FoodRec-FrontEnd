@@ -7,6 +7,9 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import {  useNavigate } from 'react-router-dom';
+import { ApproveRejectApi } from '../../api/ApproveRejectApi';
+
+import { useQuery } from '@tanstack/react-query';
 
 import './PendingRecipeDetail.css';
 
@@ -18,12 +21,19 @@ const PendingRecipeDetail = () => {
 
     const [selectedValue, setSelectedValue] = useState([]);
 
+
     const handleApproveAndReject = async (status) => {
         let state = status;
-
         if (state === 'approve') {
+            // const { data, isLoading, isError } = useQuery({
+            //     queryKey: ["pendingRecipes"],
+            //     queryFn: async () => {
+            //         const data = await ApproveRejectApi.updateStatusPost(recipeID, keycloak.token, state);
+            //         console.log(data);
+            //         return data;
+            //     }
+            // });
 
-            // Process for approve goes here
             navigate('/pendingRecipe', { state: state });
         }
 
@@ -36,7 +46,6 @@ const PendingRecipeDetail = () => {
             } catch (error) {
                 // Handle any errors that occur during the rejection process
                 console.error('Error occurred during rejection:', error);
-
             }
 
         }

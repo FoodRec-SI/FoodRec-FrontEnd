@@ -18,16 +18,13 @@ const RecipeDetail = () => {
     const { recipeID } = useParams();
 
     const location = useLocation();
-    const pending = location.state;
 
-    // const dialogRef = useRef(null);
+    let isPending =false;
 
-    // const navigate = useNavigate();
-
-    // const [recipe, setRecipe] = useState({ pending: fasle });
-
-    const isPending = pending === "pending" ? true : false;
-
+    const url = location.pathname;
+    if(url.includes("pendingRecipeDetail")){
+        isPending = true;
+    }
 
     return (
         <div className="recipeDetail__wrapper">
@@ -48,10 +45,13 @@ const RecipeDetail = () => {
                     </div>
                 </div>
             </div>
-            <div className="recommendRecipe">
-                <RecommendeRcipe />
-            </div>
-            </div>
+            {isPending === false &&
+                <div className="recommendRecipe">
+                    <RecommendeRcipe />
+                </div>
+            }
+
+        </div>
     )
 }
 

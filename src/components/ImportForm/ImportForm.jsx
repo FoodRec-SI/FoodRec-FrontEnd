@@ -1,4 +1,5 @@
 import { Button, IconButton } from '@mui/material';
+import InputBase from '@mui/material/InputBase';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { TextField } from '@mui/material';
@@ -9,6 +10,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import RemoveIcon from '@mui/icons-material/Remove';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { useState, forwardRef, useEffect } from 'react';
 import './ImportForm.css'
@@ -197,21 +199,6 @@ const ImportForm = () => {
                 <br />
                 <div className="import-form__Detail__RecipeImage">
                     <h2 style={{ margin: "10px", marginTop: "30px" }}>Recipe Image</h2>
-
-                    {/* <div className="import-form__Detail__RecipeImage__upload">
-                        <WallpaperIcon fontSize='large'></WallpaperIcon>
-                        <p> Uploading a picture to illustrate your recipe
-                            SVG, JPG, PNG ,... resolustion 1920x1080px
-                        </p>
-                        <Button variant="outlined"
-                            onClick={handleClickOpen}
-                            startIcon={<FolderIcon />}
-                            size='large'
-                            sx={{ borderRadius: '20px' }}
-                        >
-                            Browse
-                        </Button>
-                    </div> */}
                     <div className="import-form__Detail__RecipeImage__upload__preview">
                         <h2>Upload Your Image</h2>
                         <p>Uploading a picture to illustrate your recipe
@@ -272,50 +259,70 @@ const ImportForm = () => {
 }
 
 function StepGenerate(props) {
-
     const { step, setStep } = props;
+    const [tempInput, setTempInput] = useState("");
 
-
-    const handleAddStep = () => {
-        setStep((prevStep) => [...prevStep, ""]);
-    };
-
-    const handleChangeStep = debounce((index, event) => {
-        const newSteps = [...step];
-        if (event.target.value !== "") {
-            newSteps[index] = event.target.value;
-            setStep(newSteps);
-        }
-
-    }, 500);
-
-    const handleDeleteStep = (index) => {
-        const tempStep = [...step];
-        tempStep.splice(index, 1);
-        setStep(tempStep);
-    };
+    const handleAddItem = () => {
+        const tempArray = [...step];
+        if (tempInput === "") return;
+        tempArray.push(tempInput);
+        setStep(tempArray);
+        setTempInput("");
+    }
 
     useEffect(() => {
         console.log(step);
-      }, [step]);
+    }, [step])
+    return (
+        <>
+            <div className="import-form__Detail__Ingredient__list">
+                <InputBase sx={{ ml: 1, flex: 1 }} placeholder="Enter Your Ingredient" value={tempInput} onChange={(e) => setTempInput(e.target.value)} />
+                <Button onClick={handleAddItem} color='info' size='large' startIcon={<AddIcon />}>Add</Button>
+            </div>
+            <div className="import-form__Detail__Ingredient__list__display">
+                {step && step.map((item, index) => (
+                <IngredientForm props={{step,setStep,item,index}} key={index}/>
+            ))}
+            </div>
+        </>
+    )
+}
+
+function IngredientForm({props}) {
+    const { step, setStep , item, index} = props;
+
+    const [tempInput, setTempInput] = useState(item);
+
+    // const [edit, setEdit] = useState(false);
+
+    const handleDelete = () => {
+        const tempArray = [...step];
+        tempArray.splice(index, 1);
+        setStep(tempArray);
+    }
+
+    // const handleEdit = () => {
+    //     setEdit(!edit);
+    // }
 
     return (
-        <div className="stepGenerate">
-            {step.map((item, index) => (
-                <div key={index} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }} >
-                    <h3 style={{ whiteSpace: "nowrap", margin: "20px" }}>Ingredient {index + 1} </h3>
-                    <TextField  onChange={(event) => handleChangeStep(index, event)} variant="filled" sx={{ width: "80%" }} required type='search'/>
-                    {step.length > 1 ? <IconButton  aria-label="delete" size="large" onClick={handleDeleteStep(index)}>
-                        <RemoveIcon />
-                    </IconButton> : null}
-                </div>
-            ))}
-            <IconButton size='large' sx={{ border: "1px solid #000000", width: "fit-content", margin: "10px", alignSelf: "center" }} onClick={handleAddStep}>
-                <AddIcon />
+        <div className="import-form__Detail__Ingredient__list__display__item" key={index}>
+            <InputBase sx={{ ml: 1, flex: 1 }} value={item} disabled
+            onChange={(e) =>{
+                setTempInput(e.target.value);
+                if(tempInput === "") return;
+                const tempArray = [...step];
+                tempArray[index] = e.target.value;
+                setStep(tempArray);
+            }}/>
+            {/* <IconButton ara-lable="edit" size="large" onClick={handleEdit}>
+                <EditIcon />
+            </IconButton> */}
+            <IconButton aria-label="delete" size="large" onClick={handleDelete}>
+                <RemoveIcon />
             </IconButton>
         </div>
     )
-
 }
 
 
