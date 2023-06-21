@@ -2,10 +2,15 @@ import "./CollectionCards.css";
 import { useState } from "react";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 import { Link } from "react-router-dom";
+import { CollectionApi } from "../../api/CollectionApi";
+import { useKeycloak } from "@react-keycloak/web";
+import { useQuery } from "react-query";
 
 const CollectionCards = () => {
 
   const [isEditing, setIsEditing] = useState(false);
+
+  const { keycloak } = useKeycloak();
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -21,27 +26,17 @@ const CollectionCards = () => {
   };
 
 
-  const items = [
-    {
-      id: 1,
-      collectionName: "Summer Salads",
-      collectionImage: "./src/assets/healthyFood.jpg",
-      numberOfRecipes: 10,
-    },
-    {
-      id: 2,
-      collectionName: "Weeknight Dinners",
-      collectionImage: "./src/assets/healthyFood.jpg",
-      numberOfRecipes: 20,
-    },
-    {
-      id: 3,
-      collectionName: "Holiday Baking",
-      collectionImage: "./src/assets/bcb112771cb88230bbe7374e9f43bd1a.jpg",
-      numberOfRecipes: 15,
-    },
-    
-  ];
+  const fetchCollections = async () => {
+    const response = await CollectionApi.getCollection(keycloak.token);
+    return response.data.content;
+  };
+
+  const { data : items , status } = useQuery("collections", fetchCollections);
+
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="collection-cards">
@@ -89,10 +84,11 @@ const CollectionCards = () => {
       </div>
       {items.map((item) => (
         <CollectionCard
-          key={item.id}
-          id={item.id}
+          key={item.collectionId}
           collectionName={item.collectionName}
-          collectionImage={item.collectionImage}
+          collectionImage={item.image ? item.image : "src/assets/healthyFood.jpg"}
+          collectionDescription={item.description}
+          id={item.collectionId}
           numberOfRecipes={item.numberOfRecipes}
         />
       ))}

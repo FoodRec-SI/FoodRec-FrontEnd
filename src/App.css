@@ -33,9 +33,6 @@
 .App {
   height: 100%;
   object-fit: repeat;
-  background-image: url("./assets/banner-marble-bkg.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
   display: grid;
   /* grid-template-rows: [sidebar header] auto [content] auto; */
   grid-template-rows: [sidebar] 0px [header] 56px [content] auto;

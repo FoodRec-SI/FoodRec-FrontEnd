@@ -11,3 +11,17 @@ export const isMember = (keycloak) => {
   keycloak.tokenParsed.resource_access && 
   keycloak.tokenParsed.resource_access.FoodRec.roles.includes('MEMBER')
 }
+
+export const handleLogError = (error) => {
+  if (error.response) {
+    console.log(error.response.data);
+  } else if (error.request) {
+    console.log(error.request);
+  } else {
+    console.log(error.message);
+  }
+}
+
+export function bearerAuth(token) {
+  return `Bearer ${token}`;
+}

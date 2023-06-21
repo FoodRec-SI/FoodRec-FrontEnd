@@ -109,7 +109,7 @@ const Sidebar = ({setTitle}) => {
           UserMenuItems.map((item,index) => (
             <NavLink to={item.path} key={index}  className={(link) => (link.isActive ? "active" : "link")} onClick={() => setName(item.name)} >
                <div className="icon" >
-                <Tooltip title={item.name} placement="bottom-end" enterDelay={500} leaveDelay={200}>
+                <Tooltip title={item.name} placement="bottom-end" enterDelay={600} leaveDelay={0}>
                 {item.icon}
                 </Tooltip>
                 </div>           

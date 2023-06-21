@@ -10,8 +10,12 @@
 }
 
 .chip:hover {
-  background-color: #01b622;
-  color: white;
+  background-color: #d0d0d0;
+}
+
+.chip:active {
+  background-color: rgb(122, 210, 122);
+  color: #fff;
 }
 
 
