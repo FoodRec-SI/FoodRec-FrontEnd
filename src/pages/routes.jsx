@@ -10,6 +10,7 @@ import Collection from "./Collection";
 import CollectionDetail from "./CollectionDetail";
 import PendingRecipe from "./PendingRecipe";
 import RecipeDetail from "../components/RecipeDetail/RecipeDetail";
+import SearchPage from "./SearchPage";
 
 
 function AppRoutes() {
@@ -49,6 +50,16 @@ function AppRoutes() {
       title: "Collection Detail",
     },
     {
+      path: "/recipeDetail/:postId",
+      element: <RecipeDetail/>,
+      title: "Recipe Detail",
+    },
+    {
+      path: "/search",
+      element: isLogin ? <SearchPage /> : <Login />,
+      title: "SearchPage",
+    },
+    {
       path: "*",
       element: <h1>Not Found</h1>,
       title: "Not Found",
@@ -62,7 +73,7 @@ function AppRoutes() {
       title: "Pending Recipe",
     },
     {
-      path: "/recipeDetail/:recipeID",
+      path: "/recipeDetail/:postId",
       element: <RecipeDetail/>,
       title: "Recipe Detail",
     },
@@ -70,6 +81,11 @@ function AppRoutes() {
       path: "/PendingRecipeDetail/:recipeID",
       element: isLogin ? <RecipeDetail/> : <Login />,
       title: "Recipe Detail",
+    },
+    {
+      path: "/search",
+      element: isLogin ? <SearchPage /> : <Login />,
+      title: "SearchPage",
     },
     {
       path: "*",

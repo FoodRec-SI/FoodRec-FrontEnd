@@ -112,11 +112,13 @@ a {
 .collection-card.add-collection .create-collection-button {
   padding: 0;
   border-radius: 0;
+  color: #0f1b3e;
 }
 
 .collection-card.add-collection .create-collection-text {
   display: block;
   font-size: 14px;
+  color: #0f1b3e;
 }
 
 .button, [class^="btn-"], [class*=" btn-"] {

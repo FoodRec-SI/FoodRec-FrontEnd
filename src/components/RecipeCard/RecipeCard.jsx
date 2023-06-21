@@ -11,7 +11,7 @@ function RecipeCard({props,pending}) {
 
     const handleClick = () => {
         if(pending == ""){
-            navigate('/recipeDetail/' + props.id);
+            navigate('/recipeDetail/' + props.postId);
         }
         if(pending == "pending"){
             navigate('/pendingRecipeDetail/' + props.id, {state: "pending"});
@@ -20,7 +20,7 @@ function RecipeCard({props,pending}) {
 
     return (
         <div className={"recipeCard" + pending} onClick={handleClick}>
-            <img src={props.image} alt="" loading='lazy' />
+           <img src={`"data:image/png;base64, ${props.image}"`} alt="" loading="lazy" />
             <div className={"recipeCard__info" + pending}>
                 <h3>{props.recipeName}</h3>
                 <p>{props.description}</p>
