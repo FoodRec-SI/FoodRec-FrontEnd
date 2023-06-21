@@ -11,6 +11,8 @@ import CollectionDetail from "./CollectionDetail";
 import PendingRecipe from "./PendingRecipe";
 import RecipeDetail from "../components/RecipeDetail/RecipeDetail";
 import SearchPage from "./SearchPage";
+import ImportForm from "../components/ImportForm/ImportForm";
+import Profile from "../components/Profile/Profile";
 
 
 function AppRoutes() {
@@ -19,9 +21,6 @@ function AppRoutes() {
   const Login = () => {
     keycloak.login();
   };
-
-
- 
 
   const routes = [
     {
@@ -64,6 +63,16 @@ function AppRoutes() {
       element: <h1>Not Found</h1>,
       title: "Not Found",
     },
+    {
+      path: "/addRecipe",
+      element: isLogin ? <ImportForm /> : <Login />,
+      title: "Add Recipe",
+    },
+    {
+      path: "/profile",
+      element: isLogin ? <Profile /> : <Login />,
+      title: "Profile",
+    },
   ];
 
   const moderatorRoutes = [
@@ -87,11 +96,6 @@ function AppRoutes() {
       element: isLogin ? <SearchPage /> : <Login />,
       title: "SearchPage",
     },
-    {
-      path: "*",
-      element: <h1>Not Found</h1>,
-      title: "Not Found",
-    },
   ];
 
   if (isModerator(keycloak)) {
@@ -106,5 +110,6 @@ function AppRoutes() {
     </Routes>
   );
 }
+
 
 export default AppRoutes;

@@ -16,6 +16,9 @@
     border-bottom: 1px solid #ccc;
     padding: 10px;
     margin-bottom: 20px;
+    position: sticky;
+    top:50px;
+    background-color: white;
 }
 
 .import-form__title__buttons span{
@@ -109,5 +112,5 @@
     padding: 10px;
     
 }
-
+    
 

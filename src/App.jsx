@@ -6,15 +6,13 @@ import { BrowserRouter } from "react-router-dom";
 import AppRoutes from "./pages/routes";
 import {QueryClient , QueryClientProvider} from 'react-query'
 import {ReactQueryDevtools} from 'react-query/devtools'
-
 import "primereact/resources/primereact.min.css";
-import "primereact/resources/primereact.min.css";   
+
 import 'primeicons/primeicons.css';                                 
 import 'primeflex/primeflex.css';     
 import 'primereact/resources/themes/lara-light-indigo/theme.css';   // theme
 import 'primereact/resources/primereact.css';  
-import "primereact/resources/themes/lara-light-indigo/theme.css"; // theme
-import "primereact/resources/primereact.css";
+
 
 function App() {
   const [title, setTitle] = useState("");
@@ -23,6 +21,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
     <div className="App">
+
       <BrowserRouter>
         <div className="header">
           <Navbar title={title} />
@@ -33,7 +32,7 @@ function App() {
         <div className="content">
           <AppRoutes />
         </div>
-      </BrowserRouter>
+      </BrowserRouter>9
     </div>
     <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

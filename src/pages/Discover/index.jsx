@@ -35,7 +35,7 @@ const Discover = () => {
   return (
     <>
       <LoginBanner />
-      <RecipeCardList props={recipes} pending={isFetchingNextPage} />
+      <RecipeCardList props={recipes} pending={''} />
       {hasNextPage && (
         <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
           {isFetchingNextPage ? "Loading more..." : "Load more"}
