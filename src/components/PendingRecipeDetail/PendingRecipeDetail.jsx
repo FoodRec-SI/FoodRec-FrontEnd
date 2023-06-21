@@ -6,12 +6,15 @@ import Dialog from '@mui/material/Dialog';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import {  useNavigate } from 'react-router-dom';
-import { ApproveRejectApi } from '../../api/ApproveRejectApi';
+import { useNavigate } from 'react-router-dom';
 
+import { ApproveRejectApi } from '../../api/ApproveRejectApi';
 import { useQuery } from '@tanstack/react-query';
+import { useKeycloak } from "@react-keycloak/web";
 
 import './PendingRecipeDetail.css';
+import { Alert } from '@mui/material';
+import { Refresh } from '@mui/icons-material';
 
 
 
@@ -21,22 +24,26 @@ const PendingRecipeDetail = () => {
 
     const [selectedValue, setSelectedValue] = useState([]);
 
+    const { keycloak } = useKeycloak();
+
+    const [isApprove, setIsApprove] = useState('approve');
+
+    const { isError, isSuccess } = useQuery({
+        queryKey: ["pendingRecipes", { postId: 'POS000027'}],
+        queryFn: async () => {
+            const data = await ApproveRejectApi.updateStatusPost('POS000027', keycloak.token, isApprove );
+            return data;
+        },
+        enabled: false,  
+    });
 
     const handleApproveAndReject = async (status) => {
         let state = status;
         if (state === 'approve') {
-            // const { data, isLoading, isError } = useQuery({
-            //     queryKey: ["pendingRecipes"],
-            //     queryFn: async () => {
-            //         const data = await ApproveRejectApi.updateStatusPost(recipeID, keycloak.token, state);
-            //         console.log(data);
-            //         return data;
-            //     }
-            // });
-
-            navigate('/pendingRecipe', { state: state });
+            setIsApprove('approve');
+            Refresh();
+            navigate('/pendingRecipe', { state: state });   
         }
-
         if (state === 'reject') {
             try {
                 await new Promise((resolve) => {
@@ -57,8 +64,13 @@ const PendingRecipeDetail = () => {
 
         if (value.length != 0) {
             setSelectedValue(filteredValue);
+            setIsApprove('reject');
             console.log(filteredValue);
+           
+            refresh();
             navigate('/pendingRecipe', { state: 'reject' });
+            
+
         }
     };
 

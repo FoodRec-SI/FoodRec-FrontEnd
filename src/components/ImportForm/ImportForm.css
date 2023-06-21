@@ -72,11 +72,12 @@
 }
 
 .import-form__Detail__RecipeImage__upload__preview__dragArea__clearImg{
-    position: relative;
+    /* position: relative;
     top: -382px;
     left: 610px;
     cursor: pointer;
-    z-index: 1;
+    z-index: 1; */
+    margin : 0 auto;
 }
 
 
