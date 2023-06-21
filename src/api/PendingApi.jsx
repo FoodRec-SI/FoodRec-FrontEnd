@@ -12,7 +12,7 @@ const postStatus = {
 
 
 function getPendingRecipes(token) {
-    return instance.get(`/moderator/posts`, {
+    return instance.get(`api/moderator/posts`, {
         headers: {
             Authorization: bearerAuth(token),
         },

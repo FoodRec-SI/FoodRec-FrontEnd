@@ -9,12 +9,10 @@ import Checkbox from '@mui/material/Checkbox';
 import { useNavigate } from 'react-router-dom';
 
 import { ApproveRejectApi } from '../../api/ApproveRejectApi';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from 'react-query';
 import { useKeycloak } from "@react-keycloak/web";
 
 import './PendingRecipeDetail.css';
-import { Alert } from '@mui/material';
-import { Refresh } from '@mui/icons-material';
 
 
 
@@ -41,7 +39,7 @@ const PendingRecipeDetail = () => {
         let state = status;
         if (state === 'approve') {
             setIsApprove('approve');
-            Refresh();
+
             navigate('/pendingRecipe', { state: state });   
         }
         if (state === 'reject') {
@@ -67,7 +65,7 @@ const PendingRecipeDetail = () => {
             setIsApprove('reject');
             console.log(filteredValue);
            
-            refresh();
+            refetch();
             navigate('/pendingRecipe', { state: 'reject' });
             
 
