@@ -11,7 +11,7 @@ function RecipeCard({props,pending}) {
 
     const handleClick = () => {
         if(pending == ""){
-            navigate('/recipeDetail/' + props.recipeId);
+            navigate('/recipeDetail/' + props.postId);
         }
         if(pending == "pending"){
             navigate('/pendingRecipeDetail/' + props.recipeId);

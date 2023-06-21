@@ -67,8 +67,8 @@ const ChipsBanner = (props) => {
       <div className="chips-banner" ref={scrl} onScroll={scrollCheck}>
         {props.items.map((item) => (
           <Chip
-            key={item.id}
-            label={item.label}
+            key={item.tagId}
+            label={item.tagName}
             onClick={handleItemClick}
           />
         ))}

@@ -67,12 +67,23 @@
 
 
 .search-bar {
-  height: 30px;
+  height: 35px;
   border-radius: 5px;
   border: 1px solid rgb(230, 230, 230);
   background: transparent;
   flex: 1;
   display: flex;
+}
+
+.in-search-bar {
+  height: 35px;
+  border-radius: 5px;
+  border: none;
+  background: transparent;
+  flex: 1;
+  display: flex;
+  padding: 5px 15px;
+  font-size: 15px;
 }
 
 .icon-search-bar {

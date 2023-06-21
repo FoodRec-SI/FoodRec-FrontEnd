@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import SortIcon from '@mui/icons-material/Sort';
 
 import { useKeycloak } from "@react-keycloak/web";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from "react-query";
 import { PendingApi } from "../../api/PendingApi";
 import './PendingList.css'
 

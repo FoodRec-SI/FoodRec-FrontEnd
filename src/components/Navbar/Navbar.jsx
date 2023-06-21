@@ -15,18 +15,19 @@ import Settings from "@mui/icons-material/Settings";
 import {useNavigate} from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useKeycloak } from "@react-keycloak/web";
+import { useQuery } from "react-query";
+
+
 import { Tooltip } from "@mui/material";
 import { Navigate } from "react-router-dom";
 
-
-import { PostApi } from "../../api/PostApi";
+import { AccountApi } from "../../api/AccountApi";
 
 
 
 
 const Navbar = ({ title }) => {
   const { keycloak } = useKeycloak();
-
   const navigate = useNavigate();
 
   const handleLogInOut = () => {
@@ -35,9 +36,27 @@ const Navbar = ({ title }) => {
       <Navigate to="/" />
     } else {
       keycloak.login();
-
     }
   };
+
+  const createAccount = async () => {
+    const response = await AccountApi.createAccount(keycloak.token)
+    if (response.status === 200) {
+      return response.status;
+    }
+  }
+
+  const { status } = useQuery('createAccount', createAccount);
+
+  if (status === 'success') {
+    console.log('success')
+  }
+
+  if (status === 'error') {
+    console.log('error')
+  }
+
+
   const getLogInOutText = () => {
     return keycloak.authenticated ? "Logout" : "Sign in";
   };
@@ -76,13 +95,10 @@ const Navbar = ({ title }) => {
     prevOpen.current = open;
   }, [open]);
 
-  const handleSearch = async (e) => {
+  const handleSearch = (e) => {
     e.preventDefault();
     const recipeName = e.target.recipeName.value;
-
-    const response = await PostApi.getPostsByName(recipeName, keycloak.token);
-    console.log(response.data);
-
+    navigate(`/search?recipes=${recipeName}`);
   };
 
   return (
@@ -96,9 +112,10 @@ const Navbar = ({ title }) => {
           <h5 className="hello">Hello, </h5>
           <h3 className="title">{title}</h3>
         </div>
-        <form onSubmit={handleSearch}>
+        <form className="search-bar" onSubmit={handleSearch}>
         <input
-          className="search-bar"
+          className="in-search-bar"
+          
           type="text"
           placeholder="  Search for recipes"
           name="recipeName"

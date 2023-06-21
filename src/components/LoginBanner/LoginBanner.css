@@ -32,6 +32,14 @@
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
+  cursor: pointer;
+}
+
+.user-banner:hover {
+  background-image: url("https://assets.bonappetit.com/photos/57aceacc1b3340441497532d/master/w_2700,h_1621,c_limit/double-rl-ranch-burger.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
 }
 
 .popular {
