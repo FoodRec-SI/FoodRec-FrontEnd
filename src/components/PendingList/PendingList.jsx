@@ -20,14 +20,12 @@ const PendingList = () => {
         setSoft(!soft);
     }
 
-
-    const { data, isLoading, isError } = useQuery({
+    const { data, isLoading, isError, refetch } = useQuery({
         queryKey: ["pendingRecipes"],
         queryFn: async () => {
             const data = await PendingApi.getPendingRecipes(keycloak.token);
-            console.log(data.data.content);
             return data;
-        }
+        },
     });
 
     return (

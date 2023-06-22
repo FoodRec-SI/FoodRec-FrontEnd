@@ -3,6 +3,11 @@ import AddIcon from '@mui/icons-material/Add';
 
 import { useNavigate } from 'react-router-dom';
 
+import { useKeycloak } from "@react-keycloak/web";
+import { useQuery } from 'react-query';
+
+import { PersonalRecipeApi } from '../../api/PersonalRecipeApi';
+
 import ChipList from '../ChipList/ChipList';
 import RecipeCardList from '../RecipeCardList/RecipeCardList'
 import './Profile.css'
@@ -10,6 +15,8 @@ import './Profile.css'
 const Profile = () => {
 
     const navigate = useNavigate();
+
+    const { keycloak } = useKeycloak();
 
     const recipes = [
         {
@@ -87,13 +94,22 @@ const Profile = () => {
         
     ]
 
+    const {data, isLoading, isError} = useQuery({
+        queryKey: ["personalRecipes"],
+        queryFn: async () => {
+            const data = await PersonalRecipeApi.getPersonalRecipe(keycloak.token);
+            console.log(data);
+            return data;
+        },
+    });
+
     const handleAddRecipeNavigate = () => {
         navigate('/AddRecipe');
     }
 
     return (
         <>
-            <div className="profile">
+            {data && <div className="profile">
                 <div className="profile__cover">
                     <img src="src/assets/Yae FullHD tỉ lệ 16- 9 .png" alt="" />
                     <div className="profile__cover__avatar">
@@ -120,10 +136,10 @@ const Profile = () => {
                                 Add your recipe
                             </Button>
                         </div>
-                        <RecipeCardList props={recipes} pending="" />
+                        <RecipeCardList props={data.data.content} pending="" />
                     </div>
                 </div>
-            </div>
+            </div>}
         </>
     );
 }

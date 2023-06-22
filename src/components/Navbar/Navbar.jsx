@@ -49,7 +49,7 @@ const Navbar = ({ title }) => {
   const { status } = useQuery('createAccount', createAccount);
 
   if (status === 'success') {
-    console.log('success')
+    
   }
 
   if (status === 'error') {

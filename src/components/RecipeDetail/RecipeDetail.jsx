@@ -31,14 +31,13 @@ const RecipeDetail = () => {
   const { data: post, status } = useQuery(["post", postId], fetchPostById);
 
   if (status === "success") {
-    console.log(post);
+    
   }
 
   if (status === "error") {
     console.log("error");
   }
 
-  console.log(post);
 
   const location = useLocation();
   const pending = location.state;

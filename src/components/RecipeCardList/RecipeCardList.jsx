@@ -4,12 +4,11 @@ import RecipeCard from "../RecipeCard/RecipeCard";
 
 
 const RecipeCardList = ({props,pending}) => {
-
   return (
     <div className="recipe-list">
-      {props.map((item) => (   
+      {props.map((item,index) => (   
         <RecipeCard
-          key={item.postId}
+          key={index}
           props={item}
           pending={pending}
         />

@@ -27,6 +27,7 @@ const instance = axios.create({
     baseURL: import.meta.env.VITE_POST_API_URL,
 });
 
+
 instance.interceptors.response.use(response => {
     return response;
 }, function (error) {

@@ -9,7 +9,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { useNavigate } from 'react-router-dom';
 
 import { ApproveRejectApi } from '../../api/ApproveRejectApi';
-import { useQuery } from 'react-query';
+import { useQuery, useMutation , QueryClient} from 'react-query';
 import { useKeycloak } from "@react-keycloak/web";
 
 import './PendingRecipeDetail.css';
@@ -18,35 +18,46 @@ import './PendingRecipeDetail.css';
 
 const PendingRecipeDetail = () => {
 
+    const queryClient = new QueryClient();
+
     const navigate = useNavigate();
+
+    const [state, setState] = useState('');
 
     const [selectedValue, setSelectedValue] = useState([]);
 
     const { keycloak } = useKeycloak();
 
-    const [isApprove, setIsApprove] = useState('approve');
+    const [isApprove, setIsApprove] = useState('APPROVED');
 
-    const { isError, isSuccess } = useQuery({
-        queryKey: ["pendingRecipes", { postId: 'POS000027'}],
-        queryFn: async () => {
-            const data = await ApproveRejectApi.updateStatusPost('POS000027', keycloak.token, isApprove );
+    const postId = 'POS000007';
+
+    const { mutate, isSuccess} = useMutation({
+        mutationFn: async () => {
+            const data = await ApproveRejectApi.updateStatusPost({postId, isApprove}, keycloak.token );
+            console.log(data);
             return data;
         },
-        enabled: false,  
+        onSuccess: () => {
+            console.log('success update');
+            queryClient.invalidateQueries('pendingRecipes');
+            queryClient.refetchQueries;
+            navigate('/pendingRecipe', { state: state });
+        },
+        onError: () => {
+            console.log('error update');
+        }
     });
 
     const handleApproveAndReject = async (status) => {
-        let state = status;
+        setState(status);
         if (state === 'approve') {
-            setIsApprove('approve');
-
-            navigate('/pendingRecipe', { state: state });   
+            mutate();
         }
         if (state === 'reject') {
             try {
                 await new Promise((resolve) => {
                     document.getElementById('openDialog').click();
-
                 });
             } catch (error) {
                 // Handle any errors that occur during the rejection process
@@ -63,12 +74,9 @@ const PendingRecipeDetail = () => {
         if (value.length != 0) {
             setSelectedValue(filteredValue);
             setIsApprove('reject');
-            console.log(filteredValue);
-           
-            refetch();
+            console.log(filteredValue);      
             navigate('/pendingRecipe', { state: 'reject' });
             
-
         }
     };
 
@@ -90,9 +98,6 @@ const PendingRecipeDetail = () => {
                 </Button>
             </div>
             <DialogPending handleClose={handleClose} selectedValue={selectedValue} />
-            {/* <NavLink to='/pendingRecipe' className="pendingPage__button" >
-                <button id='navigateButton' style={{ display: "none" }}></button>
-            </NavLink> */}
         </div>
 
     );
