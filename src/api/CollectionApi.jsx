@@ -3,15 +3,48 @@ import axios from 'axios';
 
 export const CollectionApi = {
   getCollection,
+  createCollection,
+  addPostToCollection,
 }
 
-function getCollection(token) {
-  return instance.get(`/api/member/collections`, {
+function addPostToCollection(data,token) {
+  return instance.put(`/api/member/collections/posts`,
+  {
+    postId: data.postId,
+    collectionId: data.collectionId,
+  },
+  {
     headers: {
       Authorization: bearerAuth(token),
     },
   });
 }
+
+function getCollection(pageParam,pageSize,token) {
+  return instance.get(`/api/member/collections`,
+   {
+    params: { pageNumber : pageParam,
+              pageSize : pageSize},
+    headers: {
+      Authorization: bearerAuth(token),
+    },
+  });
+}
+
+function createCollection(data, token) {
+  return instance.post(`/api/member/collection`,
+   {
+    collectionName: data.collectionName,
+    description: data.description,
+  }
+  ,
+  {
+    headers: {
+      Authorization: bearerAuth(token), 
+    },
+  });
+}
+
 
 
 const instance = axios.create({

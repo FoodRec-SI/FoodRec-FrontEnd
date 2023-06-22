@@ -21,7 +21,6 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
     <div className="App">
-
       <BrowserRouter>
         <div className="header">
           <Navbar title={title} />
@@ -32,7 +31,7 @@ function App() {
         <div className="content">
           <AppRoutes />
         </div>
-      </BrowserRouter>9
+      </BrowserRouter>
     </div>
     <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

@@ -5,10 +5,16 @@ import { Link } from "react-router-dom";
 import { CollectionApi } from "../../api/CollectionApi";
 import { useKeycloak } from "@react-keycloak/web";
 import { useQuery } from "react-query";
+import {useMutation} from 'react-query';
+import { useQueryClient } from "react-query";
 
 const CollectionCards = () => {
 
   const [isEditing, setIsEditing] = useState(false);
+
+  const [collectionName, setCollectionName] = useState("");
+
+  const queryClient = useQueryClient();
 
   const { keycloak } = useKeycloak();
 
@@ -20,19 +26,31 @@ const CollectionCards = () => {
     setIsEditing(false);
   };
 
-  const handleSave = () => {
+  const handleSave = async (e) => {
+    e.preventDefault();
+    const description = "1";
+    const response =  await CollectionApi.createCollection({collectionName , description},keycloak.token);
+    if (response.status === 200) {
+      setCollectionName("");
+    }
     setIsEditing(false);
-    // write your save logic here
   };
 
 
-  const fetchCollections = async () => {
-    const response = await CollectionApi.getCollection(keycloak.token);
+  const {mutate : addCollection} = useMutation(handleSave, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('collections')
+      refetch();
+    }
+  })
+
+
+  const fetchCollections = async ({pageParam= 0,pageSize = 30}) => {
+    const response = await CollectionApi.getCollection(pageParam,pageSize,keycloak.token);
     return response.data.content;
   };
 
-  const { data : items , status } = useQuery("collections", fetchCollections);
-
+  const { data : items , status, refetch } = useQuery("collections", fetchCollections);
 
   if (status === "loading") {
     return <div>Loading...</div>;
@@ -63,14 +81,20 @@ const CollectionCards = () => {
          
             {isEditing && ( 
               <>
+            <form onSubmit={addCollection}>
             <input
                 className="add-collection-input"
-                maxLength="40"
+                maxLength="20"
+                type="text"
                 placeholder="Collection Name"
+                name="collectionName"
+                value={collectionName}
+                onChange={(e) => setCollectionName(e.target.value)}
               />
+              </form>
         
             <div className="save-cancel-block font-bold">
-              <div role="button" className="action primary" onClick={handleSave}>
+              <div role="button" className="action primary" onClick={addCollection}>
                 Save
               </div>
               <div role="button" className="action secondary" onClick={handleCancel}>
@@ -82,7 +106,7 @@ const CollectionCards = () => {
           </div>
         </div>
       </div>
-      {items.map((item) => (
+      {items && items.map((item) => (
         <CollectionCard
           key={item.collectionId}
           collectionName={item.collectionName}
