@@ -3,16 +3,26 @@ import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShareIcon from "@mui/icons-material/Share";
 import Tooltip from "@mui/material/Tooltip";
+import Popper from "@mui/material/Popper";
+import Grow from "@mui/material/Grow";
+import Paper from "@mui/material/Paper";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import MenuList from "@mui/material/MenuList";
+import MenuItem from "@mui/material/MenuItem";
 
 import "./RecipeDetail.css";
 import { useParams, useLocation } from "react-router-dom";
 import PendingRecipeDetail from "../PendingRecipeDetail/PendingRecipeDetail";
 import ChipList from "../ChipList/ChipList";
 import RatingArea from "../RatingArea/RatingArea";
-import RecommendeRcipe from '../RecommendRecipe/RecommendRecipe';
+import RecommendeRcipe from "../RecommendRecipe/RecommendRecipe";
+
+import { CollectionApi } from "../../api/CollectionApi";
+
+import { useState, useRef, useEffect } from "react";
 
 import { PostApi } from "../../api/PostApi";
-import { useQuery } from "react-query";
+import { useQuery , useMutation } from "react-query";
 import { useKeycloak } from "@react-keycloak/web";
 
 const RecipeDetail = () => {
@@ -49,36 +59,95 @@ const RecipeDetail = () => {
         isPending = true;
     }
 
-    return (
-        <div className="recipeDetail__wrapper">
-            <div className="recipeDetailContainer">
-                {isPending === true &&
-                    // <DialogPending ref={dialogRef} navigate={navigate} />
-                    <PendingRecipeDetail />
-                }
-                <div className="recipeDetail">
-
-                    <img src={imageFood} alt="" />
-                    <Introduction ratingPoint={5} />
-                    <Ingredients />
-                    <Description />
-                    <Instruction />
-                    <div className="recipeDetail__rating">
-                        <RatingArea />
-                    </div>
-                </div>
-            </div>
-            {isPending === false &&
-                <div className="recommendRecipe">
-                    <RecommendeRcipe />
-                </div>
-            }
-
+  return (
+    <div className="recipeDetail__wrapper">
+      <div className="recipeDetailContainer">
+        {isPending === true && (
+          // <DialogPending ref={dialogRef} navigate={navigate} />
+          <PendingRecipeDetail />
+        )}
+        <div className="recipeDetail">
+          <img src={imageFood} alt="" />
+          <Introduction ratingPoint={5} props={post} />
+          <Ingredients />
+          <Description />
+          <Instruction />
+          <div className="recipeDetail__rating">
+            <RatingArea />
+          </div>
         </div>
-    )
-}
+      </div>
+      <div className="recommendRecipe">
+        <RecommendeRcipe />
+      </div>
+    </div>
+  );
+};
 
 function Introduction({ props, ratingPoint }) {
+  const { keycloak } = useKeycloak();
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef(null);
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (event) => {
+    if (anchorRef.current.contains(event)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  function handleListKeyDown(event) {
+    if (event.key === "Tab") {
+      event.preventDefault();
+      setOpen(false);
+    } else if (event.key === "Escape") {
+      setOpen(false);
+    }
+  }
+
+  const prevOpen = useRef(open);
+  useEffect(() => {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current.focus();
+    }
+
+    prevOpen.current = open;
+  }, [open]);
+
+
+  const fetchCollections = async ({ pageParam = 0, pageSize = 30 }) => {
+    const response = await CollectionApi.getCollection(
+      pageParam,
+      pageSize,
+      keycloak.token
+    );
+    return response.data.content;
+  };
+
+  const { data: items } = useQuery("collections", fetchCollections);
+
+  const inputRef = useRef(null);
+
+  const handleAddToCollection = async () => {
+    
+    const response = await CollectionApi.addPostToCollection(
+      {
+        collectionId : inputRef.current.dataset.value,
+        postId: props.postId,
+      },
+      keycloak.token)
+    console.log(response);
+  };
+
+  const { mutate : addToCollection } = useMutation(handleAddToCollection);
+
+
+
   return (
     <>
       {props && (
@@ -99,10 +168,64 @@ function Introduction({ props, ratingPoint }) {
           <div className="userFeature">
             {/* button x 3*/}
             <Tooltip title="Add to collection" placement="top">
-              <IconButton aria-label="addToCollection">
+              <IconButton
+                aria-label="addToCollection"
+                ref={anchorRef}
+                id="composition-button"
+                aria-controls={open ? "composition-menu" : undefined}
+                aria-expanded={open ? "true" : undefined}
+                aria-haspopup="true"
+                onClick={handleToggle}
+              >
                 <PlaylistAddIcon fontSize="large" />
               </IconButton>
             </Tooltip>
+
+            <Popper
+              open={open}
+              anchorEl={anchorRef.current}
+              role={undefined}
+              placement="bottom-start"
+              transition
+              disablePortal
+            >
+              {({ TransitionProps, placement }) => (
+                <Grow
+                  {...TransitionProps}
+                  style={{
+                    transformOrigin:
+                      placement === "bottom-start" ? "left top" : "left bottom",
+                  }}
+                >
+                  <Paper>
+                    <ClickAwayListener onClickAway={handleClose}>
+                      <MenuList
+                        autoFocusItem={open}
+                        id="composition-menu"
+                        aria-labelledby="composition-button"
+                        onKeyDown={handleListKeyDown}
+
+                      >
+                        {items.map((item) => (
+                          <MenuItem
+                            ref={inputRef}
+                            data-value={item.collectionId}
+                            key={item.collectionId}
+                            onClick={() => {
+                              addToCollection();
+                              handleClose();
+                            }
+                            }
+                          >
+                            {item.collectionName}
+                          </MenuItem>
+                        ))}
+                      </MenuList>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
+              )}
+            </Popper>
 
             <Tooltip title="Add to favorite" placement="top">
               <IconButton aria-label="addToFavorite">

@@ -8,8 +8,10 @@ import { useInfiniteQuery } from "react-query";
 const Discover = () => {
   const { keycloak } = useKeycloak();
 
-  const fetchRecipes = async ({ pageParam = 0 }) => {
-    const response = await PostApi.getPosts(pageParam, keycloak.token);
+  const fetchRecipes = async ({ pageParam = 0
+  , pageSize = 30
+  }) => {
+    const response = await PostApi.getPosts(pageParam, pageSize, keycloak.token);
     return response.data.content;
   };
 

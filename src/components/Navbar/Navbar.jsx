@@ -48,14 +48,16 @@ const Navbar = ({ title }) => {
 
   const { status } = useQuery('createAccount', createAccount);
 
+<<<<<<< HEAD
   if (status === 'success') {
     
   }
 
+=======
+>>>>>>> main
   if (status === 'error') {
     console.log('error')
   }
-
 
   const getLogInOutText = () => {
     return keycloak.authenticated ? "Logout" : "Sign in";
@@ -114,8 +116,7 @@ const Navbar = ({ title }) => {
         </div>
         <form className="search-bar" onSubmit={handleSearch}>
         <input
-          className="in-search-bar"
-          
+          className="in-search-bar" 
           type="text"
           placeholder="  Search for recipes"
           name="recipeName"
