@@ -1,7 +1,84 @@
 import "./LikedRecipesList.css";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { useState, useRef, useEffect } from "react";
+import Popper from "@mui/material/Popper";
+import Grow from "@mui/material/Grow";
+import Paper from "@mui/material/Paper";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import MenuList from "@mui/material/MenuList";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
+import { useKeycloak } from "@react-keycloak/web";
+import { useMutation } from "react-query";
+import { CollectionApi } from "../../api/CollectionApi";
+import { useQueryClient } from "react-query";
 
 const LikedRecipe = (props) => {
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef(null);
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  function handleListKeyDown(event) {
+    if (event.key === "Tab") {
+      event.preventDefault();
+      setOpen(false);
+    } else if (event.key === "Escape") {
+      setOpen(false);
+    }
+  }
+
+  // return focus to the button when we transitioned from !open -> open
+  const prevOpen = useRef(open);
+  useEffect(() => {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current.focus();
+    }
+
+    prevOpen.current = open;
+  }, [open]);
+
+
+
+  const { keycloak } = useKeycloak();
+  const queryClient = useQueryClient();
+
+  const handleDeletePost = async () => {
+    const collectionId = props.collectionId;
+    const postId = props.postId;
+    const response = await CollectionApi.deletePostFromCollection({ collectionId,postId },keycloak.token);
+    if (response.status === 200) {
+      return response.status;
+    }
+  }
+
+  const { mutate : deletePostInCollection , status } = useMutation(handleDeletePost,
+    {
+      onSuccess: () => {
+          queryClient.invalidateQueries('collection');
+      }
+    }
+    );
+
+  if (status === 'error') {
+    console.log('error')
+  }
+
+
+
+
   return (
     <div className="liked-container">
       <div className="index-container">
@@ -21,9 +98,60 @@ const LikedRecipe = (props) => {
         </div>
       </div>
       <div className="action-menu">
-        <button className="menu-button">
+        <button
+          className="menu-button"
+          ref={anchorRef}
+          id="composition-button"
+          aria-controls={open ? "composition-menu" : undefined}
+          aria-expanded={open ? "true" : undefined}
+          aria-haspopup="true"
+          onClick={handleToggle}
+        >
           <MoreVertIcon />
         </button>
+        <Popper
+          open={open}
+          anchorEl={anchorRef.current}
+          role={undefined}
+          placement="bottom-start"
+          transition
+          disablePortal
+        >
+          {({ TransitionProps, placement }) => (
+            <Grow
+              {...TransitionProps}
+              style={{
+                width: "200px",
+                transformOrigin:
+                  placement === "bottom-start" ? "left top" : "left bottom",
+              }}
+            >
+              <Paper>
+                <ClickAwayListener onClickAway={handleClose}>
+                  <MenuList
+                    autoFocusItem={open}
+                    id="composition-menu"
+                    aria-labelledby="composition-button"
+                    onKeyDown={handleListKeyDown}
+                  >
+                    <MenuItem onClick= {deletePostInCollection}>
+                      <ListItemIcon>
+                        <DeleteForeverOutlinedIcon fontSize="small" />
+                      </ListItemIcon>
+                      Remove
+                    </MenuItem>
+                    <MenuItem onClick={handleClose}>
+                      <ListItemIcon>
+                        <ShareOutlinedIcon fontSize="small" />
+                      </ListItemIcon>
+                      Share
+                      </MenuItem>
+                  </MenuList>
+                </ClickAwayListener>
+              </Paper>
+            </Grow>
+          )}
+        </Popper>
       </div>
     </div>
   );
@@ -36,9 +164,11 @@ const LikedRecipeList = (props) => {
         <LikedRecipe
           key={index}
           index={index + 1}
-          name={recipe.name}
-          author={recipe.author}
-          cookingTime={recipe.cookingTime}
+          collectionId={props.id}
+          postId={recipe.postId}
+          name={recipe.recipeName}
+          author={recipe.userId}
+          cookingTime={recipe.duration} 
           image={recipe.image}
         />
       ))}

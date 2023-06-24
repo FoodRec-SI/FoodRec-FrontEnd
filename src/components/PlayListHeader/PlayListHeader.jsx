@@ -1,24 +1,139 @@
 import "./PlayListHeader.css";
+import { useState, useRef, useEffect } from "react";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Popper from "@mui/material/Popper";
+import Grow from "@mui/material/Grow";
+import Paper from "@mui/material/Paper";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import MenuList from "@mui/material/MenuList";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+import { useMutation } from "react-query";
+import { CollectionApi } from "../../api/CollectionApi";
+import { useQueryClient } from "react-query";
+import { useKeycloak } from "@react-keycloak/web";
+import { useNavigate } from "react-router-dom";
+
+const PlayListHeader = (props) => {
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef(null);
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  function handleListKeyDown(event) {
+    if (event.key === "Tab") {
+      event.preventDefault();
+      setOpen(false);
+    } else if (event.key === "Escape") {
+      setOpen(false);
+    }
+  }
+
+  // return focus to the button when we transitioned from !open -> open
+  const prevOpen = useRef(open);
+  useEffect(() => {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current.focus();
+    }
+
+    prevOpen.current = open;
+  }, [open]);
 
 
-const PlayListHeader = () => {
+  const { keycloak } = useKeycloak();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const handleDeleteCollection = async () => {
+    const collectionId = props.id;
+    const response = await CollectionApi.deleteCollection({ collectionId },keycloak.token);
+    return response.status;
+  };
+
+  const { mutate : deleteCollection } = useMutation(handleDeleteCollection, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("collections");
+      navigate("/collection");
+    },
+  });
+
   
+
   return (
-    <div className="playlist-header" >
+    <div className="playlist-header">
       <div className="playlist-wrapper">
         <div className="playlist-not-scroll">
-        <div className="playlist-header-image">
-          <img src="/src/assets/healthyFood.jpg" alt="" />
+          <div className="playlist-header-image">
+            <img src="/src/assets/healthyFood.jpg" alt="" />
+          </div>
+          <div className="playlist-header-title">Liked Recipes</div>
+          <div className="playlist-detail">
+            <div className="playlist-sub-detail">
+              <div className="playlist-owner">User...</div>
+              <div className="playlist-header-subtitle">3 recipes</div>
+            </div>
+            <div>
+              <button className="playlist-menu-button"
+              ref={anchorRef}
+              id="composition-button"
+              aria-controls={open ? "composition-menu" : undefined}
+              aria-expanded={open ? "true" : undefined}
+              aria-haspopup="true"
+              onClick={handleToggle}
+              >
+                <MoreVertIcon />
+              </button>
+              <Popper
+          open={open}
+          anchorEl={anchorRef.current}
+          role={undefined}
+          placement="bottom-start"
+          transition
+          disablePortal
+        >
+          {({ TransitionProps, placement }) => (
+            <Grow
+              {...TransitionProps}
+              style={{
+                width: "200px",
+                transformOrigin:
+                  placement === "bottom-start" ? "left top" : "left bottom",
+              }}
+            >
+              <Paper>
+                <ClickAwayListener onClickAway={handleClose}>
+                  <MenuList
+                    autoFocusItem={open}
+                    id="composition-menu"
+                    aria-labelledby="composition-button"
+                    onKeyDown={handleListKeyDown}
+                  >
+                    <MenuItem onClick= {deleteCollection}>
+                      <ListItemIcon>
+                        <DeleteForeverOutlinedIcon fontSize="small" />
+                      </ListItemIcon>
+                      Delete Collection
+                    </MenuItem>
+                  </MenuList>
+                </ClickAwayListener>
+              </Paper>
+            </Grow>
+          )}
+        </Popper>
+            </div>
+          </div>
         </div>
-        <div className="playlist-header-title">Liked Recipes</div>
-        <div className="playlist-detail">
-          <div className="playlist-owner">User...</div>
-        <div className="playlist-sub-detail">
-          <div className="playlist-header-subtitle">3 recipes</div>
-          <div className="playlist-update-time">Last update on 1 June 2023</div>
-          </div>  
-        </div>
-      </div>
       </div>
     </div>
   );
