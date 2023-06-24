@@ -48,7 +48,6 @@ const RecipeDetail = () => {
     console.log("error");
   }
 
-  console.log(post);
 
   const location = useLocation();
   const pending = location.state;

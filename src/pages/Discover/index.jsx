@@ -1,12 +1,16 @@
 import LoginBanner from "../../components/LoginBanner/LoginBanner";
 import RecipeCardList from "../../components/RecipeCardList/RecipeCardList";
+import Banner from "../../components/Banner/Banner";
 
 import { PostApi } from "../../api/PostApi";
 import { useKeycloak } from "@react-keycloak/web";
 import { useInfiniteQuery } from "react-query";
 
+
 const Discover = () => {
   const { keycloak } = useKeycloak();
+
+  const isLogin = keycloak.authenticated;
 
   const fetchRecipes = async ({ pageParam = 0
   , pageSize = 30
@@ -32,11 +36,15 @@ const Discover = () => {
     return <div>Loading...</div>;
   }
 
+  if (status === "error") {
+    return <div>Error fetching recipes</div>;
+  }
+
   const recipes = data?.pages.flatMap((page) => page);
 
   return (
     <>
-      <LoginBanner />
+      {isLogin ?  <LoginBanner /> :  <Banner />}
       <RecipeCardList props={recipes} pending={''} />
       {hasNextPage && (
         <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>

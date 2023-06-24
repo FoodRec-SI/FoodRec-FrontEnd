@@ -7,6 +7,7 @@ export const PostApi = {
   getPostById,
 };
 
+
 function getPosts(pageParam,pageSize,token){
   return instance.get(`/api/public/posts`, {
     params: { pageNumber : pageParam , pageSize  },
