@@ -22,7 +22,8 @@ import { CollectionApi } from "../../api/CollectionApi";
 import { useState, useRef, useEffect } from "react";
 
 import { PostApi } from "../../api/PostApi";
-import { useQuery , useMutation } from "react-query";
+import { LikeApi } from "../../api/LikeApi";
+import { useQuery , useMutation,useQueryClient } from "react-query";
 import { useKeycloak } from "@react-keycloak/web";
 
 const RecipeDetail = () => {
@@ -38,6 +39,7 @@ const RecipeDetail = () => {
   };
 
   const { data: post, status } = useQuery(["post", postId], fetchPostById);
+
 
   if (status === "success") {
     console.log(post);
@@ -58,6 +60,7 @@ const RecipeDetail = () => {
         isPending = true;
     }
 
+
   return (
     <div className="recipeDetail__wrapper">
       <div className="recipeDetailContainer">
@@ -67,6 +70,7 @@ const RecipeDetail = () => {
         )}
         {post && <div className="recipeDetail">
           <img src={post.image} alt="" />
+
           <Introduction ratingPoint={5} props={post} />
           <Ingredients />
           <Description props={post}/>
@@ -87,6 +91,7 @@ function Introduction({ props, ratingPoint }) {
   const { keycloak } = useKeycloak();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
+  const queryClient = useQueryClient();
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -145,7 +150,37 @@ function Introduction({ props, ratingPoint }) {
 
   const { mutate : addToCollection } = useMutation(handleAddToCollection);
 
+ 
+ 
 
+
+  const likePost = async () => {
+    const response = await LikeApi.likePost({
+      postId: props.postId,
+    } , keycloak.token);
+    return response.status;
+  };
+
+  const unlikePost = async () => {
+    const response = await LikeApi.unlikePost({
+      postId: props.postId,
+    } , keycloak.token);
+    return response.status;
+  };
+
+  const { mutate: like} = useMutation(likePost, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("likedRecipes");
+    },
+  });
+
+  const { mutate: unlike } = useMutation(
+    unlikePost,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("likedRecipes");
+      },
+    });
 
   return (
     <>
@@ -227,7 +262,17 @@ function Introduction({ props, ratingPoint }) {
             </Popper>
 
             <Tooltip title="Add to favorite" placement="top">
-              <IconButton aria-label="addToFavorite">
+              <IconButton aria-label="addToFavorite"
+              // onClick={() => {
+              //   if (props.isLiked === false) {
+              //     like();
+              //   } else {
+              //     unlike();
+              //   }
+              // }
+              // }
+              onClick={like}
+              >
                 <FavoriteBorderIcon fontSize="large" />
               </IconButton>
             </Tooltip>

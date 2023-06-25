@@ -7,10 +7,14 @@ export const PostApi = {
   getPostById,
 };
 
-//http://localhost:8080/api/public/posts?pageNumber=1&pageSize=6
 
-function getPosts(pageParam,pageSize){
-  return instance.get(`/api/public/posts?pageNumber=${pageParam}&pageSize=${pageSize}`);
+function getPosts(pageParam,pageSize,token){
+  return instance.get(`/api/public/posts`, {
+    params: { pageNumber : pageParam , pageSize  },
+    headers: {
+      Authorization: bearerAuth(token),
+    },
+  });
 }
 
 function getPostById(postId, token) {

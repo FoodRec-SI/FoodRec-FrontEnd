@@ -2,75 +2,45 @@
 import LikedRecipesList from '../../components/LikedRecipesList/LikedRecipesList';
 import PlayListHeader from '../../components/PlayListHeader/PlayListHeader';
 
+import { CollectionApi } from '../../api/CollectionApi';
+import { useQuery } from 'react-query';
+import { useKeycloak } from '@react-keycloak/web';
+import { useParams } from 'react-router-dom';
+
 
 const CollectionDetail = () => {
 
+ 
+  const { id } = useParams();
+  const { keycloak } = useKeycloak();
 
+  const fetchCollectionList = async ({
+    pageParam = 0,
+    pageSize = 10,
+  }) => {
+    const response = await CollectionApi.getPostFromCollection(id,pageParam,pageSize,keycloak.token);
+    console.log(response.data);
+    return response.data;
+  };
 
+  const { data : recipes, isLoading ,isError} = useQuery(
+    ["collection", id],
+    fetchCollectionList
+  );
 
+ 
 
-
-   const recipes = [
-    {
-      "name": "Recipe 1",
-      "author": "Author 1",
-      "cookingTime": "30 minutes",
-      "image": "/src/assets/healthyFood.jpg"
-    },
-    {
-      "name": "Recipe 2",
-      "author": "Author 2",
-      "cookingTime": "45 minutes",
-      "image": "/src/assets/healthyFood.jpg"
-    },
-    {
-      "name": "Recipe 3",
-      "author": "Author 3",
-      "cookingTime": "60 minutes",
-      "image": "/src/assets/healthyFood.jpg"
-    },
-    {
-      "name": "Recipe 4",
-      "author": "Author 1",
-      "cookingTime": "30 minutes",
-      "image": "/src/assets/healthyFood.jpg"
-    },
-    {
-      "name": "Recipe 5",
-      "author": "Author 2",
-      "cookingTime": "45 minutes",
-      "image": "/src/assets/healthyFood.jpg"
-    },
-    {
-      "name": "Recipe 6",
-      "author": "Author 3",
-      "cookingTime": "60 minutes",
-      "image": "/src/assets/healthyFood.jpg"
-    },
-    {
-      "name": "Recipe 7",
-      "author": "Author 1",
-      "cookingTime": "30 minutes",
-      "image": "/src/assets/healthyFood.jpg"
-    },
-    {
-      "name": "Recipe 8",
-      "author": "Author 2",
-      "cookingTime": "45 minutes",
-      "image": "/src/assets/healthyFood.jpg"
-    },
-    {
-      "name": "Recipe 9",
-      "author": "Author 3",
-      "cookingTime": "60 minutes",
-      "image": "/src/assets/healthyFood.jpg"
-    }
-  ];
 
   return ( 
     <div className='like-page-container'>
-      <PlayListHeader />
-      <LikedRecipesList recipes={recipes} />
+      <PlayListHeader id = {id} recipes ={recipes}/>
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : isError ? (
+        <p>There is no recipe in this collection</p>
+      ) : (
+          <LikedRecipesList recipes={recipes.postDTOS.content} id={id} />
+      )}
     </div>
    );
 }

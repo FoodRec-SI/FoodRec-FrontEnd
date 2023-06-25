@@ -18,13 +18,9 @@ function RecipeCard({props,pending}) {
         }
     }
 
-    // src='./src/assets/healthyFood.jpg'
-    // src={`"data:image/png;base64, ${props.image}"`}
-
     return (
         <div key={props.key} className={"recipeCard" + pending} onClick={handleClick}>
             <img src={props.image} alt="" loading="lazy" />
-            {/* <img src='./src/assets/healthyFood.jpg' alt="" loading="lazy" /> */}
             <div className={"recipeCard__info" + pending}>
                 <h3>{props.recipeName}</h3>
                 <p>{props.description}</p>
