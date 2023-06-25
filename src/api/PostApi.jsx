@@ -18,7 +18,7 @@ function getPosts(pageParam,pageSize,token){
 }
 
 function getPostById(postId, token) {
-  return instance.get(`/api/member/${postId}`, {
+  return instance.get(`/api/member/post/${postId}`, {
     headers: {
       Authorization: bearerAuth(token),
     },

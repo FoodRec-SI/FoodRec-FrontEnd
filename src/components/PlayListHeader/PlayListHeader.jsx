@@ -68,8 +68,6 @@ const PlayListHeader = (props) => {
     },
   });
 
-  
-
   return (
     <div className="playlist-header">
       <div className="playlist-wrapper">
@@ -77,11 +75,11 @@ const PlayListHeader = (props) => {
           <div className="playlist-header-image">
             <img src="/src/assets/healthyFood.jpg" alt="" />
           </div>
-          <div className="playlist-header-title">Liked Recipes</div>
+          <div className="playlist-header-title">{props.recipes ? props.recipes.collectionName : 0}</div>
           <div className="playlist-detail">
             <div className="playlist-sub-detail">
               <div className="playlist-owner">User...</div>
-              <div className="playlist-header-subtitle">3 recipes</div>
+              <div className="playlist-header-subtitle"> {props.recipes ? props.recipes.postDTOS.totalElements + " recipes" : 0}</div>
             </div>
             <div>
               <button className="playlist-menu-button"

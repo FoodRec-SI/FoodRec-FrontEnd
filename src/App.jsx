@@ -1,6 +1,6 @@
 import "./App.css";
 import { useState } from "react";
-import Sidebar from "./components/Sidebar/Sidebar";
+import Sidebar from "./components/sidebar/Sidebar";
 import Navbar from "./components/Navbar/Navbar";
 import { BrowserRouter } from "react-router-dom";
 import AppRoutes from "./pages/routes";
@@ -26,6 +26,7 @@ function App() {
           <Navbar title={title} />
         </div>
         <div className="sidebar">
+          
           <Sidebar setTitle={setTitle} />
         </div>
         <div className="content">

@@ -50,7 +50,8 @@ const CollectionCards = () => {
     return response.data.content;
   };
 
-  const { data : items , status, refetch } = useQuery("collections", fetchCollections);
+  const { data : items , status, refetch } = useQuery("collections", fetchCollections,
+  );
 
   if (status === "loading") {
     return <div>Loading...</div>;
