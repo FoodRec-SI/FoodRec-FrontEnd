@@ -21,10 +21,6 @@
     background-color: white;
 }
 
-.import-form__title__buttons span{
-    /* margin: 20px; */
-}
-
 .import-form__Detail{
     padding-top: 20px;;
 }
@@ -34,24 +30,6 @@
     font-weight: lighter;
     margin: 0px 0px 15px 0px;
 }
-
-/* .import-form__Detail__RecipeImage__upload{
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    padding: 10px;
-    
-}
-
-.import-form__Detail__RecipeImage__upload p{
-    max-width: 400px;
-    white-space: wrap;
-    color: #ccc;
-} */
 
 .import-form__Detail__RecipeImage__upload__preview{
     max-width: 700px;
@@ -94,23 +72,37 @@
 }
 
 .import-form__Detail__RecipeImage__upload__preview__dragArea__clearImg{
-    position: relative;
+    /* position: relative;
     top: -382px;
     left: 610px;
     cursor: pointer;
-    z-index: 1;
+    z-index: 1; */
+    margin : 0 auto;
 }
 
-.stepGenerate{
+
+.import-form__Detail__Ingredient__list{
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    align-items: center;
+    padding: 0;
     width: 90%;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    padding: 10px;
-    
+    border: #aaa9a9 1.5px solid;
+    border-radius: 8px;
+    height: 50px;
 }
+
+.import-form__Detail__Ingredient__list__display{
+    width: 60%;
+    margin: 0 auto;
+}
+
+.import-form__Detail__Ingredient__list__display__item{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0 10px;
+    border-bottom: 1px solid #ccc;
+}
+
     
 

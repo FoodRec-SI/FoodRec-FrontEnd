@@ -12,10 +12,11 @@ const postStatus = {
 
 
 function getPendingRecipes(token) {
-    return instance.get(`/moderator/posts`, {
+    return instance.get(`api/moderator/posts`, {
         headers: {
             Authorization: bearerAuth(token),
         },
+        method: "POST",
         params: {
             postStatuses: postStatus.PENDING
         }
@@ -23,8 +24,9 @@ function getPendingRecipes(token) {
 }
 
 const instance = axios.create({
-    baseURL: import.meta.env.VITE_POST_API_URL,
+    baseURL: import.meta.env.VITE_API_URL,
 });
+
 
 instance.interceptors.response.use(response => {
     return response;

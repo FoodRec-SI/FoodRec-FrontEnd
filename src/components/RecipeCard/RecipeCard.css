@@ -4,12 +4,12 @@
 
 .recipeCard {
   height: fit-content;
-  max-width: calc(var(--scale)*250px) ;
+  width: calc(var(--scale)*250px) ;
   margin: calc(var(--scale)*20px);
-  border-radius:  16px
+  border-radius:  16px;
   
   /* border: 1px solid #000000; */
-  /* border: 1px solid #A29E9E ; */
+  border: 1px solid #A29E9E ;
 }
 
 .recipeCard:hover {
@@ -23,9 +23,11 @@
 }
 
 .recipeCard img {
-  max-width: calc(var(--scale)*250px);
-  max-height: 100%;
+  width: 100%;
+  max-height: calc(var(--scale)*160px);
   border-radius: 10px;
+  object-fit: cover;
+  object-position: center;
 }
 
 .recipeCard p {

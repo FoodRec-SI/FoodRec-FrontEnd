@@ -6,7 +6,11 @@ import Dialog from '@mui/material/Dialog';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
+import { ApproveRejectApi } from '../../api/ApproveRejectApi';
+import { useQuery, useMutation , QueryClient} from 'react-query';
+import { useKeycloak } from "@react-keycloak/web";
 
 import './PendingRecipeDetail.css';
 
@@ -14,29 +18,50 @@ import './PendingRecipeDetail.css';
 
 const PendingRecipeDetail = () => {
 
+    const queryClient = new QueryClient();
+
     const navigate = useNavigate();
+
+    const [state, setState] = useState('');
 
     const [selectedValue, setSelectedValue] = useState([]);
 
-    const handleApproveAndReject = async (status) => {
-        let state = status;
+    const { keycloak } = useKeycloak();
 
-        if (state === 'approve') {
+    const [isApprove, setIsApprove] = useState('APPROVED');
 
-            // Process for approve goes here
+    const postId = 'POS000007';
+
+    const { mutate, isSuccess} = useMutation({
+        mutationFn: async () => {
+            const data = await ApproveRejectApi.updateStatusPost({postId, isApprove}, keycloak.token );
+            console.log(data);
+            return data;
+        },
+        onSuccess: () => {
+            console.log('success update');
+            queryClient.invalidateQueries('pendingRecipes');
+            queryClient.refetchQueries;
             navigate('/pendingRecipe', { state: state });
+        },
+        onError: () => {
+            console.log('error update');
         }
+    });
 
+    const handleApproveAndReject = async (status) => {
+        setState(status);
+        if (state === 'approve') {
+            mutate();
+        }
         if (state === 'reject') {
             try {
                 await new Promise((resolve) => {
                     document.getElementById('openDialog').click();
-
                 });
             } catch (error) {
                 // Handle any errors that occur during the rejection process
                 console.error('Error occurred during rejection:', error);
-
             }
 
         }
@@ -48,8 +73,10 @@ const PendingRecipeDetail = () => {
 
         if (value.length != 0) {
             setSelectedValue(filteredValue);
-            console.log(filteredValue);
+            setIsApprove('reject');
+            console.log(filteredValue);      
             navigate('/pendingRecipe', { state: 'reject' });
+            
         }
     };
 
@@ -71,9 +98,6 @@ const PendingRecipeDetail = () => {
                 </Button>
             </div>
             <DialogPending handleClose={handleClose} selectedValue={selectedValue} />
-            {/* <NavLink to='/pendingRecipe' className="pendingPage__button" >
-                <button id='navigateButton' style={{ display: "none" }}></button>
-            </NavLink> */}
         </div>
 
     );

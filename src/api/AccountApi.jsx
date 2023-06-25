@@ -5,6 +5,8 @@ export const AccountApi = {
   createAccount,
 }
 
+//http://localhost:8080/api/private/account/create
+
 function createAccount(token) {
   return instance.get(`/api/private/account/create`,  {
     headers: {
