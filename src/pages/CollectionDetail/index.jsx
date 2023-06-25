@@ -19,8 +19,8 @@ const CollectionDetail = () => {
     pageSize = 10,
   }) => {
     const response = await CollectionApi.getPostFromCollection(id,pageParam,pageSize,keycloak.token);
-    console.log(response);
-    return response.data.content;
+    console.log(response.data);
+    return response.data;
   };
 
   const { data : recipes, isLoading ,isError} = useQuery(
@@ -33,13 +33,13 @@ const CollectionDetail = () => {
 
   return ( 
     <div className='like-page-container'>
-      <PlayListHeader id = {id}/>
+      <PlayListHeader id = {id} recipes ={recipes}/>
       {isLoading ? (
         <p>Loading...</p>
       ) : isError ? (
         <p>There is no recipe in this collection</p>
       ) : (
-          <LikedRecipesList recipes={recipes} id={id} />
+          <LikedRecipesList recipes={recipes.postDTOS.content} id={id} />
       )}
     </div>
    );

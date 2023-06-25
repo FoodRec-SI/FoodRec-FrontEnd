@@ -36,7 +36,7 @@ function deletePostFromCollection(data,token) {
 }
 
 function getPostFromCollection(collectionId,pageParam,pageSize,token) {
-  return instance.get(`/api/member/posts/${collectionId}`,
+  return instance.get(`/api/member/collection/${collectionId}`,
     {
       params: { pageNumber : pageParam,
                 pageSize : pageSize},
