@@ -11,7 +11,7 @@ const Discover = () => {
   const fetchRecipes = async ({ pageParam = 0
   , pageSize = 30
   }) => {
-    const response = await PostApi.getPosts(pageParam, pageSize, keycloak.token);
+    const response = await PostApi.getPosts(pageParam, pageSize);
     return response.data.content;
   };
 
@@ -33,6 +33,7 @@ const Discover = () => {
   }
 
   const recipes = data?.pages.flatMap((page) => page);
+  console.log(recipes)
 
   return (
     <>

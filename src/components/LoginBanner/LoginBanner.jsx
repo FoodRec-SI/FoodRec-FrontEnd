@@ -19,13 +19,13 @@ const LoginBanner = () => {
 
   const { status , data : items } = useQuery('items' , fetchTags);
 
-  if (status === 'loading') {
-    return <div>Loading...</div>
-  }
+  // if (status === 'loading') {
+  //   return <div>Loading...</div>
+  // }
 
-  if (status === 'error') {
-    return <div>No Tags Found</div>
-  }
+  // if (status === 'error') {
+  //   return <div>No Tags Found</div>
+  // }
 
 
   const onItemClick = (item) => {
@@ -46,7 +46,7 @@ const LoginBanner = () => {
         </div>
       </div>
       <div className="block"></div>
-      <ChipsBanner items={items} onItemClick={onItemClick} />
+      {items && <ChipsBanner items={items} onItemClick={onItemClick} />}
     </div>
   );
 };

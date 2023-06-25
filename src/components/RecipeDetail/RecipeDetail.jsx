@@ -26,7 +26,6 @@ import { useQuery , useMutation } from "react-query";
 import { useKeycloak } from "@react-keycloak/web";
 
 const RecipeDetail = () => {
-  let imageFood = "/src/assets/healthyFood.jpg";
 
   const { keycloak } = useKeycloak();
   const { postId } = useParams();
@@ -41,7 +40,7 @@ const RecipeDetail = () => {
   const { data: post, status } = useQuery(["post", postId], fetchPostById);
 
   if (status === "success") {
-    
+    console.log(post);
   }
 
   if (status === "error") {
@@ -66,20 +65,20 @@ const RecipeDetail = () => {
           // <DialogPending ref={dialogRef} navigate={navigate} />
           <PendingRecipeDetail />
         )}
-        <div className="recipeDetail">
-          <img src={imageFood} alt="" />
+        {post && <div className="recipeDetail">
+          <img src={post.image} alt="" />
           <Introduction ratingPoint={5} props={post} />
           <Ingredients />
-          <Description />
+          <Description props={post}/>
           <Instruction />
           <div className="recipeDetail__rating">
             <RatingArea />
           </div>
-        </div>
+        </div>}
       </div>
-      <div className="recommendRecipe">
+      {isPending === false && <div className="recommendRecipe">
         <RecommendeRcipe />
-      </div>
+      </div>}
     </div>
   );
 };
@@ -241,8 +240,8 @@ function Introduction({ props, ratingPoint }) {
           </div>
           <div className="recipeStatistic">
             <Statistic amount={9} nameOfStatisic="ingredients" />
-            <Statistic amount={30} nameOfStatisic="minutes" />
-            <Statistic amount={250} nameOfStatisic="calories" />
+            <Statistic amount={props.duration} nameOfStatisic="minutes" />
+            <Statistic amount={props.calories} nameOfStatisic="calories" />
           </div>
         </div>
       )}
@@ -297,14 +296,11 @@ function Ingredients() {
   );
 }
 
-function Description() {
-  let description =
-    "Ive rented a car in Las Vegas and have reserved a hotel in Twentynine Palms which is just north of Joshua Tree. Well drive from Las Vegas through Mojave National Preserve and possibly do a short hike on our way down. Then spend all day on Monday at Joshua Tree. We can decide the next morning if we want to do more in Joshua Tree or Mojave before we head back.";
-
+function Description({props}) {
   return (
     <div className="description">
       <h1>Description</h1>
-      <p>{description}</p>
+      {props && <p>{props.description}</p>}
     </div>
   );
 }

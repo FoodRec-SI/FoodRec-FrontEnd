@@ -36,28 +36,22 @@ const Navbar = ({ title }) => {
       <Navigate to="/" />
     } else {
       keycloak.login();
+      <Navigate to="/" />
     }
   };
 
   const createAccount = async () => {
     const response = await AccountApi.createAccount(keycloak.token)
+    if(response.status === 409){
+      console.log("Account already exists");
+    }
     if (response.status === 200) {
       return response.status;
     }
-  }
-
-  const { status } = useQuery('createAccount', createAccount);
-
-<<<<<<< HEAD
-  if (status === 'success') {
     
   }
 
-=======
->>>>>>> main
-  if (status === 'error') {
-    console.log('error')
-  }
+  const { status } = useQuery('createAccount', createAccount);
 
   const getLogInOutText = () => {
     return keycloak.authenticated ? "Logout" : "Sign in";

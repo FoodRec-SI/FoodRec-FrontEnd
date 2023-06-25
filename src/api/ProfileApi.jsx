@@ -1,20 +1,23 @@
 import axios from "axios";
 
-export const PersonalRecipeApi = {
-    getPersonalRecipe,
+export const ProfileApi = {
+    getProfile,
+    updateProfile,
 }
 
-
-//api/member/recipe?pageNumber=0&pageSize=6
-function getPersonalRecipe(token) {
-    return instance.get(`/api/member/recipe`, {
+function getProfile(token, userId) {
+    return instance.get(`/api/member/account/${userId}`, {
         headers: {
             Authorization: bearerAuth(token),
         },
-        params: {
-            pageNumber: 1,
-            pageSize: 6
-        }
+    });
+}
+
+function updateProfile(token, profile) {
+    return instance.put(`/api/member/profile`, profile, {
+        headers: {
+            Authorization: bearerAuth(token),
+        },
     });
 }
 
@@ -40,4 +43,3 @@ instance.interceptors.response.use(response => {
 function bearerAuth(token) {
     return `Bearer ${token}`;
 }
-
