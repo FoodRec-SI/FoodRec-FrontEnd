@@ -13,7 +13,8 @@
 
 .rating_area_yourPoint{
     display: flex;
-    align-items: center;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .rating_area_yourPoint h6{

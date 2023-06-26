@@ -93,10 +93,10 @@ const instance = axios.create({
 instance.interceptors.response.use(response => {
   return response;
 }, function (error) {
-  if (error.response.status === 404) {
-    return { status: error.response.status };
-  }
-  return Promise.reject(error.response);
+  // if (error.response.status === 404) {
+  //   return { status: error.response.status };
+  // }
+  // return Promise.reject(error.response);
 });
 
 
