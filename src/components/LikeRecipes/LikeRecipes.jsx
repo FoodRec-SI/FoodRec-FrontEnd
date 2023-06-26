@@ -22,11 +22,11 @@ const LikeRecipes = () => {
     );
 
 
-      
+      console.log(recipes);
     
       return (
         <div className='like-page-container'>
-          <PlayListHeader />
+          <PlayListHeader likerecipes = {recipes}/>
           {isLoading ? (
         <p>Loading...</p>
       ) : isError ? (

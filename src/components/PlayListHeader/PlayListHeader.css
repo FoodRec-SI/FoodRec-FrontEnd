@@ -1,17 +1,11 @@
 .playlist-header {
   margin-left: 24px;
-  height: 790px;
+  height: calc(100vh - 90px);
   flex: 1;
   border-radius: 16px;
   position: sticky;
   top: 72px;
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
-  background: linear-gradient(
-    to bottom,
-    rgba(222, 220, 255, 0.8) 0%,
-    rgba(232, 255, 244, 0.298) 33%,
-    rgb(252, 252, 255) 100%
-  );
 }
 
 .playlist-not-scroll {
@@ -40,8 +34,8 @@
 
 .playlist-header-title {
   font-family: "YouTube Sans", "Roboto", sans-serif;
-  font-size: 2.5rem;
-  line-height: 3.8rem;
+  font-size: 2rem;
+  line-height: 3rem;
   font-weight: 700;
   color: #030303;
   white-space: pre-line;
