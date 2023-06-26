@@ -52,7 +52,11 @@ const CollectionCards = () => {
 
   const { data : items , status, refetch } = useQuery(
     "collections", 
-    fetchCollections
+    fetchCollections,
+    {
+      refetchOnWindowFocus: false,
+      staleTime: 1000 * 60 * 5,
+    }
   );
 
   if (status === "loading") {

@@ -42,7 +42,7 @@ const RecipeDetail = () => {
 
 
   if (status === "success") {
-    console.log(post);
+    
   }
 
   if (status === "error") {

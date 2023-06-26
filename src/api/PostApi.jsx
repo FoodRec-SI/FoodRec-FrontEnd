@@ -8,12 +8,9 @@ export const PostApi = {
 };
 
 
-function getPosts(pageParam,pageSize,token){
+function getPosts(pageParam,pageSize){
   return instance.get(`/api/public/posts`, {
     params: { pageNumber : pageParam , pageSize  },
-    headers: {
-      Authorization: bearerAuth(token),
-    },
   });
 }
 
