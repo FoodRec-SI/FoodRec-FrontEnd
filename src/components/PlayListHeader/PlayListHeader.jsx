@@ -70,12 +70,15 @@ const PlayListHeader = (props) => {
 
   const subtitle = props.recipes ? `${props.recipes && props.recipes.postDTOS.totalElements} recipes` : `${props.likerecipes && props.likerecipes.length} recipes`;
 
+
+ 
+
   return (
     <div className="playlist-header">
       <div className="playlist-wrapper">
         <div className="playlist-not-scroll">
           <div className="playlist-header-image">
-            <img src="/src/assets/healthyFood.jpg" alt="" />
+            <img src= "/src/assets/healthyFood.jpg" alt="" />
           </div>
           <div className="playlist-header-title">{props.recipes ? props.recipes.collectionName : "Liked Recipe"}</div>
           <div className="playlist-detail">

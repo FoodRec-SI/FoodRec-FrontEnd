@@ -36,7 +36,7 @@ const SearchPage = () => {
   }
 
   return ( 
-    <div className="page-container">
+    <div>
       <RecipeCardList props={recipes} pending="" />
     </div>
    );

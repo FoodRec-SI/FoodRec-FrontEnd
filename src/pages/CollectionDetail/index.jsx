@@ -35,9 +35,13 @@ const CollectionDetail = () => {
     <div className="like-page-container">
       <PlayListHeader id={id} recipes={recipes} />
       {isLoading ? (
+         <div className="liked-recipe-list-container">
         <p>Loading...</p>
+      </div>
       ) : isError || (recipes && recipes.postDTOS.content.length === 0) ? (
+        <div className="liked-recipe-list-container">
         <p>There are no recipes in this collection</p>
+      </div>
       ) : (
         <LikedRecipesList recipes={recipes.postDTOS.content} id={id} />
       )}
