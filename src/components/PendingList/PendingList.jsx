@@ -24,6 +24,7 @@ const PendingList = () => {
         queryKey: ["pendingRecipes"],
         queryFn: async () => {
             const data = await PendingApi.getPendingRecipes(keycloak.token);
+            console.log(data);
             return data;
         },
     });
