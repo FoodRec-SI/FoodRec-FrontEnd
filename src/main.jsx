@@ -5,7 +5,8 @@ import "./index.css";
 import { ReactKeycloakProvider } from "@react-keycloak/web";
 import keycloak from "./keycloak.jsx";
 import { CircularProgress, Box } from "@mui/material";
-
+import { QueryClient, QueryClientProvider } from "react-query";
+import {ReactQueryDevtools} from 'react-query/devtools'
 
 
 const initOptions = {
@@ -26,11 +27,16 @@ const loadingComponent = (
 );
 
 console.log(keycloak);
+const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <ReactKeycloakProvider authClient={keycloak} initOptions={initOptions} LoadingComponent={loadingComponent}>
     <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
       <App />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
     </React.StrictMode>
+    
   </ReactKeycloakProvider>
 );

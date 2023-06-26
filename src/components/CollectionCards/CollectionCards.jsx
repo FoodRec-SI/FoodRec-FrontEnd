@@ -40,7 +40,6 @@ const CollectionCards = () => {
   const {mutate : addCollection} = useMutation(handleSave, {
     onSuccess: () => {
       queryClient.invalidateQueries('collections')
-      refetch();
     }
   })
 
@@ -50,7 +49,7 @@ const CollectionCards = () => {
     return response.data.content;
   };
 
-  const { data : items , status, refetch } = useQuery(
+  const { data : items , status } = useQuery(
     "collections", 
     fetchCollections,
     {

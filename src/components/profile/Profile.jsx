@@ -51,7 +51,7 @@ const Profile = () => {
         e.preventDefault();
     };
 
-    const { data : recipeTags} = useQuery({
+    const { data: recipeTags } = useQuery({
         queryKey: ["tags"],
         queryFn: async () => {
             const data = await TagApi.getTags(keycloak.token);
@@ -184,12 +184,12 @@ const Profile = () => {
             // Handle error
         }
     };
-    const { onSuccess, mutate } = useMutation(
+    const { onSuccess, mutate: updateProfileMutate } = useMutation(
         handleUpdateProfile,
         {
             onSuccess: () => {
                 // queryClient.invalidateQueries('profile')
-                refetch();
+                refetchProfile();
             }
         }
     )
@@ -209,7 +209,23 @@ const Profile = () => {
 
             <PButton label="Save" icon="pi pi-check"
                 onClick={() => {
-                    mutate()
+                    updateProfileMutate()
+                }}
+                autoFocus />
+        </div>
+    )
+
+    const footerTagEdit = (
+        <div style={{ paddingTop: "20px" }}>
+            <PButton label="Save" icon="pi pi-check"
+                onClick={() => {
+                    // mutate()
+                    setShowTagEdit(false);
+                    document.querySelector('body').style.overflow = 'scroll';
+                    
+                    const tagIds = getMatchingTagIds(selectedTags, recipeTags.data);
+                    console.log(tagIds);
+
                 }}
                 autoFocus />
         </div>
@@ -217,7 +233,7 @@ const Profile = () => {
 
     const userId = keycloak.tokenParsed.sub;
 
-    const { data: profileData, refetch, isSuccess } = useQuery({
+    const { data: profileData, refetch:refetchProfile, isSuccess } = useQuery({
         queryKey: ["profile"],
         queryFn: async () => {
             const data = await ProfileApi.getProfile(keycloak.token, userId);
@@ -226,7 +242,7 @@ const Profile = () => {
     });
 
     const temp = profileData?.data.tagsCollection?.map((tag) => tag.tagName);
-    
+
 
     const { data, isLoading, isError } = useQuery({
         queryKey: ["personalRecipes"],
@@ -239,6 +255,17 @@ const Profile = () => {
     const handleAddRecipeNavigate = () => {
         navigate('/AddRecipe');
     }
+
+    const getMatchingTagIds = (tagNames, tagObjects) => {
+        const matchingTagIds = [];
+        for (let i = 0; i < tagObjects.length; i++) {
+          const tagObject = tagObjects[i];
+          if (tagNames.includes(tagObject.tagName)) {
+            matchingTagIds.push(tagObject.tagId);
+          }
+        }
+        return matchingTagIds;
+      }
 
     return (
         <>
@@ -268,8 +295,10 @@ const Profile = () => {
                                 icon='pi pi-pencil'
                                 rounded
                                 outlined
-                                onClick={() => { setShowTagEdit(true),setSelectedTags(temp),
-                                    document.querySelector('body').style.overflow = 'hidden'}}
+                                onClick={() => {
+                                    setShowTagEdit(true), setSelectedTags(temp),
+                                    document.querySelector('body').style.overflow = 'hidden'
+                                }}
                             ></PButton>
                         </div>
                         <h6>What do you like ?</h6>
@@ -363,17 +392,26 @@ const Profile = () => {
                     </div>
                 </div>
             </Dialog>
-            <Dialog modal="true" blockScroll="true" header="Custom your tag" visible={showTagEdit} style={{ width: '60vw' }} onHide={() => { setShowTagEdit(false),document.querySelector('body').style.overflow = 'scroll',setSelectedTags(temp)}}>             
-                    <MultiSelect
+            <Dialog 
+            modal="true" 
+            blockScroll="true" 
+            header="Custom your tag" 
+            visible={showTagEdit} 
+            style={{ width: '60vw' }} 
+            onHide={() => { setShowTagEdit(false), document.querySelector('body').style.overflow = 'scroll', setSelectedTags(temp) }}
+            footer={footerTagEdit}
+            >
+                <MultiSelect
                     style={{ width: "100%" }}
                     value={selectedTags}
-                    options={tags} onChange={(e) => setSelectedTags(e.value)}
+                    options={tags} 
+                    onChange={(e) => setSelectedTags(e.value)}
                     display="chip"
                     required
                     placeholder="Select Tags"
                     filter
                     filterInputAutoFocus
-                    />
+                />
             </Dialog>
         </>
     );
