@@ -9,10 +9,11 @@ import MenuList from "@mui/material/MenuList";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
+import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import { useKeycloak } from "@react-keycloak/web";
 import { useMutation } from "react-query";
 import { CollectionApi } from "../../api/CollectionApi";
+import { LikeApi } from "../../api/LikeApi";
 import { useQueryClient } from "react-query";
 
 const LikedRecipe = (props) => {
@@ -50,34 +51,50 @@ const LikedRecipe = (props) => {
     prevOpen.current = open;
   }, [open]);
 
-
-
   const { keycloak } = useKeycloak();
   const queryClient = useQueryClient();
 
   const handleDeletePost = async () => {
     const collectionId = props.collectionId;
     const postId = props.postId;
-    const response = await CollectionApi.deletePostFromCollection({ collectionId,postId },keycloak.token);
+    const response = await CollectionApi.deletePostFromCollection(
+      { collectionId, postId },
+      keycloak.token
+    );
     if (response.status === 200) {
       return response.status;
     }
-  }
+  };
 
-  const { mutate : deletePostInCollection , status } = useMutation(handleDeletePost,
+  const { mutate: deletePostInCollection, status } = useMutation(
+    handleDeletePost,
     {
       onSuccess: () => {
-          queryClient.invalidateQueries('collection');
-      }
+        queryClient.invalidateQueries("collection");
+        
+      },
     }
-    );
+  );
 
-  if (status === 'error') {
-    console.log('error')
+  if (status === "error") {
+    console.log("error");
   }
 
+  const unlikePost = async () => {
+    const response = await LikeApi.unlikePost(
+      {
+        postId: props.postId,
+      },
+      keycloak.token
+    );
+    return response.status;
+  };
 
-
+  const { mutate: unlike } = useMutation(unlikePost, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("likedRecipes");
+    },
+  });
 
   return (
     <div className="liked-container">
@@ -134,7 +151,15 @@ const LikedRecipe = (props) => {
                     aria-labelledby="composition-button"
                     onKeyDown={handleListKeyDown}
                   >
-                    <MenuItem onClick= {deletePostInCollection}>
+                    <MenuItem
+                      onClick={() => {
+                        if (props.collectionId) {
+                          deletePostInCollection();
+                        } else {
+                          unlike();
+                        }
+                      }}
+                    >
                       <ListItemIcon>
                         <DeleteForeverOutlinedIcon fontSize="small" />
                       </ListItemIcon>
@@ -145,7 +170,7 @@ const LikedRecipe = (props) => {
                         <ShareOutlinedIcon fontSize="small" />
                       </ListItemIcon>
                       Share
-                      </MenuItem>
+                    </MenuItem>
                   </MenuList>
                 </ClickAwayListener>
               </Paper>
@@ -168,7 +193,7 @@ const LikedRecipeList = (props) => {
           postId={recipe.postId}
           name={recipe.recipeName}
           author={recipe.userId}
-          cookingTime={recipe.duration} 
+          cookingTime={recipe.duration}
           image={recipe.image}
         />
       ))}

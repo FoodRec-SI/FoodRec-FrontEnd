@@ -135,18 +135,19 @@ function Introduction({ props, ratingPoint }) {
 
   const { data: items } = useQuery("collections", fetchCollections);
 
-  const inputRef = useRef(null);
 
-  const handleAddToCollection = async () => {
+  const handleAddToCollection = async (collectionId) => {
     
     const response = await CollectionApi.addPostToCollection(
       {
-        collectionId : inputRef.current.dataset.value,
+        collectionId : collectionId,
         postId: props.postId,
       },
       keycloak.token)
     console.log(response);
   };
+
+  
 
   const { mutate : addToCollection } = useMutation(handleAddToCollection);
 
@@ -242,11 +243,9 @@ function Introduction({ props, ratingPoint }) {
                       >
                         {items.map((item) => (
                           <MenuItem
-                            ref={inputRef}
-                            data-value={item.collectionId}
                             key={item.collectionId}
                             onClick={() => {
-                              addToCollection();
+                              addToCollection(item.collectionId);
                               handleClose();
                             }
                             }

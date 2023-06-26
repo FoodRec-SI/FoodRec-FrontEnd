@@ -17,7 +17,7 @@ const LoginBanner = () => {
     return response.data;
   }
 
-  const { status , data : items } = useQuery('items' , fetchTags);
+  const { data : items } = useQuery('items' , fetchTags);
 
   // if (status === 'loading') {
   //   return <div>Loading...</div>
