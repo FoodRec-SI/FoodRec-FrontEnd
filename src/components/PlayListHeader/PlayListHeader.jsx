@@ -68,6 +68,8 @@ const PlayListHeader = (props) => {
     },
   });
 
+  const subtitle = props.recipes ? `${props.recipes && props.recipes.postDTOS.totalElements} recipes` : `${props.likerecipes && props.likerecipes.length} recipes`;
+
   return (
     <div className="playlist-header">
       <div className="playlist-wrapper">
@@ -75,14 +77,17 @@ const PlayListHeader = (props) => {
           <div className="playlist-header-image">
             <img src="/src/assets/healthyFood.jpg" alt="" />
           </div>
-          <div className="playlist-header-title">{props.recipes ? props.recipes.collectionName : 0}</div>
+          <div className="playlist-header-title">{props.recipes ? props.recipes.collectionName : "Liked Recipe"}</div>
           <div className="playlist-detail">
             <div className="playlist-sub-detail">
               <div className="playlist-owner">User...</div>
-              <div className="playlist-header-subtitle"> {props.recipes ? props.recipes.postDTOS.totalElements + " recipes" : 0}</div>
+              <div className="playlist-header-subtitle"> 
+              {/* {props.recipes ? props.recipes.postDTOS.totalElements + " recipes" : props.likerecipes.length + " recipes"} */}
+              {subtitle}
+              </div>
             </div>
             <div>
-              <button className="playlist-menu-button"
+              <button className={`playlist-menu-button ${props.likerecipes ? 'hidden' : ''}`}
               ref={anchorRef}
               id="composition-button"
               aria-controls={open ? "composition-menu" : undefined}
@@ -129,6 +134,9 @@ const PlayListHeader = (props) => {
             </Grow>
           )}
         </Popper>
+            </div>
+            <div className="playlist-description">
+              {props.recipes ? "hahaha" : ""}
             </div>
           </div>
         </div>

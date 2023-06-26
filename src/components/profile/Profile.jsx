@@ -97,7 +97,7 @@ const Profile = () => {
                                 Add your recipe
                             </Button>
                         </div>
-                        {data && <RecipeCardList props={data.data.content} pending="" />}
+                        {/* {data && <RecipeCardList props={data.data.content} pending="" />} */}
                     </div>
                 </div>
             </div>}
