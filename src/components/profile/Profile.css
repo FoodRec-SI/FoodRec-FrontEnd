@@ -42,8 +42,8 @@
 }
 
 .profile__cover__avatar img{
-    width: 200px;
-    height: 200px;
+    width: 210px;
+    height: 210px;
     border-radius: 50%;
     border: 10px solid white;
     background-color: white;
@@ -213,11 +213,19 @@
     width: 80%;
 }
 
-@media (max-width: 768px) {
+.multiSelectTag .p-multiselect-label{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+@media (max-width: 870px) {
 
     .profile__cover img{
         height: 100%;
+        margin-top: 0px;
     }
+
 
     .profile__cover__avatar{
         display: flex;
@@ -228,12 +236,17 @@
 
     .profile__cover__avatar img{
         margin: 0;
-        margin-top: -100px;
+        margin-top: -50px;
+        width: 170px;
+        height: 170px;
     }
 
     .profile__cover__name{
         font-size: 20px;
         padding: 10px;
+        margin: 0;
+        align-items: center;
+        justify-content: center;
     }
 
     .profile__cover__editBtn{
