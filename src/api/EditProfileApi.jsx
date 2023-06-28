@@ -2,6 +2,7 @@ import axios from "axios";
 
 export const EditProfileApi = {
     updateProfile,
+    updateProfileTag
 }
 
 const baseURL = import.meta.env.VITE_API_URL;
@@ -17,25 +18,16 @@ function updateProfile(data, token) {
     });
 }
 
-// function updateProfile(data, token) {
-//     const formData = new FormData();
-//     formData.append("description", data.description);
-//     if (data.profileImage) {
-//       formData.append("profileImage", data.profileImage);
-//     }
-//     if (data.backgroundImage) {
-//       formData.append("backgroundImage", data.backgroundImage);
-//     }
-  
-//     return axios.put(`${baseURL}/api/member/account/update`, formData, {
-//       headers: {
-//         Authorization: bearerAuth(token),
-//         "Content-Type": "multipart/form-data",
-//       },
-//     });
-//   }
-
-// -- Axios 
+function updateProfileTag(data, token) {
+        return instance.post(`/api/member/account/tags?${data}`,'"', {
+        headers: {
+            Authorization: bearerAuth(token),
+        },
+        // params: {
+        //     tagIds: data
+        // }
+    });
+}
 
 const instance = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
