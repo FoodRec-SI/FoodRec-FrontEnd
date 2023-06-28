@@ -24,8 +24,6 @@ const LikeRecipes = () => {
     isError,
   } = useQuery("likedRecipes", fetchLikedRecipes);
 
-  console.log(recipes);
-
   return (
     <div className="like-page-container">
       <PlayListHeader likerecipes={recipes} />
@@ -33,7 +31,7 @@ const LikeRecipes = () => {
         <div className="liked-recipe-list-container">
           <p>Loading...</p>
         </div>
-      ) : isError ? (
+      ) : isError|| (recipes && recipes.length === 0) ? (
         <div className="liked-recipe-list-container">
           <p>There is no recipe in this like page</p>
         </div>

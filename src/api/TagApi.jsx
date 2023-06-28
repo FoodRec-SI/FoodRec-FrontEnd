@@ -4,7 +4,7 @@ import axios from "axios"
 export const TagApi = {
   getTags,
   getPostByTag,
-  
+  getTagsByRecipe
 }
 
 function getTags(token) {
@@ -24,7 +24,7 @@ function getPostByTag(tagId,token){
 }
 
 function getTagsByRecipe(recipeId,token){
-  return instance.get(`/api/public/tag/${recipeId}`, {
+  return instance.get(`/api/public/tag/${recipeId}`,{
     headers: {
       Authorization: bearerAuth(token),
     },

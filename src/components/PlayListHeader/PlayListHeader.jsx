@@ -50,93 +50,112 @@ const PlayListHeader = (props) => {
     prevOpen.current = open;
   }, [open]);
 
-
   const { keycloak } = useKeycloak();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const handleDeleteCollection = async () => {
     const collectionId = props.id;
-    const response = await CollectionApi.deleteCollection({ collectionId },keycloak.token);
+    const response = await CollectionApi.deleteCollection(
+      { collectionId },
+      keycloak.token
+    );
     return response.status;
   };
 
-  const { mutate : deleteCollection } = useMutation(handleDeleteCollection, {
+  const { mutate: deleteCollection } = useMutation(handleDeleteCollection, {
     onSuccess: () => {
       queryClient.invalidateQueries("collections");
       navigate("/collection");
     },
   });
 
-  const subtitle = props.recipes ? `${props.recipes && props.recipes.postDTOS.totalElements} recipes` : `${props.likerecipes && props.likerecipes.length} recipes`;
+  const subtitle = props.recipes
+    ? `${props.recipes.postDTOS && props.recipes.postDTOS.totalElements} recipes`
+    : `${props.likerecipes && props.likerecipes.length} recipes`;
 
-
- 
+  console.log(props);
 
   return (
     <div className="playlist-header">
       <div className="playlist-wrapper">
         <div className="playlist-not-scroll">
           <div className="playlist-header-image">
-            <img src= "/src/assets/healthyFood.jpg" alt="" />
+            
+                {props.recipes && props.recipes.image ? (
+                  <img src={props.recipes.image} alt="Recipe" />
+                ) : props.likerecipes && props.likerecipes.length ? (
+                  <img src={props.likerecipes[0].image} alt="Liked Recipe" />
+                ) : (
+                  <img src="/src/assets/healthyFood.jpg" alt="Healthy Food" />
+                )
+              }
+             
           </div>
-          <div className="playlist-header-title">{props.recipes ? props.recipes.collectionName : "Liked Recipe"}</div>
+          <div className="playlist-header-title">
+            {props.recipes ? props.recipes.collectionName : "Liked Recipe"}
+          </div>
           <div className="playlist-detail">
             <div className="playlist-sub-detail">
               <div className="playlist-owner">User...</div>
-              <div className="playlist-header-subtitle"> 
-              {/* {props.recipes ? props.recipes.postDTOS.totalElements + " recipes" : props.likerecipes.length + " recipes"} */}
-              {subtitle}
+              <div className="playlist-header-subtitle">
+                {/* {props.recipes ? props.recipes.postDTOS.totalElements + " recipes" : props.likerecipes.length + " recipes"} */}
+                {subtitle}
               </div>
             </div>
             <div>
-              <button className={`playlist-menu-button ${props.likerecipes ? 'hidden' : ''}`}
-              ref={anchorRef}
-              id="composition-button"
-              aria-controls={open ? "composition-menu" : undefined}
-              aria-expanded={open ? "true" : undefined}
-              aria-haspopup="true"
-              onClick={handleToggle}
+              <button
+                className={`playlist-menu-button ${
+                  props.likerecipes ? "hidden" : ""
+                }`}
+                ref={anchorRef}
+                id="composition-button"
+                aria-controls={open ? "composition-menu" : undefined}
+                aria-expanded={open ? "true" : undefined}
+                aria-haspopup="true"
+                onClick={handleToggle}
               >
                 <MoreVertIcon />
               </button>
               <Popper
-          open={open}
-          anchorEl={anchorRef.current}
-          role={undefined}
-          placement="bottom-start"
-          transition
-          disablePortal
-        >
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{
-                width: "200px",
-                transformOrigin:
-                  placement === "bottom-start" ? "left top" : "left bottom",
-              }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList
-                    autoFocusItem={open}
-                    id="composition-menu"
-                    aria-labelledby="composition-button"
-                    onKeyDown={handleListKeyDown}
+                open={open}
+                anchorEl={anchorRef.current}
+                role={undefined}
+                placement="bottom-start"
+                transition
+                disablePortal
+              >
+                {({ TransitionProps, placement }) => (
+                  <Grow
+                    {...TransitionProps}
+                    style={{
+                      width: "200px",
+                      transformOrigin:
+                        placement === "bottom-start"
+                          ? "left top"
+                          : "left bottom",
+                    }}
                   >
-                    <MenuItem onClick= {deleteCollection}>
-                      <ListItemIcon>
-                        <DeleteForeverOutlinedIcon fontSize="small" />
-                      </ListItemIcon>
-                      Delete Collection
-                    </MenuItem>
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
+                    <Paper>
+                      <ClickAwayListener onClickAway={handleClose}>
+                        <MenuList
+                          autoFocusItem={open}
+                          id="composition-menu"
+                          aria-labelledby="composition-button"
+                          onKeyDown={handleListKeyDown}
+                        >
+                          <MenuItem onClick={deleteCollection}>
+                            <ListItemIcon>
+                              <DeleteForeverOutlinedIcon fontSize="small" />
+                            </ListItemIcon>
+                            Delete Collection
+                          </MenuItem>
+                        </MenuList>
+                      </ClickAwayListener>
+                    </Paper>
+                  </Grow>
+                )}
+              </Popper>
             </div>
             <div className="playlist-description">
               {props.recipes ? "hahaha" : ""}

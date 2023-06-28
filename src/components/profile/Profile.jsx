@@ -164,9 +164,9 @@ const Profile = () => {
 
     const handleUpdateProfile = async () => {
         const formData = new FormData();
-        // formData.append("description", description || "");
+        formData.append("description", description || "");
         formData.append("profileImage", fileAvatar || "");
-        // formData.append("backgroundImage", fileBackground || "");
+        formData.append("backgroundImage", fileBackground || "");
         // const data ={
         //     description: description || "",
         //     profileImage: fileAvatar || "",

@@ -90,13 +90,13 @@ const instance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
 
-instance.interceptors.response.use(response => {
-  return response;
-}, function (error) {
-  // if (error.response.status === 404) {
-  //   return { status: error.response.status };
-  // }
-  // return Promise.reject(error.response);
-});
+// instance.interceptors.response.use(response => {
+//   return response;
+// }, function (error) {
+//   // if (error.response.status === 404) {
+//   //   return { status: error.response.status };
+//   // }
+//   // return Promise.reject(error.response);
+// });
 
 

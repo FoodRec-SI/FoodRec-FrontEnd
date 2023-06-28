@@ -71,7 +71,6 @@ const LikedRecipe = (props) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("collection");
-        
       },
     }
   );

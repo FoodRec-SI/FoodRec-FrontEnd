@@ -27,9 +27,9 @@ const CollectionDetail = () => {
     isError,
   } = useQuery(["collection", id], fetchCollectionList);
 
-  if (recipes && recipes.postDTOS.content.length === 0) {
-    console.log();
-  }
+
+
+  
 
   return (
     <div className="like-page-container">
@@ -38,12 +38,12 @@ const CollectionDetail = () => {
          <div className="liked-recipe-list-container">
         <p>Loading...</p>
       </div>
-      ) : isError || (recipes && recipes.postDTOS.content.length === 0) ? (
+      ) : isError || (recipes == "") ? (
         <div className="liked-recipe-list-container">
         <p>There are no recipes in this collection</p>
       </div>
       ) : (
-        <LikedRecipesList recipes={recipes.postDTOS.content} id={id} />
+        <LikedRecipesList recipes={recipes.postDTOS ? recipes.postDTOS.content : recipes} id={id} />
       )}
     </div>
   );
