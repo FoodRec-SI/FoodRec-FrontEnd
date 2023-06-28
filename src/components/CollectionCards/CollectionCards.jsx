@@ -52,15 +52,13 @@ const CollectionCards = () => {
   const { data : items , status } = useQuery(
     "collections", 
     fetchCollections,
-    {
-      refetchOnWindowFocus: false,
-      staleTime: 1000 * 60 * 5,
-    }
   );
 
   if (status === "loading") {
     return <div>Loading...</div>;
   }
+
+  console.log(items);
 
   return (
     <div className="collection-cards">
@@ -119,7 +117,7 @@ const CollectionCards = () => {
           collectionImage={item.image ? item.image : "src/assets/healthyFood.jpg"}
           collectionDescription={item.description}
           id={item.collectionId}
-          numberOfRecipes={item.numberOfRecipes}
+          numberOfRecipes={item.countPost}
         />
       ))}
     </div>

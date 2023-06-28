@@ -13,7 +13,7 @@ const Discover = () => {
   const isLogin = keycloak.authenticated;
 
   const fetchRecipes = async ({ pageParam = 0
-    , pageSize = 30
+  , pageSize = 6
   }) => {
     const response = await PostApi.getPosts(pageParam, pageSize);
     return response.data.content;
@@ -26,11 +26,10 @@ const Discover = () => {
     isFetchingNextPage,
     status,
   } = useInfiniteQuery("recipes", fetchRecipes, {
-    getNextPageParam: (lastPage) => {
-      const nextPage = lastPage.number + 1;
-      return nextPage < lastPage.totalPages ? nextPage : undefined;
-    },
-  });
+    getNextPageParam: 
+    (lastPage) => lastPage.length === 6 ? lastPage.length : false,
+  }
+  );
 
   if (status === "loading") {
     return <div>Loading...</div>;
@@ -40,6 +39,7 @@ const Discover = () => {
     return <div>Error fetching recipes</div>;
   }
 
+  console.log(data)
   const recipes = data?.pages.flatMap((page) => page);
   console.log(recipes)
 

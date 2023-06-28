@@ -18,6 +18,7 @@ import RatingArea from "../RatingArea/RatingArea";
 import RecommendeRcipe from "../RecommendRecipe/RecommendRecipe";
 
 import { CollectionApi } from "../../api/CollectionApi";
+import { TagApi } from '../../api/TagApi';
 
 import { useState, useRef, useEffect } from "react";
 
@@ -31,6 +32,7 @@ const RecipeDetail = () => {
   const { keycloak } = useKeycloak();
   const { postId } = useParams();
 
+
   const fetchPostById = async () => {
     const response = await PostApi.getPostById(postId, keycloak.token);
     if (response.status === 200) {
@@ -38,20 +40,14 @@ const RecipeDetail = () => {
     }
   };
 
-  const { data: post, status } = useQuery(["post", postId], fetchPostById);
+  const { data: post } = useQuery(["post", postId], fetchPostById);
 
 
-  if (status === "success") {
-    
-  }
 
-  if (status === "error") {
-    console.log("error");
-  }
 
 
   const location = useLocation();
-  const pending = location.state;
+
 
     let isPending =false;
 
@@ -151,19 +147,9 @@ function Introduction({ props, ratingPoint }) {
 
   const { mutate : addToCollection } = useMutation(handleAddToCollection);
 
- 
- 
-
 
   const likePost = async () => {
     const response = await LikeApi.likePost({
-      postId: props.postId,
-    } , keycloak.token);
-    return response.status;
-  };
-
-  const unlikePost = async () => {
-    const response = await LikeApi.unlikePost({
       postId: props.postId,
     } , keycloak.token);
     return response.status;
@@ -175,13 +161,16 @@ function Introduction({ props, ratingPoint }) {
     },
   });
 
-  const { mutate: unlike } = useMutation(
-    unlikePost,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("likedRecipes");
-      },
-    });
+  const fetchTags = async () => {
+    const response = await TagApi.getTagsByRecipe(props.recipeId, keycloak.token)
+    return response.data;
+  }
+
+  const { data: tags } = useQuery("tags", fetchTags);
+
+
+
+
 
   return (
     <>
@@ -198,7 +187,7 @@ function Introduction({ props, ratingPoint }) {
             />
           )}
           <div className="showTag">
-            {/* <ChipList  /> */}
+            {tags && <ChipList tags = {tags}/>}
           </div>
           <div className="userFeature">
             {/* button x 3*/}

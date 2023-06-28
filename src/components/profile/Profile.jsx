@@ -302,7 +302,7 @@ const Profile = () => {
                         </div>
                         <h6>What do you like ?</h6>
                         <br></br>
-                        <ChipList props={temp} />
+                        {profileData && <ChipList tags={profileData?.data?.tagsCollection} />}
 
                     </div>
                     <div className="profile__info__yourRecipe">

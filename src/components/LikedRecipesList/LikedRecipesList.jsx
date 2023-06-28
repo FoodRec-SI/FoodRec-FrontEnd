@@ -71,7 +71,6 @@ const LikedRecipe = (props) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("collection");
-        
       },
     }
   );
@@ -110,7 +109,7 @@ const LikedRecipe = (props) => {
           <div className="small-detail">
             <div className="liked-recipe-author">{props.author}</div>
             <div className="separator">&#183;</div>
-            <div className="liked-recipe-time">{props.cookingTime}</div>
+            <div className="liked-recipe-time">{props.cookingTime} minutes</div>
           </div>
         </div>
       </div>
