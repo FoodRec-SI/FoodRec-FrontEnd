@@ -47,9 +47,26 @@ const Profile = () => {
 
     const [selectedTags, setSelectedTags] = useState([]);
 
-    const handleDragOver = (e) => {
-        e.preventDefault();
-    };
+    
+
+    //-------Call API-------
+    const { data: profileData, isLoading: loadingProfile } = useQuery({
+        queryKey: ["profile"],
+        queryFn: async () => {
+            const data = await ProfileApi.getProfile(keycloak.token, keycloak.tokenParsed.sub);
+            return data;
+        },
+        refetchInterval: 1000*0.5
+    });
+
+
+    const { data: personalRecipe, isLoading, isError } = useQuery({
+        queryKey: ["personalRecipes"],
+        queryFn: async () => {
+            const data = await PersonalRecipeApi.getPersonalRecipe(keycloak.token);
+            return data;
+        },
+    });
 
     const { data: recipeTags } = useQuery({
         queryKey: ["tags"],
@@ -59,37 +76,87 @@ const Profile = () => {
         },
     });
 
-
     const tags = recipeTags?.data.map((tag) => tag.tagName);
 
+    const temp = profileData?.data.tagsCollection?.map((tag) => tag.tagName);
+
+    //-------End Call API-------
+
+    //-------Update Data-------
+    const handleUpdateProfile = async () => {
+        const formData = new FormData();
+        if (description !== profileData.data.description) {
+            formData.append("description", description || "");
+        }
+        if (fileAvatar !== null) {
+            formData.append("profileImage", fileAvatar || "");
+        }
+        if (fileBackground !== null) {
+            formData.append("backgroundImage", fileBackground || "");
+        }
+        try {
+            const response = await EditProfileApi.updateProfile(formData, keycloak.token);
+            if (response.status === 200) {
+                setVisible(false);
+                setDescription('');
+                setBackgroundImage(null);
+                setProfileImage(null);
+            }
+        } catch (error) {
+            // Handle error
+        }
+    };
+    const { mutate: updateProfileMutate, data: updateProfileData } = useMutation(
+        handleUpdateProfile,
+        {
+            onSucess: () => {
+                console.log(updateProfileData)
+                queryClient.invalidateQueries('profile')
+            }
+        }
+    )
+
+
+
+    const handleUpdateProfileTag = async () => {
+        const tagIds = getMatchingTagIds(selectedTags, recipeTags.data);
+        const paramTag = tagIds.map(tagId => `tagIds=${tagId}`).join('&');
+        console.log(paramTag)
+        try {
+            const response = await EditProfileApi.updateProfileTag(paramTag, keycloak.token);
+            if (response.status === 200) {
+                setShowTagEdit(false);
+                document.querySelector('body').style.overflow = 'scroll';
+            }
+        } catch (error) {
+            // Handle error 
+        }
+    };
+    const { mutate: mutateUpdateTag, isLoading: loadingUpdateTag, isError: tagError } = useMutation(
+        handleUpdateProfileTag,
+        {
+            onSucess: () => {
+                queryClient.invalidateQueries('profile')
+                setSelectedTags([]);
+            },
+            tagError: () => {
+                console.log("error")
+            }
+        }
+    )
+    //-------End Update Data-------
+
+    //-------Event Fucntion-------
+
+    const handleDragOver = (e) => {
+        e.preventDefault();
+    };
 
     const handleDrop = (e) => {
         e.preventDefault();
         let file = e.dataTransfer.files[0];
         handleDropImage(file);
     };
-
-
-    // const handleDropImage = (file) => {
-    //     let validExtensions = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/svg+xml'];
-    //     if (validExtensions.includes(file.type)) {
-    //         const formData = new FormData();
-    //         formData.append('image', file);
-    //         if(isAvatar){
-    //             setFile({ ...file, profileImage: file });
-    //         }else{
-    //             setFile({ ...file, backgroundImage: file });
-    //         }
-    //         let fileReader = new FileReader();
-    //         fileReader.onload = () => {
-    //             let fileURL = fileReader.result;
-    //             setPreviewImg(fileURL);
-    //         };
-    //         fileReader.readAsDataURL(file);
-    //     } else {
-    //         alert('This is not an Image File!');
-    //     }
-    // }
 
     const handleDropImage = (file) => {
         let validExtensions = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/svg+xml'];
@@ -100,10 +167,6 @@ const Profile = () => {
                 setPreviewImg(fileURL);
             };
             fileReader.readAsDataURL(file);
-
-            //   const formData = new FormData();
-            //   formData.append('image', file);
-
             if (isAvatar) {
                 setFileAvatar(file)
             } else {
@@ -124,12 +187,33 @@ const Profile = () => {
         handleDropImage(file);
     }
 
+    const handleAddRecipeNavigate = () => {
+        navigate('/AddRecipe');
+    }
+
+    const getMatchingTagIds = (tagNames, tagObjects) => {
+        const matchingTagIds = [];
+        for (let i = 0; i < tagObjects.length; i++) {
+            const tagObject = tagObjects[i];
+            if (tagNames.includes(tagObject.tagName)) {
+                matchingTagIds.push(tagObject.tagId);
+            }
+        }
+        return matchingTagIds;
+    }
+
+    //-------End Event Fucntion-------  
+    
+
+    //-------Dialog Footer-------
     const footerEditImage = (
         <div style={{ paddingTop: "20px" }}>
             <PButton label="Cancel" icon="pi pi-times" onClick={() => {
                 setOpenEditImage(false);
                 setTimeout(() => {
                     setPreviewImg(null)
+                    setFileAvatar(null)
+                    setFileBackground(null)
                 }, 1000 * 0.5);
             }}
                 className="p-button-text" />
@@ -147,54 +231,6 @@ const Profile = () => {
         </div>
     )
 
-    // const handleUpdateProfile = async () => {
-    //     const data = {
-    //         description: description,
-    //         profileImage: file.profileImage,
-    //         backgroundImage: file.backgroundImage
-    //     }
-    //     const response = await EditProfileApi.updateProfile(data, keycloak.token);
-    //     if (response.status === 200) {
-    //         setVisible(false);
-    //         setDescription('');
-    //         setBackgroundImage(null);
-    //         setProfileImage(null);
-    //     }
-    // }
-
-    const handleUpdateProfile = async () => {
-        const formData = new FormData();
-        // formData.append("description", description || "");
-        formData.append("profileImage", fileAvatar || "");
-        // formData.append("backgroundImage", fileBackground || "");
-        // const data ={
-        //     description: description || "",
-        //     profileImage: fileAvatar || "",
-        //     backgroundImage: fileBackground || ""
-        // }
-        try {
-            const response = await EditProfileApi.updateProfile(formData, keycloak.token);
-            if (response.status === 200) {
-                setVisible(false);
-                setDescription('');
-                setBackgroundImage(null);
-                setProfileImage(null);
-            }
-        } catch (error) {
-            // Handle error
-        }
-    };
-    const { onSuccess, mutate: updateProfileMutate } = useMutation(
-        handleUpdateProfile,
-        {
-            onSuccess: () => {
-                // queryClient.invalidateQueries('profile')
-                refetchProfile();
-            }
-        }
-    )
-
-
     const footerContent = (
         <div style={{ paddingTop: "20px" }}>
             <PButton label="Cancel" icon="pi pi-times"
@@ -203,6 +239,8 @@ const Profile = () => {
                     setTimeout(() => {
                         setBackgroundImage(null)
                         setProfileImage(null)
+                        setFileAvatar(null)
+                        setFileBackground(null)
                     }, 1000 * 0.5);
                 }}
                 className="p-button-text" />
@@ -219,53 +257,14 @@ const Profile = () => {
         <div style={{ paddingTop: "20px" }}>
             <PButton label="Save" icon="pi pi-check"
                 onClick={() => {
-                    // mutate()
-                    setShowTagEdit(false);
-                    document.querySelector('body').style.overflow = 'scroll';
-                    
-                    const tagIds = getMatchingTagIds(selectedTags, recipeTags.data);
-                    console.log(tagIds);
-
+                    mutateUpdateTag();
                 }}
                 autoFocus />
         </div>
     )
 
-    const userId = keycloak.tokenParsed.sub;
+    //-------End Dialog Footer-------
 
-    const { data: profileData, refetch:refetchProfile, isSuccess } = useQuery({
-        queryKey: ["profile"],
-        queryFn: async () => {
-            const data = await ProfileApi.getProfile(keycloak.token, userId);
-            return data;
-        },
-    });
-
-    const temp = profileData?.data.tagsCollection?.map((tag) => tag.tagName);
-
-
-    const { data, isLoading, isError } = useQuery({
-        queryKey: ["personalRecipes"],
-        queryFn: async () => {
-            const data = await PersonalRecipeApi.getPersonalRecipe(keycloak.token);
-            return data;
-        },
-    });
-
-    const handleAddRecipeNavigate = () => {
-        navigate('/AddRecipe');
-    }
-
-    const getMatchingTagIds = (tagNames, tagObjects) => {
-        const matchingTagIds = [];
-        for (let i = 0; i < tagObjects.length; i++) {
-          const tagObject = tagObjects[i];
-          if (tagNames.includes(tagObject.tagName)) {
-            matchingTagIds.push(tagObject.tagId);
-          }
-        }
-        return matchingTagIds;
-      }
 
     return (
         <>
@@ -283,7 +282,7 @@ const Profile = () => {
                                 label="Edit your profile"
                                 icon='pi pi-pencil'
                                 className='p-button-raised p-button-rounded'
-                                onClick={() => { setVisible(true) }}></PButton>
+                                onClick={() => { setVisible(true), setDescription(profileData.data.description) }}></PButton>
                         </div>
                     </div>
                 </div>
@@ -297,7 +296,7 @@ const Profile = () => {
                                 outlined
                                 onClick={() => {
                                     setShowTagEdit(true), setSelectedTags(temp),
-                                    document.querySelector('body').style.overflow = 'hidden'
+                                        document.querySelector('body').style.overflow = 'hidden'
                                 }}
                             ></PButton>
                         </div>
@@ -313,11 +312,11 @@ const Profile = () => {
                                 Add your recipe
                             </Button>
                         </div>
-                        {/* {data && <RecipeCardList props={data.data.content} pending="" />} */}
+                        {personalRecipe && <RecipeCardList props={personalRecipe?.data.content} pending="" />}
                     </div>
                 </div>
             </div>}
-            {profileData && <Dialog header="Style your profile :>" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)} footer={footerContent}>
+            {profileData && <Dialog header="Style your profile :>" visible={visible} style={{ width: '50vw' }} onHide={() => { setVisible(false), setBackgroundImage(null), setProfileImage(null) }} footer={footerContent}>
                 <div className="profile__dialog__avatar">
                     <h2>Profile picture: </h2><br />
                     <div className="profile__dialog__avatar__edit" onClick={() => {
@@ -327,7 +326,7 @@ const Profile = () => {
                         {profileImage !== null ?
                             <img id='avatar' src={profileImage} style={{ objectFit: "cover", objectPosition: "center" }} alt='' />
                             :
-                            <img id='avatar' src={profileData.data.profileImage} alt="" />}
+                            <img id='avatar' src={profileData.data.profileImage} style={{ objectFit: "cover", objectPosition: "center" }} alt="" />}
                         <div className="profile__dialog__avatar__edit__btn">
                             <EditIcon fontSize='large' />
                         </div>
@@ -342,22 +341,12 @@ const Profile = () => {
                         {backgroundImage !== null ?
                             <img src={backgroundImage} style={{ width: "100%", height: "100%" }} alt='' />
                             :
-                            <img src={profileData.data.backgroundImage} alt="" />}
+                            <img src={profileData.data.backgroundImage} style={{ width: "100%", height: "100%" }} alt="" />}
                         <div className="profile__dialog__avatar__edit__btn">
                             <EditIcon fontSize='large' />
                         </div>
                     </div>
                 </div>
-                <div className="profile__dialog__name">
-                    <h2>Name:</h2>
-                    <div className="profile__dialog__name__edit">
-                        <TextField id="outlined-basic"
-                            label="Name"
-                            variant="outlined"
-                            defaultValue={profileData.data.name}
-                            fullWidth />
-                    </div>
-                </div><br />
                 <div className="profile__dialog__description">
                     <h2>Description:</h2>
                     <div className="profile__dialog__description__edit">
@@ -366,6 +355,10 @@ const Profile = () => {
                             variant="outlined"
                             defaultValue={profileData.data.description}
                             fullWidth
+                            onChange={(e) => {
+                                setDescription(e.target.value)
+                            }
+                            }
                         />
                     </div>
                 </div>
@@ -377,6 +370,9 @@ const Profile = () => {
                     setOpenEditImage(false)
                     if (isAvatar) {
                         setProfileImage(null);
+                    }
+                    else {
+                        setBackgroundImage(null);
                     }
                 }}>
                 <div className="edit_form">
@@ -392,26 +388,33 @@ const Profile = () => {
                     </div>
                 </div>
             </Dialog>
-            <Dialog 
-            modal="true" 
-            blockScroll="true" 
-            header="Custom your tag" 
-            visible={showTagEdit} 
-            style={{ width: '60vw' }} 
-            onHide={() => { setShowTagEdit(false), document.querySelector('body').style.overflow = 'scroll', setSelectedTags(temp) }}
-            footer={footerTagEdit}
+            <Dialog
+                modal="true"
+                blockScroll="true"
+                header="Custom your tag"
+                visible={showTagEdit}
+                style={{ width: '60vw', minHeight: "50vh" }}
+                onHide={() => { setShowTagEdit(false), document.querySelector('body').style.overflow = 'scroll', setSelectedTags(temp) }}
+                footer={footerTagEdit}
             >
+                {loadingUpdateTag ? 
+                <div>Loading...</div> 
+                : 
                 <MultiSelect
                     style={{ width: "100%" }}
                     value={selectedTags}
-                    options={tags} 
+                    options={tags}
                     onChange={(e) => setSelectedTags(e.value)}
                     display="chip"
                     required
                     placeholder="Select Tags"
                     filter
                     filterInputAutoFocus
-                />
+                    panelStyle={{ maxHeight: "300px", maxWidth:"50vw" }}
+                    className='multiSelectTag'
+                    closeIcon="pi pi-times"
+                />}
+
             </Dialog>
         </>
     );

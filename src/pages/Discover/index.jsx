@@ -13,7 +13,7 @@ const Discover = () => {
   const isLogin = keycloak.authenticated;
 
   const fetchRecipes = async ({ pageParam = 0
-  , pageSize = 30
+    , pageSize = 30
   }) => {
     const response = await PostApi.getPosts(pageParam, pageSize);
     return response.data.content;
@@ -45,13 +45,16 @@ const Discover = () => {
 
   return (
     <>
-      {isLogin ?  <LoginBanner /> :  <Banner />}
-      <RecipeCardList props={recipes} pending={''} />
-      {hasNextPage && (
-        <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
-          {isFetchingNextPage ? "Loading more..." : "Load more"}
-        </button>
+      {isLogin ? <LoginBanner /> : <Banner />}
+      <div style={{margin: "0 auto"}}>
+        <RecipeCardList props={recipes} pending={''} />
+        {hasNextPage && (
+          <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
+            {isFetchingNextPage ? "Loading more..." : "Load more"}
+          </button>
+        
       )}
+      </div>
     </>
   );
 };

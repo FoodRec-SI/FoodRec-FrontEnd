@@ -198,7 +198,7 @@ function Introduction({ props, ratingPoint }) {
             />
           )}
           <div className="showTag">
-            <ChipList />
+            {/* <ChipList  /> */}
           </div>
           <div className="userFeature">
             {/* button x 3*/}
