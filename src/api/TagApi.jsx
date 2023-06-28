@@ -16,7 +16,7 @@ function getTags(token) {
 }
 
 function getPostByTag(tagId,token){
-  return instance.get(`/api/public/tag/${tagId}`, {
+  return instance.get(`/api/public/posts/${tagId}`, {
     headers: {
       Authorization: bearerAuth(token),
     },
@@ -30,6 +30,8 @@ function getTagsByRecipe(recipeId,token){
     },
   });
 }
+
+
 
 // -- Axios
 

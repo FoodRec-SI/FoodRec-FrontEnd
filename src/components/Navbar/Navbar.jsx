@@ -51,7 +51,11 @@ const Navbar = ({ title }) => {
     
   }
 
-  const { status } = useQuery('createAccount', createAccount);
+  const { data } = useQuery('createAccount', createAccount);
+  if(data === 200){
+    console.log("");
+  }
+  
 
   const getLogInOutText = () => {
     return keycloak.authenticated ? "Logout" : "Sign in";
