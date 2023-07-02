@@ -55,6 +55,7 @@ const ChipsBanner = (props) => {
   }
      
    const handleItemClick = (item) => {
+    console.log(item);
     props.onItemClick(item);
   };
 
@@ -69,7 +70,7 @@ const ChipsBanner = (props) => {
           <Chip
             key={item.tagId}
             label={item.tagName}
-            onClick={handleItemClick}
+            onClick={() => handleItemClick(item)}
           />
         ))}
       </div>

@@ -18,7 +18,6 @@ import RatingArea from "../RatingArea/RatingArea";
 import RecommendeRcipe from "../RecommendRecipe/RecommendRecipe";
 
 import { CollectionApi } from "../../api/CollectionApi";
-import { TagApi } from '../../api/TagApi';
 
 import { useState, useRef, useEffect } from "react";
 
@@ -63,6 +62,7 @@ const RecipeDetail = () => {
   const { data: post, isSuccess: isPostSuccess } = useQuery(["post", postId], fetchPostById);
 
 
+  console.log(post);
 
   return (
     isPostSuccess &&
@@ -94,7 +94,7 @@ const RecipeDetail = () => {
   );
 };
 
-function Introduction({ props, isPostSuccess }) {
+function Introduction({ props }) {
   const { keycloak } = useKeycloak();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
@@ -319,7 +319,7 @@ function Ingredients() {
     <div className="ingredients">
       <h1>Ingredients</h1>
       <ul>
-        {listOfIngredients.map((ingredient, index) => (
+        {listOfIngredients.map((ingredient) => (
           <li key={ingredient}> {ingredient} </li>
         ))}
       </ul>

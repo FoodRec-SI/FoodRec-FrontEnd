@@ -93,7 +93,12 @@ const PlayListHeader = (props) => {
              
           </div>
           <div className="playlist-header-title">
-            {props.recipes ? props.recipes.collectionName : "Liked Recipe"}
+            {props.recipes ?
+            <div className="playlist-title">
+              {props.recipes.collectionName}
+              <input />
+              </div> 
+            : "Liked Recipe"}
           </div>
           <div className="playlist-detail">
             <div className="playlist-sub-detail">

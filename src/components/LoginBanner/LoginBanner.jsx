@@ -1,6 +1,7 @@
 import "./LoginBanner.css";
 import ChipsBanner from "../ChipsBanner/ChipsBanner";
 
+import { useState } from "react";
 import { TagApi } from "../../api/TagApi";
 import { useKeycloak } from "@react-keycloak/web";
 import { useQuery } from "react-query";
@@ -10,6 +11,7 @@ import { Rating } from "@mui/material";
 const LoginBanner = () => {
 
   const { keycloak } = useKeycloak();
+  const [tagId, setTagId] = useState('');
   
 
   const fetchTags = async () => {
@@ -30,7 +32,18 @@ const LoginBanner = () => {
 
   const onItemClick = (item) => {
     console.log(item);
+    setTagId(item.tagId);
   };
+  
+
+  // const fetchPostByTag = async () => {
+  //   const response = await TagApi.getPostByTag(tagId);
+  //   return response.data;
+  // };
+
+  // const { data : posts } = useQuery('posts', fetchPostByTag);
+
+
 
   return (
     <div className="login-banner">
