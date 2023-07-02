@@ -1,7 +1,8 @@
 import axios from "axios";
 
 export const PendingApi = {
-    getPendingRecipes
+    getPendingRecipes,
+    getPendingRecipeDetail
 };
 
 const postStatus = {
@@ -10,13 +11,23 @@ const postStatus = {
     PENDING: "PENDING_APPROVAL"
 }
 
+//http://localhost:8080/api/moderator/post/POS000028
+
+function getPendingRecipeDetail(postId, token) {
+    return instance.get(`/api/moderator/post/${postId}`, {
+        headers: {
+            Authorization: bearerAuth(token),
+        },
+    });
+}
+
+
 
 function getPendingRecipes(token) {
     return instance.get(`api/moderator/posts`, {
         headers: {
             Authorization: bearerAuth(token),
         },
-        method: "POST",
         params: {
             postStatuses: postStatus.PENDING
         }

@@ -46,7 +46,7 @@ const Discover = () => {
   return (
     <>
       {isLogin ? <LoginBanner /> : <Banner />}
-      <div style={{margin: "0 auto"}}>
+      <div style={{width:"90%", margin:"0 auto"}}>
         <RecipeCardList props={recipes} pending={''} />
         {hasNextPage && (
           <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
