@@ -16,7 +16,7 @@ import './PendingRecipeDetail.css';
 
 
 
-const PendingRecipeDetail = () => {
+const PendingRecipeDetail = (props) => {
 
     const queryClient = new QueryClient();
 
@@ -30,7 +30,7 @@ const PendingRecipeDetail = () => {
 
     const [isApprove, setIsApprove] = useState('APPROVED');
 
-    const postId = 'POS000007';
+    const {postId} = props;
 
     const { mutate, isSuccess} = useMutation({
         mutationFn: async () => {

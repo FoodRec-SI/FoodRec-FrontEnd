@@ -61,16 +61,13 @@ const RecipeDetail = () => {
 
   const { data: post, isSuccess: isPostSuccess } = useQuery(["post", postId], fetchPostById);
 
-
-  console.log(post);
-
   return (
     isPostSuccess &&
     <div className="recipeDetail__wrapper">
       <div className="recipeDetailContainer">
         {isPending === true && (
           // <DialogPending ref={dialogRef} navigate={navigate} />
-          <PendingRecipeDetail />
+          <PendingRecipeDetail postId = {postId}/>
         )}
         {post && <div className="recipeDetail">
           <img src={post.image} alt="" />
