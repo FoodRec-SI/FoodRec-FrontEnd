@@ -3,6 +3,8 @@ import axios from "axios";
 export const RatingApi = {
     updateRating,
     getRating,
+    getPersonalRating,
+    getPercnetageRating
 }
 
 //http://localhost:8080/api/member/rating
@@ -14,11 +16,31 @@ function updateRating(data, token) {
     });
 }
 
-function getRating(token) {
-    return instance.get(`/api/rating/get`, {
+//http://localhost:8080/api/member/rating/POS000030
+
+function getRating(token, podtId) {
+    return instance.get(`/api/member/rating/${podtId}`, {
         headers: {
             Authorization: bearerAuth(token),
-            'Content-Type': 'application/json'
+        },
+    });
+}
+
+
+//http://localhost:8080/api/member/rating/user/post/POS000030
+function getPersonalRating(token, podtId) {
+    return instance.get(`/api/member/rating/user/post/${podtId}`, {
+        headers: {
+            Authorization: bearerAuth(token),
+        },
+    });
+}
+
+//http://localhost:8080/api/member/rating/percentage/POS000030
+function getPercnetageRating(token, podtId) {
+    return instance.get(`/api/member/rating/percentage/${podtId}`, {
+        headers: {
+            Authorization: bearerAuth(token),
         },
     });
 }

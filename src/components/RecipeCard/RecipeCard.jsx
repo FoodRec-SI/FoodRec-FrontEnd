@@ -27,9 +27,9 @@ function RecipeCard({props,pending}) {
                 <div className= {"recipeCard__rating" + pending}>
                     <div className={"recipeCard__time" + pending} >
                         <AccessTimeIcon fontSize = "medium"></AccessTimeIcon>
-                        <p style={{marginLeft:"5px"}}>{props.duration} min</p>
+                        <p style={{marginLeft:"5px", textAlign:"center", marginBottom:"0px"}}>{props.duration} min</p>
                     </div>
-                    {props.ratingPoint && <Rating name="ratingPoint" defaultValue={props.ratingPoint} precision={0.1} readOnly size="small"/>}
+                    <Rating name="ratingPoint" defaultValue={props.averageScore} precision={0.1} readOnly size="small"/>
                 </div>
             </div>
         </div>

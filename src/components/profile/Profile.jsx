@@ -9,6 +9,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import { Button as PButton } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { MultiSelect } from 'primereact/multiselect';
+import { ConfirmDialog } from 'primereact/confirmdialog';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -47,7 +48,8 @@ const Profile = () => {
 
     const [selectedTags, setSelectedTags] = useState([]);
 
-    
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
 
     //-------Call API-------
     const { data: profileData, isLoading: loadingProfile } = useQuery({
@@ -56,9 +58,10 @@ const Profile = () => {
             const data = await ProfileApi.getProfile(keycloak.token, keycloak.tokenParsed.sub);
             return data;
         },
-        refetchInterval: 1000*0.5
+        refetchInterval: 1000 * 2
     });
 
+    const tempTag = profileData?.data?.tagsCollection?.map((tag) => tag.tagName);
 
     const { data: personalRecipe, isLoading, isError } = useQuery({
         queryKey: ["personalRecipes"],
@@ -68,7 +71,9 @@ const Profile = () => {
         },
     });
 
-    const { data: recipeTags } = useQuery({
+    
+
+    const { data: recipeTags, isSuccess: isTagSuccessFetch } = useQuery({
         queryKey: ["tags"],
         queryFn: async () => {
             const data = await TagApi.getTags(keycloak.token);
@@ -76,9 +81,10 @@ const Profile = () => {
         },
     });
 
-    const tags = recipeTags?.data.map((tag) => tag.tagName);
+    const tagNames = recipeTags?.data?.map((tag) => tag.tagName);
 
-    const temp = profileData?.data.tagsCollection?.map((tag) => tag.tagName);
+
+
 
     //-------End Call API-------
 
@@ -203,7 +209,7 @@ const Profile = () => {
     }
 
     //-------End Event Fucntion-------  
-    
+
 
     //-------Dialog Footer-------
     const footerEditImage = (
@@ -263,8 +269,11 @@ const Profile = () => {
         </div>
     )
 
+
     //-------End Dialog Footer-------
 
+    if (loadingProfile)
+        return (<div>Loading...</div>)
 
     return (
         <>
@@ -278,11 +287,22 @@ const Profile = () => {
                             <p>{profileData.data.description && profileData.data.description}</p>
                         </div>
                         <div className='profile__cover__editBtn'>
-                            <PButton
-                                label="Edit your profile"
-                                icon='pi pi-pencil'
-                                className='p-button-raised p-button-rounded'
-                                onClick={() => { setVisible(true), setDescription(profileData.data.description) }}></PButton>
+
+                            <span className="p-buttonset">
+                                <PButton
+                                    label="Delete"
+                                    icon="pi pi-trash"
+                                    rounded
+                                    onClick={() => setShowDeleteConfirm(true)}
+                                    size="small"
+                                />
+                                <PButton
+                                    label="Edit your profile"
+                                    icon='pi pi-pencil'
+                                    rounded
+                                    size="small"
+                                    onClick={() => { setVisible(true), setDescription(profileData.data.description) }}></PButton>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -295,14 +315,15 @@ const Profile = () => {
                                 rounded
                                 outlined
                                 onClick={() => {
-                                    setShowTagEdit(true), setSelectedTags(temp),
-                                        document.querySelector('body').style.overflow = 'hidden'
+                                    setShowTagEdit(true),
+                                    setSelectedTags(tempTag),
+                                    document.querySelector('body').style.overflow = 'hidden'
                                 }}
                             ></PButton>
                         </div>
                         <h6>What do you like ?</h6>
                         <br></br>
-                        {profileData && <ChipList tags={profileData?.data?.tagsCollection} />}
+                        {profileData && <ChipList tags={profileData.data.tagsCollection} />}
 
                     </div>
                     <div className="profile__info__yourRecipe">
@@ -394,29 +415,38 @@ const Profile = () => {
                 header="Custom your tag"
                 visible={showTagEdit}
                 style={{ width: '60vw', minHeight: "50vh" }}
-                onHide={() => { setShowTagEdit(false), document.querySelector('body').style.overflow = 'scroll', setSelectedTags(temp) }}
+                onHide={() => { setShowTagEdit(false), document.querySelector('body').style.overflow = 'scroll', setSelectedTags([]) }}
                 footer={footerTagEdit}
             >
-                {loadingUpdateTag ? 
-                <div>Loading...</div> 
-                : 
-                <MultiSelect
-                    style={{ width: "100%" }}
-                    value={selectedTags}
-                    options={tags}
-                    onChange={(e) => setSelectedTags(e.value)}
-                    display="chip"
-                    required
-                    placeholder="Select Tags"
-                    filter
-                    filterInputAutoFocus
-                    panelStyle={{ maxHeight: "300px", maxWidth:"50vw" }}
-                    className='multiSelectTag'
-                    closeIcon="pi pi-times"
-                />}
-
+                {loadingUpdateTag ?
+                    <div>Loading...</div>
+                    :
+                    <MultiSelect
+                        style={{ width: "100%" }}
+                        value={selectedTags}
+                        options={tagNames}
+                        onChange={(e) => setSelectedTags(e.value)}
+                        display="chip"
+                        required
+                        placeholder="Select Tags"
+                        filter
+                        filterInputAutoFocus
+                        panelStyle={{ maxHeight: "300px", maxWidth: "50vw" }}
+                        className='multiSelectTag'
+                        closeIcon="pi pi-times"
+                    />}
             </Dialog>
+            <ConfirmDialog
+                visible={showDeleteConfirm}
+                onHide={() => setShowDeleteConfirm(false)}
+                message="Are you sure you want to proceed?"
+                header="Confirmation"
+                icon="pi pi-exclamation-triangle"
+                accept={() => setShowDeleteConfirm(false)}
+                reject={() => setShowDeleteConfirm(false)}
+            />
         </>
+
     );
 }
 

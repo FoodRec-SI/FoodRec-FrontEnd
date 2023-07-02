@@ -2,19 +2,52 @@
     display: flex;
     flex-direction: column ;
     justify-content: center   ;
-    align-items: flex-start;
+    align-items: center;
     margin: 0;
     width: 100%;
     height: fit-content;
-    background-color: #f1f0f0;
     border-radius: 16px;
     padding: 20px;
 }
 
+.rating_area_overView{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.rating_area_overView p{
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    margin: 0;
+    padding-top: 8px;
+    color: #a1a1a1;
+}
+
+.rating_area_overView_score{
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-radius: 25px;
+    background-color: #f1f0f0;
+}
+
+.rating_area_overView_score p{
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    margin: 0;
+    padding-left: 10px;
+    padding-right: 15px;
+    color: #747474;
+}
+
 .rating_area_yourPoint{
     display: flex;
-    justify-content: space-between;
-    width: 100%;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .rating_area_yourPoint h6{
@@ -34,4 +67,9 @@
 
 .rating_area_countRatingPoint p{
     font-size: 14px;
+    font-weight: 100;
+    color: #747474;
 }
+
+
+
