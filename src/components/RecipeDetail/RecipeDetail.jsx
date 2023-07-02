@@ -18,46 +18,54 @@ import RatingArea from "../RatingArea/RatingArea";
 import RecommendeRcipe from "../RecommendRecipe/RecommendRecipe";
 
 import { CollectionApi } from "../../api/CollectionApi";
-import { TagApi } from '../../api/TagApi';
 
 import { useState, useRef, useEffect } from "react";
 
 import { PostApi } from "../../api/PostApi";
+import { PendingApi } from "../../api/PendingApi";
 import { LikeApi } from "../../api/LikeApi";
-import { useQuery , useMutation,useQueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import { useKeycloak } from "@react-keycloak/web";
 
 const RecipeDetail = () => {
 
   const { keycloak } = useKeycloak();
   const { postId } = useParams();
-
-
-  const fetchPostById = async () => {
-    const response = await PostApi.getPostById(postId, keycloak.token);
-    if (response.status === 200) {
-      return response.data;
-    }
-  };
-
-  const { data: post } = useQuery(["post", postId], fetchPostById);
-
-
-
-
-
   const location = useLocation();
 
+  let isPending = false;
 
-    let isPending =false;
+  const url = location.pathname;
 
-    const url = location.pathname;
-    if(url.includes("pendingRecipeDetail")){
-        isPending = true;
-    }
+  let fetchPostById;
 
+  if (url.includes("pendingRecipeDetail")) {
+    isPending = true;
+  }
+
+  if (isPending === true) {
+    fetchPostById = async () => {
+      const response = await PendingApi.getPendingRecipeDetail(postId, keycloak.token);
+      if (response.status === 200) {
+        return response.data;
+      }
+    };
+  } else {
+    fetchPostById = async () => {
+      const response = await PostApi.getPostById(postId, keycloak.token);
+      if (response.status === 200) {
+        return response.data;
+      }
+    };
+  }
+
+  const { data: post, isSuccess: isPostSuccess } = useQuery(["post", postId], fetchPostById);
+
+
+  console.log(post);
 
   return (
+    isPostSuccess &&
     <div className="recipeDetail__wrapper">
       <div className="recipeDetailContainer">
         {isPending === true && (
@@ -67,23 +75,26 @@ const RecipeDetail = () => {
         {post && <div className="recipeDetail">
           <img src={post.image} alt="" />
 
-          <Introduction ratingPoint={5} props={post} />
-          <Ingredients />
-          <Description props={post}/>
-          <Instruction />
-          <div className="recipeDetail__rating">
-            <RatingArea />
-          </div>
+          <Introduction props={post} isPostSuccess />
+          <Ingredients isPostSuccess />
+          <Description props={post} isPostSuccess />
+          <Instruction isPostSuccess />
+          {isPending === false &&
+            <div className="recipeDetail__rating">
+              <RatingArea isPostSuccess />
+            </div>
+          }
         </div>}
       </div>
       {isPending === false && <div className="recommendRecipe">
         <RecommendeRcipe />
       </div>}
     </div>
+
   );
 };
 
-function Introduction({ props, ratingPoint }) {
+function Introduction({ props }) {
   const { keycloak } = useKeycloak();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
@@ -133,44 +144,33 @@ function Introduction({ props, ratingPoint }) {
 
 
   const handleAddToCollection = async (collectionId) => {
-    
+
     const response = await CollectionApi.addPostToCollection(
       {
-        collectionId : collectionId,
+        collectionId: collectionId,
         postId: props.postId,
       },
       keycloak.token)
     console.log(response);
   };
 
-  
 
-  const { mutate : addToCollection } = useMutation(handleAddToCollection);
+
+  const { mutate: addToCollection } = useMutation(handleAddToCollection);
 
 
   const likePost = async () => {
     const response = await LikeApi.likePost({
       postId: props.postId,
-    } , keycloak.token);
+    }, keycloak.token);
     return response.status;
   };
 
-  const { mutate: like} = useMutation(likePost, {
+  const { mutate: like } = useMutation(likePost, {
     onSuccess: () => {
       queryClient.invalidateQueries("likedRecipes");
     },
   });
-
-  const fetchTags = async () => {
-    const response = await TagApi.getTagsByRecipe(props.recipeId, keycloak.token)
-    return response.data;
-  }
-
-  const { data: tags } = useQuery("tags", fetchTags);
-
-
-
-
 
   return (
     <>
@@ -178,16 +178,14 @@ function Introduction({ props, ratingPoint }) {
         <div className="introduction">
           <h1>{props.recipeName}</h1>
           <p>Author</p>
-          {ratingPoint && (
             <Rating
               name="ratingPoint"
-              defaultValue={ratingPoint}
+              defaultValue={props.averageScore}
               precision={0.1}
               readOnly
             />
-          )}
           <div className="showTag">
-            {tags && <ChipList tags = {tags}/>}
+            {<ChipList tags={props.tagDTOList} />}
           </div>
           <div className="userFeature">
             {/* button x 3*/}
@@ -251,15 +249,15 @@ function Introduction({ props, ratingPoint }) {
 
             <Tooltip title="Add to favorite" placement="top">
               <IconButton aria-label="addToFavorite"
-              // onClick={() => {
-              //   if (props.isLiked === false) {
-              //     like();
-              //   } else {
-              //     unlike();
-              //   }
-              // }
-              // }
-              onClick={like}
+                // onClick={() => {
+                //   if (props.isLiked === false) {
+                //     like();
+                //   } else {
+                //     unlike();
+                //   }
+                // }
+                // }
+                onClick={like}
               >
                 <FavoriteBorderIcon fontSize="large" />
               </IconButton>
@@ -321,7 +319,7 @@ function Ingredients() {
     <div className="ingredients">
       <h1>Ingredients</h1>
       <ul>
-        {listOfIngredients.map((ingredient, index) => (
+        {listOfIngredients.map((ingredient) => (
           <li key={ingredient}> {ingredient} </li>
         ))}
       </ul>
@@ -329,7 +327,7 @@ function Ingredients() {
   );
 }
 
-function Description({props}) {
+function Description({ props }) {
   return (
     <div className="description">
       <h1>Description</h1>

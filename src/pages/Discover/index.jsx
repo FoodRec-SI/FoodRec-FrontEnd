@@ -9,39 +9,30 @@ import { useInfiniteQuery } from "react-query";
 const Discover = () => {
   const { keycloak } = useKeycloak();
   const isLogin = keycloak.authenticated;
-  
-  const fetchRecipes = async ({ pageParam, pageSize}) => {
+
+  const fetchRecipes = async ({ pageParam, pageSize }) => {
     const response = await PostApi.getPosts(pageParam, pageSize);
     // console.log(response.data);
     return response.data;
   };
 
-
-
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    status,
-  } = useInfiniteQuery("recipes", 
+  const { data, fetchNextPage, hasNextPage, status } = useInfiniteQuery(
+    "recipes",
     ({ pageParam = 0, pageSize = 6 }) => fetchRecipes({ pageParam, pageSize }),
     {
       getNextPageParam: (lastPage) => {
         const maxPages = lastPage.totalElements / 5;
-        const nextPage = lastPage.number + 1 ;
+        const nextPage = lastPage.number + 1;
         return nextPage <= maxPages ? nextPage : undefined;
       },
     }
   );
 
-  
-
-
   useEffect(() => {
-
     const onScroll = (event) => {
       let fetching = false;
-      const { scrollTop, clientHeight, scrollHeight } = event.target.scrollingElement;
+      const { scrollTop, clientHeight, scrollHeight } =
+        event.target.scrollingElement;
 
       if (!fetching && scrollHeight - scrollTop <= clientHeight * 1.5) {
         fetching = true;
@@ -59,9 +50,6 @@ const Discover = () => {
     };
   }, [hasNextPage, fetchNextPage]);
 
-
- 
-
   if (status === "loading") {
     return <div>Loading...</div>;
   }
@@ -78,9 +66,12 @@ const Discover = () => {
   return (
     <>
       {isLogin ? <LoginBanner /> : <Banner />}
-
-      <RecipeCardList props={data.pages.flatMap((page) => page.content)} pending={""} />
-
+      <div style={{ width: "90%", margin: "0 auto" }}>
+        <RecipeCardList
+          props={data.pages.flatMap((page) => page.content)}
+          pending={""}
+        />
+      </div>
       {/* {hasNextPage && (
         <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
           {isFetchingNextPage ? "Loading more..." : "Load more"}

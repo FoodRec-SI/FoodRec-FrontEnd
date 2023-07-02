@@ -9,8 +9,6 @@ const ChipList = (props) => {
 
     const { tags } = props;
 
-    console.log(tags);
-
     return ( 
         <div className="chiplist">
             {tags && tags.map((tag) => (

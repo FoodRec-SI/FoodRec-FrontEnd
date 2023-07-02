@@ -1,15 +1,15 @@
 :root{
-  --scale: 0.8;
+  --scale: 1;
 }
 
 .recipeCard {
   height: fit-content;
-  width: calc(var(--scale)*250px) ;
-  margin: calc(var(--scale)*20px);
-  border-radius:  16px;
-  
+  width: 270px;
+  margin: 10px;
+  /* border-radius:  16px;
+   */
   /* border: 1px solid #000000; */
-  border: 1px solid #A29E9E ;
+  /* border: 1px solid #A29E9E ; */
 }
 
 .recipeCard:hover {
@@ -24,8 +24,8 @@
 
 .recipeCard img {
   width: 100%;
-  height: calc(var(--scale)*160px);
-  border-radius: 10px;
+  height: 160px;
+    
   object-fit: cover;
   object-position: center;
 }
@@ -39,7 +39,7 @@
 .recipeCard__info {
   display: flex;
   flex-direction: column;
-  height: 190px;
+  height: 150px;
   /* max-height: 100%; */
   justify-content: space-around;
   padding: 5px 10px 10px 10px;
@@ -48,16 +48,18 @@
 .recipeCard__info h3 {
   margin-top: 3px;
   margin-bottom: 3px;
-  height: 60px;
+  height: 55px;
+  font-size: 24px;
 }
 
 .recipeCard__info p {
-  max-height: 54px;
+  max-height: 50px;
   max-width: calc(var(--scale)*260px);
   margin-top: 5px;
   margin-bottom: 5px;
-  overflow: hidden;
-  text-overflow: ellipsis ;
+  /* overflow: hidden;
+  text-overflow: ellipsis; */
+  text-warp: balance;
   
 }
 
@@ -103,11 +105,17 @@
 }
 
 .recipeCardpending img{
-  width: fit-content;
-  max-width: 300px;
-  max-height: 200px;
+  width: 350px;
+  height: 200px;
   border-radius: 10px;
   padding-right: 20px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.recipeCard__infopending{
+  width: 100%;
+  padding-right: 20px ;
 }
 
 .recipeCard__infopending h3{
@@ -129,10 +137,13 @@
 .recipeCard__ratingpending {
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 .recipeCard__timepending {
   display: flex;
+  align-items: center;
+  
 }
 
 
@@ -191,7 +202,6 @@
 
   .recipeCardpending img{
     max-height: 150px;
-    width: fit-content;
     max-width: 300px;
     border-radius: 10px;
     padding-right: 20px;

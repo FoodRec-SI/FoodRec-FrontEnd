@@ -2,10 +2,5 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  width: fit-content;
-}
-
-.recipe-list-wrapper{
- width: 90%;
- margin: 0 auto;
+  justify-content: space-around;
 }

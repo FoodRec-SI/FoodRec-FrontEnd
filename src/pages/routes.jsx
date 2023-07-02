@@ -81,13 +81,13 @@ function AppRoutes() {
       element: isLogin ? <PendingRecipe /> : <Login />,
       title: "Pending Recipe",
     },
+    // {
+    //   path: "/recipeDetail/:postId",
+    //   element: <RecipeDetail/>,
+    //   title: "Recipe Detail",
+    // },
     {
-      path: "/recipeDetail/:postId",
-      element: <RecipeDetail/>,
-      title: "Recipe Detail",
-    },
-    {
-      path: "/PendingRecipeDetail/:recipeID",
+      path: "/PendingRecipeDetail/:postId",
       element: isLogin ? <RecipeDetail/> : <Login />,
       title: "Recipe Detail",
     },
