@@ -15,12 +15,8 @@ function getTags(token) {
   });
 }
 
-function getPostByTag(tagId,token){
-  return instance.get(`/api/public/posts/${tagId}`, {
-    headers: {
-      Authorization: bearerAuth(token),
-    },
-  });
+function getPostByTag(tagId){
+  return instance.get(`/api/public/posts/${tagId}`);
 }
 
 function getTagsByRecipe(recipeId,token){

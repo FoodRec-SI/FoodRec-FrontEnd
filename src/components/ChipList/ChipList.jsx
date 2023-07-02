@@ -1,4 +1,4 @@
-import { Tag } from '@mui/icons-material';
+
 import Chip from '@mui/material/Chip';
 
 
@@ -8,6 +8,8 @@ const ChipList = (props) => {
 
 
     const { tags } = props;
+
+    console.log(tags);
 
     return ( 
         <div className="chiplist">

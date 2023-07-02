@@ -5,6 +5,7 @@ import RecipeCard from "../RecipeCard/RecipeCard";
 
 const RecipeCardList = ({props,pending}) => {
   return (
+    <div className="recipe-list-wrapper">
     <div className="recipe-list">
       {props.map((item,index) => (   
         <RecipeCard
@@ -13,6 +14,7 @@ const RecipeCardList = ({props,pending}) => {
           pending={pending}
         />
       ))}
+    </div>
     </div>
   );
 };
