@@ -63,6 +63,8 @@ const Discover = () => {
   // console.log(data);
   // console.log(recipes);
 
+  console.log(data);
+
   return (
     <>
       {isLogin ? <LoginBanner /> : <Banner />}
