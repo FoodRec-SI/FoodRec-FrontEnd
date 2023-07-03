@@ -49,16 +49,14 @@ const Profile = () => {
     const [selectedTags, setSelectedTags] = useState([]);
 
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-
-
-    //-------Call API-------
-    const { data: profileData, isLoading: loadingProfile } = useQuery({
+    
+    const { data: profileData, isLoading: loadingProfile, refetch } = useQuery({
         queryKey: ["profile"],
         queryFn: async () => {
             const data = await ProfileApi.getProfile(keycloak.token, keycloak.tokenParsed.sub);
             return data;
         },
-        refetchInterval: 1000 * 2
+        
     });
 
     const tempTag = profileData?.data?.tagsCollection?.map((tag) => tag.tagName);
@@ -83,11 +81,6 @@ const Profile = () => {
 
     const tagNames = recipeTags?.data?.map((tag) => tag.tagName);
 
-
-
-
-    //-------End Call API-------
-
     //-------Update Data-------
     const handleUpdateProfile = async () => {
         const formData = new FormData();
@@ -107,19 +100,14 @@ const Profile = () => {
                 setDescription('');
                 setBackgroundImage(null);
                 setProfileImage(null);
+                refetch();
             }
         } catch (error) {
             // Handle error
         }
     };
-    const { mutate: updateProfileMutate, data: updateProfileData } = useMutation(
+    const { mutate: updateProfileMutate } = useMutation(
         handleUpdateProfile,
-        {
-            onSucess: () => {
-                console.log(updateProfileData)
-                queryClient.invalidateQueries('profile')
-            }
-        }
     )
 
 
@@ -127,12 +115,12 @@ const Profile = () => {
     const handleUpdateProfileTag = async () => {
         const tagIds = getMatchingTagIds(selectedTags, recipeTags.data);
         const paramTag = tagIds.map(tagId => `tagIds=${tagId}`).join('&');
-        console.log(paramTag)
         try {
             const response = await EditProfileApi.updateProfileTag(paramTag, keycloak.token);
             if (response.status === 200) {
                 setShowTagEdit(false);
                 document.querySelector('body').style.overflow = 'scroll';
+                refetch();
             }
         } catch (error) {
             // Handle error 
@@ -141,10 +129,6 @@ const Profile = () => {
     const { mutate: mutateUpdateTag, isLoading: loadingUpdateTag, isError: tagError } = useMutation(
         handleUpdateProfileTag,
         {
-            onSucess: () => {
-                queryClient.invalidateQueries('profile')
-                setSelectedTags([]);
-            },
             tagError: () => {
                 console.log("error")
             }
