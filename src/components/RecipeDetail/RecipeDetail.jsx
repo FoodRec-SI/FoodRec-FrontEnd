@@ -54,6 +54,7 @@ const RecipeDetail = () => {
     fetchPostById = async () => {
       const response = await PostApi.getPostById(postId, keycloak.token);
       if (response.status === 200) {
+        console.log("refetch");
         return response.data;
       }
     };

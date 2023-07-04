@@ -18,7 +18,7 @@ const Discover = () => {
 
   const { data, fetchNextPage, hasNextPage, status } = useInfiniteQuery(
     "recipes",
-    ({ pageParam = 0, pageSize = 6 }) => fetchRecipes({ pageParam, pageSize }),
+    ({ pageParam = 0, pageSize = 4 }) => fetchRecipes({ pageParam, pageSize }),
     {
       getNextPageParam: (lastPage) => {
         const maxPages = lastPage.totalElements / 5;
