@@ -1,11 +1,11 @@
-import RatingArea from '../../components/RatingArea/RatingArea';
+import SkeletonProfile from "../../components/Skeleton/SkeletonProfile";
 
 const Meal = () => {
 
 
   return (
     <>
-      <RatingArea />
+      <SkeletonProfile/>
     </>
   );
 };

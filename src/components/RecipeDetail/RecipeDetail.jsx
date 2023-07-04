@@ -67,7 +67,6 @@ const RecipeDetail = () => {
     <div className="recipeDetail__wrapper">
       <div className="recipeDetailContainer">
         {isPending === true && (
-          // <DialogPending ref={dialogRef} navigate={navigate} />
           <PendingRecipeDetail postId = {postId}/>
         )}
         {post && <div className="recipeDetail">
