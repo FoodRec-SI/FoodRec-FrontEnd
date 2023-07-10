@@ -1,19 +1,16 @@
 import "./LoginBanner.css";
 import ChipsBanner from "../ChipsBanner/ChipsBanner";
 
-import { useState } from "react";
+
 import { TagApi } from "../../api/TagApi";
 import { useKeycloak } from "@react-keycloak/web";
 import { useQuery } from "react-query";
 
 import { Rating } from "@mui/material";
 
-const LoginBanner = () => {
+const LoginBanner = (props) => {
 
   const { keycloak } = useKeycloak();
-  const [tagId, setTagId] = useState('');
-  
-
   const fetchTags = async () => {
     const response = await TagApi.getTags(keycloak.token)
     return response.data;
@@ -21,28 +18,12 @@ const LoginBanner = () => {
 
   const { data : items } = useQuery('items' , fetchTags);
 
-  // if (status === 'loading') {
-  //   return <div>Loading...</div>
-  // }
-
-  // if (status === 'error') {
-  //   return <div>No Tags Found</div>
-  // }
-
-
   const onItemClick = (item) => {
     console.log(item);
-    setTagId(item.tagId);
+    props.onItemClick(item);
   };
   
-
-  // const fetchPostByTag = async () => {
-  //   const response = await TagApi.getPostByTag(tagId);
-  //   return response.data;
-  // };
-
-  // const { data : posts } = useQuery('posts', fetchPostByTag);
-
+  
 
 
   return (
@@ -58,7 +39,7 @@ const LoginBanner = () => {
           </div>
         </div>
       </div>
-      <div className="block"></div>
+      {/* <div className="block"></div> */}
       {items && <ChipsBanner items={items} onItemClick={onItemClick} />}
     </div>
   );

@@ -12,6 +12,7 @@ import PendingRecipe from "./PendingRecipe";
 import RecipeDetail from "../components/RecipeDetail/RecipeDetail";
 import SearchPage from "./SearchPage";
 import ImportForm from "../components/ImportForm/ImportForm";
+import AddRecipeForm from "../components/AddRecipeForm/AddRecipeForm";
 import Profile from "../components/Profile/Profile";
 
 
@@ -65,8 +66,13 @@ function AppRoutes() {
     },
     {
       path: "/addRecipe",
-      element: isLogin ? <ImportForm /> : <Login />,
+      element: isLogin ? <AddRecipeForm/> : <Login />,
       title: "Add Recipe",
+    },
+    {
+      path: "/importRecipe",
+      element: isLogin ? <ImportForm/> : <Login />,
+      title: "Import Recipe",
     },
     {
       path: "/profile",

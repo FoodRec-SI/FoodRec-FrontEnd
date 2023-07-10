@@ -177,7 +177,7 @@ const ImportForm = () => {
 
                     <TextField label="Enter Your Recipe Title"
                         fullWidth
-                        variant="outlined"
+                        variant="filled"
                         size="larger"
                         required={true}
                         onChange={(e) => debounce(setTitle(e.target.value), 500)}
@@ -189,6 +189,7 @@ const ImportForm = () => {
 
                     <TextField
                         label="Enter Your Recipe Description"
+                        variant="filled"
                         multiline
                         fullWidth
                         minRows={5}
@@ -237,12 +238,13 @@ const ImportForm = () => {
                 <div className="import-form__Detail__Ingredient">
 
                     <h2 style={{ margin: "10px", marginTop: "30px", }}>Ingredient</h2>
-                    <StepGenerate step={ingredient} setStep={setIngredient} />
+                    <StepGenerate step={ingredient} setStep={setIngredient} fullWidth/>
                 </div>
                 <div className="import-form__Detail__Step">
                     <h2 style={{ margin: "10px", marginTop: "30px" }}>Instruction</h2>
                     <TextField
-                        label="Enter Your Recipe Instruction"
+                        label="Enter Your Recipe Instruction"   
+                        variant="filled"
                         multiline
                         fullWidth
                         minRows={5}

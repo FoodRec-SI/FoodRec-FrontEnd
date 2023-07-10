@@ -8,6 +8,21 @@ export const CollectionApi = {
   getPostFromCollection,
   deletePostFromCollection,
   deleteCollection,
+  updateCollection,
+}
+
+function updateCollection(data,token) {
+  return instance.put(`/api/member/collection`,
+  {
+    collectionId: data.collectionId,
+    collectionName: data.collectionName,
+    description: data.collectionDescription,
+  },
+  {
+    headers: {
+      Authorization: bearerAuth(token),
+    },
+  });
 }
 
 function deleteCollection(data,token) {
