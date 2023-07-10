@@ -38,7 +38,6 @@ const PendingRecipeDetail = (props) => {
     const { mutate, isSuccess } = useMutation({
         mutationFn: async () => {
             const data = await ApproveRejectApi.updateStatusPost({ postId, isApprove }, keycloak.token);
-
             return data;
         },
         onSuccess: () => {

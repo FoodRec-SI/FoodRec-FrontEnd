@@ -1,11 +1,11 @@
-import SkeletonProfile from "../../components/Skeleton/SkeletonProfile";
+import SkeletonRecipeDetail from "../../components/Skeleton/SkeletonRecipeDetail";
 
 const Meal = () => {
 
 
   return (
     <>
-      <SkeletonProfile/>
+      <SkeletonRecipeDetail />
     </>
   );
 };
