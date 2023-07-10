@@ -13,9 +13,10 @@
   background-color: #d0d0d0;
 }
 
-.chip:active {
+.chip.active {
   background-color: rgb(122, 210, 122);
   color: #fff;
+  margin-left: 0;
 }
 
 

@@ -1,0 +1,15 @@
+.add-recipe-form{
+  width: 700px;
+  margin: 0 auto;
+  padding: 2rem;
+  border-radius: 15px;
+  background-color: #ffffff;
+  box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.25);
+}
+
+.form-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}

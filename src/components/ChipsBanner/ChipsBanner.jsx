@@ -8,8 +8,22 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 const Chip=(props) =>{
 
+  const { label, onClick, activeChip, setActiveChip } = props;
+
+  const handleClick = () => {
+    if (activeChip === label) {
+      // Deactivate the chip if it is already active
+      setActiveChip(null);
+      onClick(null);
+    } else {
+      // Activate the chip and deactivate others
+      setActiveChip(label);
+    }
+    onClick(label);
+  };
+
   return (
-    <div className="chip" onClick={() => props.onClick(props.label)} >
+    <div className={`chip ${activeChip === label ? 'active' : ''}`} onClick={handleClick} >
       {props.label}
     </div>
   );
@@ -18,7 +32,7 @@ const Chip=(props) =>{
 const ChipsBanner = (props) => {
 
   const scrl =useRef(null);
-
+  const [activeChip, setActiveChip] = useState(null);
   const [scrollX, setscrollX] = useState(0);
   const [scrollEnd, setscrollEnd] = useState(false);
 
@@ -54,9 +68,14 @@ const ChipsBanner = (props) => {
     scrl.current.scrollLeft += shift;
   }
      
-   const handleItemClick = (item) => {
-    console.log(item);
-    props.onItemClick(item);
+  const handleItemClick = (item) => {
+    if (activeChip === item.tagName) {
+      setActiveChip(""); // Deactivate the chip
+      props.onItemClick(""); // Clear the value sent to another component
+    } else {
+      setActiveChip(item.tagName); // Activate the chip
+      props.onItemClick(item); // Send the chip value to another component
+    }
   };
 
   return (
@@ -71,6 +90,8 @@ const ChipsBanner = (props) => {
             key={item.tagId}
             label={item.tagName}
             onClick={() => handleItemClick(item)}
+            activeChip={activeChip}
+            setActiveChip={setActiveChip}
           />
         ))}
       </div>

@@ -1,11 +1,11 @@
-import RatingArea from '../../components/RatingArea/RatingArea';
+import MealPlan from "../../components/MealPlan/MealPlan";
 
 const Meal = () => {
 
 
   return (
     <>
-      <RatingArea />
+      <MealPlan />
     </>
   );
 };

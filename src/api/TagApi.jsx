@@ -16,7 +16,7 @@ function getTags(token) {
 }
 
 function getPostByTag(tagId){
-  return instance.get(`/api/public/posts/${tagId}`);
+  return instance.get(`/api/public/post/${tagId}`);
 }
 
 function getTagsByRecipe(recipeId,token){
