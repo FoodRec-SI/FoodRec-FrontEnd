@@ -8,9 +8,9 @@ import ClickAwayListener from "@mui/material/ClickAwayListener";
 import MenuList from "@mui/material/MenuList";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import PersonAdd from "@mui/icons-material/PersonAdd";
 import Logout from "@mui/icons-material/Logout";
 import Settings from "@mui/icons-material/Settings";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
@@ -114,12 +114,12 @@ const Navbar = ({ title }) => {
           <h3 className="title">{title}</h3>
         </div>
         <form className="search-bar" onSubmit={handleSearch}>
-          <input
-            className="in-search-bar"
-            type="text"
-            placeholder="  Search for recipes"
-            name="recipeName"
-          />
+        <input
+          className="in-search-bar" 
+          type="text"
+          placeholder="  What are you craving today?"
+          name="recipeName"
+        />
         </form>
       </div>
       <div className="navbar-end">
@@ -171,7 +171,7 @@ const Navbar = ({ title }) => {
                           navigate('/profile');
                         }}>
                           <ListItemIcon>
-                            <PersonAdd fontSize="small" />
+                            <AccountCircleIcon fontSize="small" />
                           </ListItemIcon>
                           Profile
                         </MenuItem>

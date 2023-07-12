@@ -15,10 +15,18 @@ import { useMutation } from "react-query";
 import { CollectionApi } from "../../api/CollectionApi";
 import { LikeApi } from "../../api/LikeApi";
 import { useQueryClient } from "react-query";
+import { useNavigate } from "react-router-dom";
 
 const LikedRecipe = (props) => {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
+  const navigate = useNavigate();
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    navigate('/recipeDetail/' + props.postId);
+  };
+
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -95,8 +103,11 @@ const LikedRecipe = (props) => {
     },
   });
 
+
+  
   return (
-    <div className="liked-container">
+    <div className="liked-container" >
+      <div className="liked-container-click" onClick={handleClick}>
       <div className="index-container">
         <div className="index">{props.index}</div>
       </div>
@@ -111,6 +122,7 @@ const LikedRecipe = (props) => {
             <div className="separator">&#183;</div>
             <div className="liked-recipe-time">{props.cookingTime} minutes</div>
           </div>
+        </div>
         </div>
       </div>
       <div className="action-menu">

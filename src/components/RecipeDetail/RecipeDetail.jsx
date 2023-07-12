@@ -16,6 +16,7 @@ import PendingRecipeDetail from "../PendingRecipeDetail/PendingRecipeDetail";
 import ChipList from "../ChipList/ChipList";
 import RatingArea from "../RatingArea/RatingArea";
 import RecommendeRcipe from "../RecommendRecipe/RecommendRecipe";
+import SkeletonRecipeDetail from "../Skeleton/SkeletonRecipeDetail";
 
 import { CollectionApi } from "../../api/CollectionApi";
 
@@ -60,7 +61,15 @@ const RecipeDetail = () => {
     };
   }
 
-  const { data: post, isSuccess: isPostSuccess } = useQuery(["post", postId], fetchPostById);
+  const { data: post, isSuccess: isPostSuccess, status } = useQuery(["post", postId], fetchPostById);
+
+  if (status === "loading") {
+    return(
+      <>
+        <SkeletonRecipeDetail />
+      </>
+    )
+  }
 
   return (
     isPostSuccess &&

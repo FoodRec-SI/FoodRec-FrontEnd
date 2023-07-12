@@ -5,6 +5,7 @@
   align-items: center;
   margin: 0 auto;
   margin-top: 2rem; /* use em or rem unit for margin */
+ 
 }
 
 .block{
@@ -22,9 +23,9 @@
 
 .user-banner {
   width: 90%;
-  height: 16rem; /* use em or rem unit for height */
+  height: 20rem; /* use em or rem unit for height */
   border: 1px solid #e9e7e7;
-  border-radius: 5px;
+  border-radius: 15px;
   display: flex;
   align-items: center;
   position: relative;

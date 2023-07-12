@@ -1,14 +1,19 @@
-import { useEffect } from "react";
+import {useState,useEffect } from "react";
 import LoginBanner from "../../components/LoginBanner/LoginBanner";
 import RecipeCardList from "../../components/RecipeCardList/RecipeCardList";
+import SkeletonCardList from "../../components/Skeleton/SkeletonCardList";
 import Banner from "../../components/Banner/Banner";
 import { PostApi } from "../../api/PostApi";
+import { TagApi } from "../../api/TagApi";
 import { useKeycloak } from "@react-keycloak/web";
-import { useInfiniteQuery } from "react-query";
+import { useQuery,useInfiniteQuery } from "react-query";
+
 
 const Discover = () => {
   const { keycloak } = useKeycloak();
   const isLogin = keycloak.authenticated;
+  const [tagId, setTagId] = useState('');
+
 
   const fetchRecipes = async ({ pageParam, pageSize }) => {
     const response = await PostApi.getPosts(pageParam, pageSize);
@@ -16,9 +21,11 @@ const Discover = () => {
     return response.data;
   };
 
+  
+
   const { data, fetchNextPage, hasNextPage, status } = useInfiniteQuery(
-    "recipes",
-    ({ pageParam = 0, pageSize = 4 }) => fetchRecipes({ pageParam, pageSize }),
+    "posts",
+    ({ pageParam = 0, pageSize = 6 }) => fetchRecipes({ pageParam, pageSize }),
     {
       getNextPageParam: (lastPage) => {
         const maxPages = lastPage.totalElements / 5;
@@ -27,6 +34,25 @@ const Discover = () => {
       },
     }
   );
+  
+  const handleItemSelection = (item) => {
+    console.log(item);
+    setTagId(item.tagId);
+  };
+
+
+  const fetchPostByTag = async (tagId) => {
+    const response = await TagApi.getPostByTag(tagId,keycloak.token);
+    return response.data;
+  };
+
+  const shouldFetchData = Boolean(tagId);
+
+  const { data : posts } = useQuery(['posts',tagId], () => fetchPostByTag(tagId),{
+    enabled: shouldFetchData,
+  }
+  );
+
 
   useEffect(() => {
     const onScroll = (event) => {
@@ -51,7 +77,14 @@ const Discover = () => {
   }, [hasNextPage, fetchNextPage]);
 
   if (status === "loading") {
-    return <div>Loading...</div>;
+    return (
+      <>
+      {isLogin ? <LoginBanner onItemClick={handleItemSelection}/> : <Banner />}
+      <div style={{ width: "90%", margin: "0 auto" }}>
+        <SkeletonCardList />
+      </div>
+      </>
+    )
   }
 
   if (status === "error") {
@@ -63,12 +96,16 @@ const Discover = () => {
   // console.log(data);
   // console.log(recipes);
 
+  console.log(data);
+ 
+  
+
   return (
     <>
-      {isLogin ? <LoginBanner /> : <Banner />}
+      {isLogin ? <LoginBanner onItemClick={handleItemSelection}/> : <Banner />}
       <div style={{ width: "90%", margin: "0 auto" }}>
         <RecipeCardList
-          props={data.pages.flatMap((page) => page.content)}
+          props={posts && posts.content ? posts.content : data.pages.flatMap((page) => page.content)}
           pending={""}
         />
       </div>

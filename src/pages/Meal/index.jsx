@@ -1,11 +1,9 @@
-import SkeletonRecipeDetail from "../../components/Skeleton/SkeletonRecipeDetail";
+import MealPlan from "../../components/MealPlan/MealPlan";
 
 const Meal = () => {
-
-
   return (
     <>
-      <SkeletonRecipeDetail />
+      <MealPlan />
     </>
   );
 };

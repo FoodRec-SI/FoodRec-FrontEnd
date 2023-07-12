@@ -85,13 +85,13 @@ const Profile = () => {
     const handleUpdateProfile = async () => {
         const formData = new FormData();
         if (description !== profileData.data.description) {
-            formData.append("description", description || "");
+            formData.append("description", description);
         }
         if (fileAvatar !== null) {
-            formData.append("profileImage", fileAvatar || "");
+            formData.append("profileImage", fileAvatar);
         }
         if (fileBackground !== null) {
-            formData.append("backgroundImage", fileBackground || "");
+            formData.append("backgroundImage", fileBackground);
         }
         try {
             const response = await EditProfileApi.updateProfile(formData, keycloak.token);

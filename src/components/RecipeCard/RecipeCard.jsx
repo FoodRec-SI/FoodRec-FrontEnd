@@ -19,13 +19,13 @@ function RecipeCard({props,pending}) {
     }
 
     return (
-        <div key={props.key} className={"recipeCard" + pending} onClick={handleClick}>
+        <div key={props.key} className={"recipeCard"} onClick={handleClick}>
             <img src={props.image} alt="" loading="lazy" />
-            <div className={"recipeCard__info" + pending}>
+            <div className={"recipeCard__info"}>
                 <h3>{props.recipeName}</h3>
                 <p>{props.description}</p>
-                <div className= {"recipeCard__rating" + pending}>
-                    <div className={"recipeCard__time" + pending} >
+                <div className= {"recipeCard__rating"}>
+                    <div className={"recipeCard__time"} >
                         <AccessTimeIcon fontSize = "medium"></AccessTimeIcon>
                         <p style={{marginLeft:"5px", textAlign:"center", marginBottom:"0px"}}>{props.duration} min</p>
                     </div>

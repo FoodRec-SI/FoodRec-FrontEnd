@@ -1,0 +1,22 @@
+.add-recipe-form{
+  width: 70%;
+  margin: 0 auto;
+  padding: 2rem;
+  border-radius: 15px;
+  background-color: #ffffff;
+  box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.25);
+  /* color: rgb(45, 45, 45); */
+}
+
+.form-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+  .add-recipe-form{
+    width: 98%;
+  }
+}
