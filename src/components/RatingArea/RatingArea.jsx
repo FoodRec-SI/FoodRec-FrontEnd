@@ -12,6 +12,7 @@ import { useQuery, useMutation, QueryClient } from 'react-query';
 
 import { Dialog } from 'primereact/dialog';
 
+const queryClient = new QueryClient();
 
 const labels = {
     1: 'Useless',
@@ -49,7 +50,7 @@ const RatingArea = () => {
         ["personalRating", id],
         async () => {
             const response = await RatingApi.getPersonalRating(keycloak.token, id);
-            setValue(response.data.rating);
+
             return response.data;
         },
     );
@@ -58,7 +59,7 @@ const RatingArea = () => {
         ["percentageRating", id],
         async () => {
             const response = await RatingApi.getPercnetageRating(keycloak.token, id);
-            console.log(response.data);
+
             return response.data;
         },
     );
@@ -90,7 +91,6 @@ const RatingArea = () => {
                     <br />
                     <div className="rating_area_overView_score">
                         <Rating
-                            name="read-only"
                             value={ratingData.average}
                             precision={0.5}
                             readOnly
@@ -109,6 +109,7 @@ const RatingArea = () => {
                 <CountRatingPoint />
                 <br />
                 <Button label="Rating now" text rounded severity="info" onClick={() => {
+                    setValue(personalRatingData.rating);
                     setOpen(true);
                 }} />
                 <Dialog

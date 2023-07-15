@@ -5,8 +5,18 @@ export const PostApi = {
   getPostsByName,
   getPosts,
   getPostById,
+  createRecipe,
 };
 
+//http://localhost:8080/api/member/recipe
+function createRecipe(data, token) {
+  return instance.post(`/api/member/recipe`, data, {
+    headers: {
+      Authorization: bearerAuth(token),
+      'Content-Type':'multipart/form-data'
+    },
+  });
+}
 
 function getPosts(pageNumber,pageSize){
   return instance.get(`/api/public/posts`, {

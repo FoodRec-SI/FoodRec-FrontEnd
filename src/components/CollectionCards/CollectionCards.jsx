@@ -58,8 +58,6 @@ const CollectionCards = () => {
     return <div>Loading...</div>;
   }
 
-  console.log(items);
-
   return (
     <div className="collection-cards">
       <div className={`collection-card ${isEditing ? "add-collection is-editing" : "add-collection"}`}>

@@ -14,7 +14,7 @@ import { ConfirmDialog } from 'primereact/confirmdialog';
 import { useNavigate } from 'react-router-dom';
 
 import { useKeycloak } from "@react-keycloak/web";
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation, useInfiniteQuery } from 'react-query';
 
 import { PersonalRecipeApi } from '../../api/PersonalRecipeApi';
 import { TagApi } from '../../api/TagApi';
@@ -49,31 +49,58 @@ const Profile = () => {
     const [selectedTags, setSelectedTags] = useState([]);
 
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-
-
-    //-------Call API-------
-    const { data: profileData, isLoading: loadingProfile } = useQuery({
+    
+    const { data: profileData, isLoading: loadingProfile, refetch } = useQuery({
         queryKey: ["profile"],
         queryFn: async () => {
             const data = await ProfileApi.getProfile(keycloak.token, keycloak.tokenParsed.sub);
             return data;
         },
-        refetchInterval: 1000 * 2
+        
     });
 
     const tempTag = profileData?.data?.tagsCollection?.map((tag) => tag.tagName);
 
-    const { data: personalRecipe, isLoading, isError } = useQuery({
+    const fetchPersonalRecipe = async ({pageParam, pageSize}) => {
+        const response = await PersonalRecipeApi.getPersonalRecipe(keycloak.token, pageParam, pageSize);
+        return response.data;
+    }
+
+    const { data: personalRecipe, hasNextPage , fetchNextPage } = useInfiniteQuery({
         queryKey: ["personalRecipes"],
-        queryFn: async () => {
-            const data = await PersonalRecipeApi.getPersonalRecipe(keycloak.token);
-            return data;
+        queryFn: ({ pageParam = 0, pageSize = 6 }) => fetchPersonalRecipe({ pageParam, pageSize }),
+        getNextPageParam: (lastPage) => {
+            const maxPages = lastPage.totalElements / 5;
+            const nextPage = lastPage.number + 1;
+            return nextPage <= maxPages ? nextPage : undefined;
         },
     });
 
+    useEffect(() => {
+        const onScroll = (event) => {
+          let fetching = false;
+          const { scrollTop, clientHeight, scrollHeight } =
+            event.target.scrollingElement;
+    
+          if (!fetching && scrollHeight - scrollTop <= clientHeight * 1.5) {
+            fetching = true;
+            if (hasNextPage) {
+              fetchNextPage();
+            }
+            // console.log("fetching");
+            fetching = false;
+          }
+        };
+        document.addEventListener("scroll", onScroll);
+    return () => {
+      document.removeEventListener("scroll", onScroll);
+    };
+  }, [hasNextPage, fetchNextPage]);
     
 
-    const { data: recipeTags, isSuccess: isTagSuccessFetch } = useQuery({
+    
+
+    const { data: recipeTags} = useQuery({
         queryKey: ["tags"],
         queryFn: async () => {
             const data = await TagApi.getTags(keycloak.token);
@@ -83,22 +110,17 @@ const Profile = () => {
 
     const tagNames = recipeTags?.data?.map((tag) => tag.tagName);
 
-
-
-
-    //-------End Call API-------
-
     //-------Update Data-------
     const handleUpdateProfile = async () => {
         const formData = new FormData();
         if (description !== profileData.data.description) {
-            formData.append("description", description || "");
+            formData.append("description", description);
         }
         if (fileAvatar !== null) {
-            formData.append("profileImage", fileAvatar || "");
+            formData.append("profileImage", fileAvatar);
         }
         if (fileBackground !== null) {
-            formData.append("backgroundImage", fileBackground || "");
+            formData.append("backgroundImage", fileBackground);
         }
         try {
             const response = await EditProfileApi.updateProfile(formData, keycloak.token);
@@ -107,19 +129,14 @@ const Profile = () => {
                 setDescription('');
                 setBackgroundImage(null);
                 setProfileImage(null);
+                refetch();
             }
         } catch (error) {
             // Handle error
         }
     };
-    const { mutate: updateProfileMutate, data: updateProfileData } = useMutation(
+    const { mutate: updateProfileMutate } = useMutation(
         handleUpdateProfile,
-        {
-            onSucess: () => {
-                console.log(updateProfileData)
-                queryClient.invalidateQueries('profile')
-            }
-        }
     )
 
 
@@ -127,12 +144,12 @@ const Profile = () => {
     const handleUpdateProfileTag = async () => {
         const tagIds = getMatchingTagIds(selectedTags, recipeTags.data);
         const paramTag = tagIds.map(tagId => `tagIds=${tagId}`).join('&');
-        console.log(paramTag)
         try {
             const response = await EditProfileApi.updateProfileTag(paramTag, keycloak.token);
             if (response.status === 200) {
                 setShowTagEdit(false);
                 document.querySelector('body').style.overflow = 'scroll';
+                refetch();
             }
         } catch (error) {
             // Handle error 
@@ -141,10 +158,6 @@ const Profile = () => {
     const { mutate: mutateUpdateTag, isLoading: loadingUpdateTag, isError: tagError } = useMutation(
         handleUpdateProfileTag,
         {
-            onSucess: () => {
-                queryClient.invalidateQueries('profile')
-                setSelectedTags([]);
-            },
             tagError: () => {
                 console.log("error")
             }
@@ -333,7 +346,7 @@ const Profile = () => {
                                 Add your recipe
                             </Button>
                         </div>
-                        {personalRecipe && <RecipeCardList props={personalRecipe?.data.content} pending="" />}
+                        {personalRecipe && <RecipeCardList props={personalRecipe?.pages.flatMap((page) => page.content)} pending="myRecipe" />}
                     </div>
                 </div>
             </div>}

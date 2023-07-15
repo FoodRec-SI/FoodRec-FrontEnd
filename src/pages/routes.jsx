@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { useKeycloak } from "@react-keycloak/web";
 import { isModerator } from "../utills/Helper";
 
@@ -20,8 +20,12 @@ import PlanDetail from "./PlanDetail/PlanDetail";
 function AppRoutes() {
   const { keycloak } = useKeycloak();
   const isLogin = keycloak?.authenticated;
+  const navigate = useNavigate();
   const Login = () => {
+    navigate('/')
+    setTimeout(() => {
     keycloak.login();
+  }, 1000 * 0.5);
   };
 
   const routes = [
@@ -61,6 +65,11 @@ function AppRoutes() {
       title: "Recipe Detail",
     },
     {
+      path: "/myRecipeDetail/:recipeId",
+      element: isLogin ? <RecipeDetail/> : <Login />,
+      title: "Recipe Detail",
+    },
+    {
       path: "/search",
       element: isLogin ? <SearchPage /> : <Login />,
       title: "SearchPage",
@@ -89,7 +98,7 @@ function AppRoutes() {
 
   const moderatorRoutes = [
     {
-      path: "/pendingRecipe",
+      path: "/",
       element: isLogin ? <PendingRecipe /> : <Login />,
       title: "Pending Recipe",
     },
