@@ -19,8 +19,6 @@ import { useQuery } from "react-query";
 
 
 import { Tooltip } from "@mui/material";
-import { Navigate } from "react-router-dom";
-
 import { AccountApi } from "../../api/AccountApi";
 
 
@@ -167,9 +165,10 @@ const Navbar = ({ title }) => {
                         aria-labelledby="composition-button"
                         onKeyDown={handleListKeyDown}
                       >
-                        <MenuItem onClick={() => {
-                          navigate('/profile');
-                        }}>
+                        <MenuItem  onClick={()=>{
+                            navigate('/profile');
+                            setOpen(false);
+                          }}>
                           <ListItemIcon>
                             <AccountCircleIcon fontSize="small" />
                           </ListItemIcon>
