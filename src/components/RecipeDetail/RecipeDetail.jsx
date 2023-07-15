@@ -9,13 +9,18 @@ import Paper from "@mui/material/Paper";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import MenuList from "@mui/material/MenuList";
 import MenuItem from "@mui/material/MenuItem";
+import DeleteIcon from '@mui/icons-material/Delete';
+
+import { ConfirmDialog } from 'primereact/confirmdialog';
 
 import "./RecipeDetail.css";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import PendingRecipeDetail from "../PendingRecipeDetail/PendingRecipeDetail";
 import ChipList from "../ChipList/ChipList";
 import RatingArea from "../RatingArea/RatingArea";
 import RecommendeRcipe from "../RecommendRecipe/RecommendRecipe";
+import SkeletonRecipeDetail from "../Skeleton/SkeletonRecipeDetail";
+import MyRecipeDetail from "../MyRecipeDetail/MyRecipeDetail";
 
 import { CollectionApi } from "../../api/CollectionApi";
 
@@ -24,6 +29,7 @@ import { useState, useRef, useEffect } from "react";
 import { PostApi } from "../../api/PostApi";
 import { PendingApi } from "../../api/PendingApi";
 import { LikeApi } from "../../api/LikeApi";
+import { PersonalRecipeApi } from "../../api/PersonalRecipeApi";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { useKeycloak } from "@react-keycloak/web";
 
@@ -32,20 +38,32 @@ const RecipeDetail = () => {
   const { keycloak } = useKeycloak();
   const { postId } = useParams();
   const location = useLocation();
-
   let isPending = false;
-
+  let isMyRecipe = false;
   const url = location.pathname;
-
   let fetchPostById;
+
 
   if (url.includes("pendingRecipeDetail")) {
     isPending = true;
+  } else if (url.includes("myRecipeDetail")) {
+    isMyRecipe = true;
+  } else if (url.includes("recipeDetail")) {
+    isPending = false;
+    isMyRecipe = false;
   }
 
   if (isPending === true) {
     fetchPostById = async () => {
       const response = await PendingApi.getPendingRecipeDetail(postId, keycloak.token);
+      if (response.status === 200) {
+        return response.data;
+      }
+    };
+  } else if (isMyRecipe === true) {
+    const { recipeId } = useParams();
+    fetchPostById = async () => {
+      const response = await PersonalRecipeApi.getPersonalRecipeByRecipeID(keycloak.token, recipeId);
       if (response.status === 200) {
         return response.data;
       }
@@ -59,34 +77,41 @@ const RecipeDetail = () => {
     };
   }
 
-  const { data: post, isSuccess: isPostSuccess } = useQuery(["post", postId], fetchPostById);
+  const { data: post, isSuccess: isPostSuccess, status } = useQuery(["post", postId], fetchPostById);
 
-
-  console.log(post);
+  if (status === "loading") {
+    return (
+      <>
+        <SkeletonRecipeDetail />
+      </>
+    )
+  }
 
   return (
     isPostSuccess &&
     <div className="recipeDetail__wrapper">
       <div className="recipeDetailContainer">
         {isPending === true && (
-          // <DialogPending ref={dialogRef} navigate={navigate} />
-          <PendingRecipeDetail />
+          <PendingRecipeDetail postId={postId} />
         )}
         {post && <div className="recipeDetail">
           <img src={post.image} alt="" />
 
-          <Introduction props={post} isPostSuccess />
+          <Introduction props={post} isPostSuccess isMyRecipe={isMyRecipe} />
           <Ingredients isPostSuccess />
           <Description props={post} isPostSuccess />
           <Instruction isPostSuccess />
-          {isPending === false &&
+          {isPending === false && isMyRecipe == false &&
             <div className="recipeDetail__rating">
               <RatingArea isPostSuccess />
             </div>
           }
+          {isMyRecipe == true && isPending == false && <div className="myRecipeDetail">
+            <MyRecipeDetail recipeId={post.recipeId} />
+          </div>}
         </div>}
       </div>
-      {isPending === false && <div className="recommendRecipe">
+      {isPending === false && isMyRecipe == false && <div className="recommendRecipe">
         <RecommendeRcipe />
       </div>}
     </div>
@@ -94,11 +119,15 @@ const RecipeDetail = () => {
   );
 };
 
-function Introduction({ props }) {
+function Introduction({ props, isMyRecipe }) {
+
+
   const { keycloak } = useKeycloak();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const queryClient = useQueryClient();
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const navigate = useNavigate();
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -172,18 +201,29 @@ function Introduction({ props }) {
     },
   });
 
+  const deletePost = async () => {
+    const response = await PersonalRecipeApi.deletePersonalRecipe(keycloak.token, props.recipeId);
+    if (response.status === 200) {
+      navigate("/profile")
+    }
+    return response.status;
+  };
+
+  const { mutate: deleteRecipe } = useMutation(deletePost);
+
+
   return (
     <>
       {props && (
         <div className="introduction">
           <h1>{props.recipeName}</h1>
           <p>Author</p>
-            <Rating
-              name="ratingPoint"
-              defaultValue={props.averageScore}
-              precision={0.1}
-              readOnly
-            />
+          <Rating
+            name="ratingPoint"
+            defaultValue={props.averageScore}
+            precision={0.1}
+            readOnly
+          />
           <div className="showTag">
             {<ChipList tags={props.tagDTOList} />}
           </div>
@@ -249,14 +289,6 @@ function Introduction({ props }) {
 
             <Tooltip title="Add to favorite" placement="top">
               <IconButton aria-label="addToFavorite"
-                // onClick={() => {
-                //   if (props.isLiked === false) {
-                //     like();
-                //   } else {
-                //     unlike();
-                //   }
-                // }
-                // }
                 onClick={like}
               >
                 <FavoriteBorderIcon fontSize="large" />
@@ -268,14 +300,40 @@ function Introduction({ props }) {
                 <ShareIcon fontSize="large" />
               </IconButton>
             </Tooltip>
+
+            {isMyRecipe == true && <Tooltip title="Delete Recipe" placement="top">
+              <IconButton aria-label="delete" color="error"
+                onClick={() => { setOpenDeleteDialog(true) }}
+              >
+                <DeleteIcon fontSize="large" />
+              </IconButton>
+            </Tooltip>}
+
           </div>
           <div className="recipeStatistic">
             <Statistic amount={9} nameOfStatisic="ingredients" />
             <Statistic amount={props.duration} nameOfStatisic="minutes" />
             <Statistic amount={props.calories} nameOfStatisic="calories" />
           </div>
+          <ConfirmDialog
+            visible={openDeleteDialog}
+            onHide={() => setOpenDeleteDialog(false)}
+            message="Are you sure you want to delete this recipe?"
+            header="Delete Recipe"
+            icon="pi pi-exclamation-triangle"
+            acceptClassName="p-button-danger"
+            accept={() => {
+              deleteRecipe();
+              setOpenDeleteDialog(false);
+            }}
+            reject={() => {
+              setOpenDeleteDialog(false);
+              console.log("cancel");
+            }}
+          />
         </div>
       )}
+
     </>
   );
 }

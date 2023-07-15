@@ -12,7 +12,7 @@ import Logout from "@mui/icons-material/Logout";
 import Settings from "@mui/icons-material/Settings";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useKeycloak } from "@react-keycloak/web";
 import { useQuery } from "react-query";
@@ -32,27 +32,28 @@ const Navbar = ({ title }) => {
 
   const handleLogInOut = () => {
     if (keycloak.authenticated) {
+      navigate('/');
       keycloak.logout();
-      <Navigate to="/" />
+
     } else {
+      navigate('/');
       keycloak.login();
-      <Navigate to="/" />
     }
   };
 
   const createAccount = async () => {
     const response = await AccountApi.createAccount(keycloak.token)
-    if(response.status === 409){
+    if (response.status === 409) {
       console.log("Account already exists");
     }
     if (response.status === 200) {
       return response.status;
     }
-    
+
   }
 
   const { status } = useQuery('createAccount', createAccount);
-  
+
   if (status === "error") {
     console.log("error");
   }
@@ -126,7 +127,7 @@ const Navbar = ({ title }) => {
           <div className="navbar-end">
             <div className="notification-icon">
               <Tooltip title="Notifications">
-              <NotificationsOutlinedIcon />
+                <NotificationsOutlinedIcon />
               </Tooltip>
             </div>
             <div className="avatar">
@@ -166,9 +167,9 @@ const Navbar = ({ title }) => {
                         aria-labelledby="composition-button"
                         onKeyDown={handleListKeyDown}
                       >
-                        <MenuItem  onClick={()=>{
-                            navigate('/profile');
-                          }}>
+                        <MenuItem onClick={() => {
+                          navigate('/profile');
+                        }}>
                           <ListItemIcon>
                             <AccountCircleIcon fontSize="small" />
                           </ListItemIcon>

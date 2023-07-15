@@ -1,26 +1,31 @@
 import "./AddRecipeForm.css";
+import { useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Button } from "primereact/button";
 
 import { MultiSelect } from "primereact/multiselect";
-import { IconButton } from "@mui/material";
-import CancelIcon from "@mui/icons-material/Cancel";
 import ImageIcon from "@mui/icons-material/Image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { classNames } from "primereact/utils";
 
-const AddRecipeForm = () => {
-  // const [recipeName, setRecipeName] = useState("");
-  // const [recipeCalories, setRecipeCalories] = useState("");
-  // const [recipeDuration, setRecipeDuration] = useState("");
+import { TagApi } from "../../api/TagApi";
+import { PostApi } from "../../api/PostApi";
+import { useKeycloak } from "@react-keycloak/web";
+import { useQuery, useMutation } from 'react-query';
+import { useNavigate } from "react-router-dom";
 
-  // const [recipeDescription, setRecipeDescription] = useState("");
-  // const [recipeImage, setRecipeImage] = useState(null);
-  // const [recipeIngredients, setRecipeIngredients] = useState([]);
-  // const [recipeInstructions, setRecipeInstructions] = useState("");
-  // const [recipeTags, setRecipeTags] = useState([]);
+const AddRecipeForm = () => {
+  const [previewImg, setPreviewImg] = useState(null);
+  const [fileImage, setFileImage] = useState(null);
+  const [isError, setIsError] = useState(null);
+  const [isTagError, setIsTagError] = useState(null);
+  const [tag, setTag] = useState([]);
+
+  const { keycloak } = useKeycloak();
+
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -28,39 +33,79 @@ const AddRecipeForm = () => {
       recipeCalories: "",
       recipeDuration: "",
       recipeDescription: "",
-      recipeImage: null,
-      recipeIngredients: [],
+      recipeIngredients: "",
       recipeInstructions: "",
-      recipeTags: [],
     },
     validationSchema: Yup.object({
       recipeName: Yup.string().required("Required"),
-      recipeCalories: Yup.number().required("Required"),
-      recipeDuration: Yup.number().required("Required"),
+      recipeCalories: Yup.number().positive("Please enter a positive number").required("Required").typeError("Please enter a positive number"),
+      recipeDuration: Yup.number().positive("Please enter a positive number").required("Required").typeError("Please enter a positive number"),
       recipeDescription: Yup.string().required("Required"),
-      recipeImage: Yup.mixed().required("Required"),
-      recipeIngredients: Yup.array().required("Required"),
+      recipeIngredients: Yup.string().required("Required"),
       recipeInstructions: Yup.string().required("Required"),
-      recipeTags: Yup.array().required("Required"),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      if (fileImage == null) {
+        setIsError("Required");
+        return;
+      }
+      if (tag.length === 0) {
+        setIsTagError("Required");
+        return;
+      }
+      createRecipe();
     },
   });
 
-  const tags = [
-    "Breakfast",
-    "Brunch",
-    "Lunch",
-    "Dinner",
-    "Appetizer",
-    "Snack",
-    "Dessert",
-    "Baking",
-    "Grilling",
-    "Roasting",
-    "Slow Cooker",
-  ];
+
+
+  const { data: recipeTags } = useQuery({
+    queryKey: ["tags"],
+    queryFn: async () => {
+      const data = await TagApi.getTags(keycloak.token);
+      return data;
+    },
+  });
+
+  const tagNames = recipeTags?.data?.map((tag) => tag.tagName);
+
+
+
+  const getMatchingTagIds = (tagName, tagObjects) => {
+    const matchingTagIds = [];
+    for (let i = 0; i < tagObjects.length; i++) {
+      const tagObject = tagObjects[i];
+      if (tagName.includes(tagObject.tagName)) {
+        matchingTagIds.push(tagObject.tagId);
+      }
+    }
+    return matchingTagIds;
+  }
+
+  const handleCreateRecipe = async () => {
+    const data = new FormData();
+    data.append("recipeName", formik.values.recipeName);
+    data.append("description", formik.values.recipeDescription);
+    data.append("calories", formik.values.recipeCalories);
+    data.append("duration", formik.values.recipeDuration);
+    data.append("instructions", formik.values.recipeInstructions);
+    data.append("ingredientList", formik.values.recipeIngredients);
+    data.append("tagsIdSet", getMatchingTagIds(tag, recipeTags.data));
+    data.append("image", fileImage);
+    try {
+      const response = await PostApi.createRecipe(data, keycloak.token);
+      if (response.status === 200) {
+        console.log(response);
+        navigate(`/myRecipeDetail/${response.data}`);
+        
+      }
+    } catch (error) {
+
+    }
+  }
+
+  const { mutate: createRecipe } = useMutation(handleCreateRecipe,)
+
 
   const isFormFieldValid = (name) =>
     !!(formik.touched[name] && formik.errors[name]);
@@ -72,28 +117,66 @@ const AddRecipeForm = () => {
     );
   };
 
+  const handleBrowseOnClick = () => {
+    document.querySelector('input[type="file"]').click();
+  }
+
+  const handleInputFileChange = (e) => {
+    e.preventDefault();
+    let file = e.target.files[0];
+    handleDropImage(file);
+  }
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    let file = e.dataTransfer.files[0];
+    handleDropImage(file);
+  };
+
+  const handleDropImage = (file) => {
+
+    let validExtensions = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/svg+xml'];
+    if (validExtensions.includes(file.type)) {
+      let fileReader = new FileReader();
+      fileReader.onloadend = () => {
+        let fileURL = fileReader.result;
+        setPreviewImg(fileURL);
+      };
+      setIsError(null);
+      setFileImage(file);
+      fileReader.readAsDataURL(file);
+    } else {
+      setIsError("Invalid file type");
+    }
+  }
+
+
   return (
     <div>
       <form className="add-recipe-form" onSubmit={formik.handleSubmit}>
         <div className="form-header">
           <h2 className="">Recipe Detail</h2>
           <div className="form-button">
-          <Button
-            type=""
-            label="Cancel"
-            icon="pi pi-times"
-            iconPos="right"
-            className="p-button-raised p-button-rounded"
-            outlined
-          />
-          <Button
-            type="submit"
-            label="Submit"
-            icon="pi pi-check"
-            iconPos="right"
-            className="p-button-raised p-button-rounded ml-4"
-          />
-        </div>
+            <Button
+              type="button"
+              label="Cancel"
+              icon="pi pi-times"
+              iconPos="right"
+              className="p-button-raised p-button-rounded m-2"
+              outlined
+            />
+            <Button
+              type="submit"
+              label="Submit"
+              icon="pi pi-check"
+              iconPos="right"
+              className="p-button-raised p-button-rounded m-2"
+            />
+          </div>
         </div>
         <div className="flex flex-column gap-2 mb-3">
           <label
@@ -133,8 +216,10 @@ const AddRecipeForm = () => {
               name="recipeCalories"
               value={formik.values.recipeCalories}
               onChange={formik.handleChange}
+              size={16}
               className={classNames({
-                "p-invalid": isFormFieldValid("recipeCalories"),
+                "p-invalid": isFormFieldValid("recipeCalories")
+                ,
               })}
             />
             {getFormErrorMessage("recipeCalories")}
@@ -154,6 +239,7 @@ const AddRecipeForm = () => {
               name="recipeDuration"
               value={formik.values.recipeDuration}
               onChange={formik.handleChange}
+              size={15}
               className={classNames({
                 "p-invalid": isFormFieldValid("recipeDuration"),
               })}
@@ -183,72 +269,49 @@ const AddRecipeForm = () => {
           {getFormErrorMessage("recipeDescription")}
         </div>
         <div className="flex flex-column gap-2 mb-3">
-          <label
-            htmlFor="recipe-image"
-            className={classNames({
-              "p-error": isFormFieldValid("recipeImage"),
-            })}
-          >
-            Image
-          </label>
-          <div className="import-form__Detail__RecipeImage__upload__preview">
+          <p style={isError !== null ? { color: "red" } : {}}>Image</p>
+          <div className="import-form__Detail__RecipeImage__upload__preview" >
             <h2>Upload Your Image</h2>
-            <p>
+            <p style={{ padding: "10px", textAlign: "center", color: "rgb(45, 45, 45)" }}>
               Uploading a picture to illustrate your recipe SVG, JPG, PNG ,...
-              resolustion 1920x1080px
+              resolustion 1920x1080 px
             </p>
-            <div className="import-form__Detail__RecipeImage__upload__preview__dragArea">
-              {/* <p>Drag and drop your image here</p> */}
+            <div className="import-form__Detail__RecipeImage__upload__preview__dragArea" onDragOver={handleDragOver} onDrop={handleDrop}>
 
-              {!formik.values.recipeImage && <ImageIcon fontSize="large" />}
-              {!formik.values.recipeImage && <span> Drag and Drop</span>}
-              {!formik.values.recipeImage && <span> or</span>}
+              {!previewImg && <ImageIcon fontSize="large" />}
+              {!previewImg && <span> Drag and Drop</span>}
+              {!previewImg && <span> or</span>}
 
-              {!formik.values.recipeImage && (
-                <Button  link>Browes</Button>
+              {!previewImg && (
+                <Button type="button" onClick={handleBrowseOnClick
+                }>Browes</Button>
               )}
-              {!formik.values.recipeImage && <input type="file" hidden />}
-
-              {formik.values.recipeImage && (
-                <img src={formik.values.recipeImage} alt="" />
-              )}
+              <input className="inputFile" hidden type="file" onChange={handleInputFileChange} />
+              {previewImg && <img src={previewImg} alt="" />}
             </div>
-            {formik.values.recipeImage && (
+            {previewImg && (
               <div className="import-form__Detail__RecipeImage__upload__preview__dragArea__clearImg">
-                <IconButton
-                  aria-label="delete"
-                  size="large"
-                  color="error"
-                  onClick={(formik.values.recipeImage = null)}
-                >
-                  <CancelIcon />
-                </IconButton>
+                <Button icon="pi pi-times" rounded outlined severity="danger" aria-label="Cancel"
+                  onClick={() => { setPreviewImg(null), setFileImage(null), setIsError(null) }} />
               </div>
             )}
           </div>
-          {getFormErrorMessage("recipeImage")}
+          {isError && <p style={{ fontSize: "small", color: "red" }}>{isError}</p>}
         </div>
         <div className="flex flex-column gap-2 mb-3">
-          <label
-            htmlFor="recipe-tags"
-            className={classNames({
-              "p-error": isFormFieldValid("recipeTags"),
-            })}
-          >
-            Tags
-          </label>
+          <p style={isTagError !== null ? { color: "red" } : {}}>Tag</p>
           <MultiSelect
             id="recipe-tags"
             name="recipeTags"
-            value={formik.values.recipeTags}
-            options={tags}
+            value={tag}
+            options={tagNames}
             display="chip"
-            onChange={formik.handleChange}
+            onChange={(e) => {setTag(e.value) , setIsTagError(null)}}
             className={classNames({
               "p-invalid": isFormFieldValid("recipeTags"),
             })}
           />
-          {getFormErrorMessage("recipeTags")}
+           {isTagError && <p style={{ fontSize: "small", color: "red" }}>{isTagError}</p>}
         </div>
 
         <div className="flex flex-column gap-2 mb-3">

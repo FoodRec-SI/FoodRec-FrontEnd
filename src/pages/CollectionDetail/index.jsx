@@ -17,7 +17,6 @@ const CollectionDetail = () => {
       pageSize,
       keycloak.token
     );
-    console.log(response.data);
     return response.data;
   };
 

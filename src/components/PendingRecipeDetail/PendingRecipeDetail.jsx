@@ -1,92 +1,83 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
-import DialogTitle from '@mui/material/DialogTitle';
-import Dialog from '@mui/material/Dialog';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import { Button as PButton } from 'primereact/button';
 import { useNavigate } from 'react-router-dom';
 
 import { ApproveRejectApi } from '../../api/ApproveRejectApi';
-import { useQuery, useMutation , QueryClient} from 'react-query';
+import { useQuery, useMutation, QueryClient } from 'react-query';
 import { useKeycloak } from "@react-keycloak/web";
+
+import { Dialog } from 'primereact/dialog';
+import { ListBox } from 'primereact/listbox';
 
 import './PendingRecipeDetail.css';
 
 
 
-const PendingRecipeDetail = () => {
-
-    const queryClient = new QueryClient();
+const PendingRecipeDetail = (props) => {
+    const { postId } = props;
 
     const navigate = useNavigate();
 
-    const [state, setState] = useState('');
-
     const [selectedValue, setSelectedValue] = useState([]);
+
+    const [isOpen, setIsOpen] = useState(false);
 
     const { keycloak } = useKeycloak();
 
     const [isApprove, setIsApprove] = useState('APPROVED');
 
-    const postId = 'POS000007';
+    const reason =[
+        "The recipe is not clear",
+        "The recipe is not complete",
+        "The recipe is not good",
+        "The recipe is not delicious",
+        "The recipe is not healthy",
+        "The recipe is not easy to cook",
+        "The recipe is not easy to understand",
+        "The recipe is not easy to follow",
+        "The recipe is not easy to read",
+        "The recipe is not easy to make",
+        "The recipe is not easy to prepare",
+    ]
 
-    const { mutate, isSuccess} = useMutation({
+    const { mutate, isSuccess } = useMutation({
         mutationFn: async () => {
-            const data = await ApproveRejectApi.updateStatusPost({postId, isApprove}, keycloak.token );
-            console.log(data);
+            const data = await ApproveRejectApi.updateStatusPost({ postId, isApprove }, keycloak.token);
             return data;
         },
         onSuccess: () => {
             console.log('success update');
-            queryClient.invalidateQueries('pendingRecipes');
-            queryClient.refetchQueries;
-            navigate('/pendingRecipe', { state: state });
+            setIsOpen(false);
+            navigate('/pendingRecipe', { state: isApprove });
         },
         onError: () => {
             console.log('error update');
         }
     });
 
-    const handleApproveAndReject = async (status) => {
-        setState(status);
-        if (state === 'approve') {
-            mutate();
+    const handleApproveAndReject = (updateState) => {
+        if (updateState === 'approve') {
+            setIsApprove('APPROVED');
         }
-        if (state === 'reject') {
-            try {
-                await new Promise((resolve) => {
-                    document.getElementById('openDialog').click();
-                });
-            } catch (error) {
-                // Handle any errors that occur during the rejection process
-                console.error('Error occurred during rejection:', error);
-            }
-
+        if (updateState === 'reject') {
+            setIsApprove('REJECTED');
         }
-    };
+        mutate();
+    }
 
-
-    const handleClose = (value) => {
-        const filteredValue = value.filter((item) => item !== undefined && item !== null);
-
-        if (value.length != 0) {
-            setSelectedValue(filteredValue);
-            setIsApprove('reject');
-            console.log(filteredValue);      
-            navigate('/pendingRecipe', { state: 'reject' });
-            
-        }
-    };
-
+    const dialogFooter = (
+        <div>
+            {selectedValue.length > 0 && <PButton label="Submit" icon="pi pi-check" onClick={() => handleApproveAndReject('reject')} />}
+        </div>
+    );
 
     return (
         <div className="recipeDetailPending">
             <h1>Public this recipe ???</h1>
             <div className="recipeDetailPending__btn">
                 <Button color='error' variant="outlined" sx={{ fontSize: "27px", height: "52px", width: "170px", borderRadius: "25px", margin: "10px" }}
-                    onClick={() => handleApproveAndReject('reject')}
+                    onClick={() => setIsOpen(true)}
                 >
                     Reject
                 </Button>
@@ -96,105 +87,13 @@ const PendingRecipeDetail = () => {
                 >
                     Approve
                 </Button>
+                <Dialog header="Why do you want to reject this recipe ???" visible={isOpen} style={{ width: '50vw' }} modal={true} onHide={() => setIsOpen(false)} footer={dialogFooter} >
+                    <ListBox multiple value={selectedValue} onChange={(e) => setSelectedValue(e.value)} options={reason} />
+                </Dialog>
             </div>
-            <DialogPending handleClose={handleClose} selectedValue={selectedValue} />
-        </div>
 
+        </div>
     );
 }
-
-
-
-function DialogPending(props) {
-
-    const { handleClose, selectedValue } = props;
-
-    const [open, setOpen] = useState(false);
-
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleCloseDialog = (value) => {
-        setOpen(false);
-        handleClose(value);
-    };
-
-    return (
-        <div>
-            <button id='openDialog' style={{ display: "none" }} onClick={handleClickOpen}>Open simple dialog</button>
-            <PopUpDialog
-                open={open}
-                onClose={handleCloseDialog}
-            />
-        </div>
-
-
-    );
-};
-
-function PopUpDialog(props) {
-    const { onClose, open } = props;
-
-    const [selectItem, setSelectItem] = useState([]);
-
-    const listOfRejectReason = [
-        'Inaccurate or Incomplete Instructions',
-        'Missing Ingredients',
-        'Lack of Originality',
-        'Unappealing Presentation',
-        'Safety Concerns',
-        'Unverified Claims',
-        'Offensive or Inappropriate Content',
-        'Copyright Infringement',
-    ];
-
-
-    const handleClose = (value) => {
-        // console.log(selectItem);
-        // onClose(selectedValue);
-
-
-
-        if (value === 'OK') {
-            onClose(selectItem);
-
-        }
-        if (value === 'Cancel') {
-            setSelectItem([]);
-            onClose([]);
-        }
-    };
-
-    const handleSeletedItem = (e) => {
-        // console.log(e.target.value);
-
-        const itemSelected = e.target.value;
-        if (selectItem.includes(itemSelected)) {
-            setSelectItem(selectItem.filter(item => item !== itemSelected));
-            // setSelectItem(selectItem.filter(item => item !== ' '));
-        } else {
-            setSelectItem([...selectItem, itemSelected]);
-        }
-    }
-
-    return (
-        <Dialog onClose={handleClose} open={open} >
-
-            <DialogTitle>Why did you reject this recipe to be public ? </DialogTitle>
-            <FormGroup sx={{ padding: "20px", paddingBottom: "5px" }} >
-                {listOfRejectReason.map((item, index) => (
-                    <FormControlLabel key={index} label={item} value={item} control={<Checkbox />} onClick={handleSeletedItem} />
-                ))}
-            </FormGroup>
-            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                <Button onClick={() => handleClose("Cancel")}>Cancel</Button>
-                <Button onClick={() => handleClose("OK")}>OK</Button>
-            </div>
-        </Dialog>
-    );
-}
-
 
 export default PendingRecipeDetail;

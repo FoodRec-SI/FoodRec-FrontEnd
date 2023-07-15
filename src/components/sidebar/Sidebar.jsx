@@ -76,7 +76,7 @@ const Sidebar = ({ setTitle }) => {
     {
       name: "Pending Recipe",
       icon: <AccessTimeIcon sx={{ fontSize: "1.5rem" }} />,
-      path: "/pendingRecipe",
+      path: "/",
     },
   ];
 

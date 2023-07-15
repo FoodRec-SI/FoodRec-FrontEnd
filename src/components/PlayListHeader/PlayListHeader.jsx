@@ -79,7 +79,6 @@ const PlayListHeader = (props) => {
       } recipes`
     : `${props.likerecipes && props.likerecipes.length} recipes`;
 
-  console.log(props);
 
   const [isEdit, setIsEdit] = useState(false);
   const [value, setValue] = useState(
@@ -109,8 +108,6 @@ const PlayListHeader = (props) => {
   };
 
   const DESCRIPTION_LIMIT = 100;
-
-  console.log(props.id);
 
   const updateCollectionName = async () => {
     const collectionId = props.id;

@@ -1,6 +1,7 @@
 import {useState,useEffect } from "react";
 import LoginBanner from "../../components/LoginBanner/LoginBanner";
 import RecipeCardList from "../../components/RecipeCardList/RecipeCardList";
+import SkeletonCardList from "../../components/Skeleton/SkeletonCardList";
 import Banner from "../../components/Banner/Banner";
 import { PostApi } from "../../api/PostApi";
 import { TagApi } from "../../api/TagApi";
@@ -76,21 +77,19 @@ const Discover = () => {
   }, [hasNextPage, fetchNextPage]);
 
   if (status === "loading") {
-    return <div>Loading...</div>;
+    return (
+      <>
+      {isLogin ? <LoginBanner onItemClick={handleItemSelection}/> : <Banner />}
+      <div style={{ width: "90%", margin: "0 auto" }}>
+        <SkeletonCardList />
+      </div>
+      </>
+    )
   }
 
   if (status === "error") {
     return <div>Error fetching recipes</div>;
   }
-
-  // const recipes = data?.pages.flatMap((page) => page);
-
-  // console.log(data);
-  // console.log(recipes);
-
-  console.log(data);
- 
-  
 
   return (
     <>
