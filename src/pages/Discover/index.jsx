@@ -91,15 +91,6 @@ const Discover = () => {
     return <div>Error fetching recipes</div>;
   }
 
-  // const recipes = data?.pages.flatMap((page) => page);
-
-  // console.log(data);
-  // console.log(recipes);
-
-  console.log(data);
- 
-  
-
   return (
     <>
       {isLogin ? <LoginBanner onItemClick={handleItemSelection}/> : <Banner />}

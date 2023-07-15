@@ -14,13 +14,18 @@ import { TagApi } from "../../api/TagApi";
 import { PostApi } from "../../api/PostApi";
 import { useKeycloak } from "@react-keycloak/web";
 import { useQuery, useMutation } from 'react-query';
+import { useNavigate } from "react-router-dom";
 
 const AddRecipeForm = () => {
   const [previewImg, setPreviewImg] = useState(null);
   const [fileImage, setFileImage] = useState(null);
   const [isError, setIsError] = useState(null);
+  const [isTagError, setIsTagError] = useState(null);
+  const [tag, setTag] = useState([]);
 
   const { keycloak } = useKeycloak();
+
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -30,7 +35,6 @@ const AddRecipeForm = () => {
       recipeDescription: "",
       recipeIngredients: "",
       recipeInstructions: "",
-      recipeTags: [],
     },
     validationSchema: Yup.object({
       recipeName: Yup.string().required("Required"),
@@ -39,11 +43,14 @@ const AddRecipeForm = () => {
       recipeDescription: Yup.string().required("Required"),
       recipeIngredients: Yup.string().required("Required"),
       recipeInstructions: Yup.string().required("Required"),
-      recipeTags: Yup.array().required("Required"),
     }),
     onSubmit: (values) => {
       if (fileImage == null) {
         setIsError("Required");
+        return;
+      }
+      if (tag.length === 0) {
+        setIsTagError("Required");
         return;
       }
       createRecipe();
@@ -52,22 +59,23 @@ const AddRecipeForm = () => {
 
 
 
-  const { data: recipeTags, isSuccess: isTagSuccessFetch } = useQuery({
+  const { data: recipeTags } = useQuery({
     queryKey: ["tags"],
     queryFn: async () => {
       const data = await TagApi.getTags(keycloak.token);
-
-      return data.data;
+      return data;
     },
   });
 
-  const tagNames = recipeTags?.map((tag) => tag.tagName);
+  const tagNames = recipeTags?.data?.map((tag) => tag.tagName);
 
-  const getMatchingTagIds = (tagNames, tagObjects) => {
+
+
+  const getMatchingTagIds = (tagName, tagObjects) => {
     const matchingTagIds = [];
     for (let i = 0; i < tagObjects.length; i++) {
       const tagObject = tagObjects[i];
-      if (tagNames.includes(tagObject.tagName)) {
+      if (tagName.includes(tagObject.tagName)) {
         matchingTagIds.push(tagObject.tagId);
       }
     }
@@ -82,13 +90,14 @@ const AddRecipeForm = () => {
     data.append("duration", formik.values.recipeDuration);
     data.append("instructions", formik.values.recipeInstructions);
     data.append("ingredientList", formik.values.recipeIngredients);
-    data.append("tagsIdSet", getMatchingTagIds(formik.values.recipeTags, recipeTags));
+    data.append("tagsIdSet", getMatchingTagIds(tag, recipeTags.data));
     data.append("image", fileImage);
-
     try {
       const response = await PostApi.createRecipe(data, keycloak.token);
       if (response.status === 200) {
-        console.log("success");
+        console.log(response);
+        navigate(`/myRecipeDetail/${response.data}`);
+        
       }
     } catch (error) {
 
@@ -137,7 +146,7 @@ const AddRecipeForm = () => {
         let fileURL = fileReader.result;
         setPreviewImg(fileURL);
       };
-      setIsError(true);
+      setIsError(null);
       setFileImage(file);
       fileReader.readAsDataURL(file);
     } else {
@@ -260,7 +269,7 @@ const AddRecipeForm = () => {
           {getFormErrorMessage("recipeDescription")}
         </div>
         <div className="flex flex-column gap-2 mb-3">
-          <p style={isError!==null ? { color: "red" } : {}}>Image</p>
+          <p style={isError !== null ? { color: "red" } : {}}>Image</p>
           <div className="import-form__Detail__RecipeImage__upload__preview" >
             <h2>Upload Your Image</h2>
             <p style={{ padding: "10px", textAlign: "center", color: "rgb(45, 45, 45)" }}>
@@ -290,26 +299,19 @@ const AddRecipeForm = () => {
           {isError && <p style={{ fontSize: "small", color: "red" }}>{isError}</p>}
         </div>
         <div className="flex flex-column gap-2 mb-3">
-          <label
-            htmlFor="recipe-tags"
-            className={classNames({
-              "p-error": isFormFieldValid("recipeTags"),
-            })}
-          >
-            Tags
-          </label>
+          <p style={isTagError !== null ? { color: "red" } : {}}>Tag</p>
           <MultiSelect
             id="recipe-tags"
             name="recipeTags"
-            value={formik.values.recipeTags}
+            value={tag}
             options={tagNames}
             display="chip"
-            onChange={formik.handleChange}
+            onChange={(e) => {setTag(e.value) , setIsTagError(null)}}
             className={classNames({
               "p-invalid": isFormFieldValid("recipeTags"),
             })}
           />
-          {getFormErrorMessage("recipeTags")}
+           {isTagError && <p style={{ fontSize: "small", color: "red" }}>{isTagError}</p>}
         </div>
 
         <div className="flex flex-column gap-2 mb-3">

@@ -147,6 +147,10 @@
     margin-bottom: 10px;
 }
 
+.myRecipeDetail{
+    grid-column: 1 / 3;
+}
+
 .recommendRecipe{
     width: 23%;
     position: sticky;

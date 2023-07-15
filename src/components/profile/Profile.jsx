@@ -14,7 +14,7 @@ import { ConfirmDialog } from 'primereact/confirmdialog';
 import { useNavigate } from 'react-router-dom';
 
 import { useKeycloak } from "@react-keycloak/web";
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation, useInfiniteQuery } from 'react-query';
 
 import { PersonalRecipeApi } from '../../api/PersonalRecipeApi';
 import { TagApi } from '../../api/TagApi';
@@ -61,17 +61,46 @@ const Profile = () => {
 
     const tempTag = profileData?.data?.tagsCollection?.map((tag) => tag.tagName);
 
-    const { data: personalRecipe, isLoading, isError } = useQuery({
+    const fetchPersonalRecipe = async ({pageParam, pageSize}) => {
+        const response = await PersonalRecipeApi.getPersonalRecipe(keycloak.token, pageParam, pageSize);
+        return response.data;
+    }
+
+    const { data: personalRecipe, hasNextPage , fetchNextPage } = useInfiniteQuery({
         queryKey: ["personalRecipes"],
-        queryFn: async () => {
-            const data = await PersonalRecipeApi.getPersonalRecipe(keycloak.token);
-            return data;
+        queryFn: ({ pageParam = 0, pageSize = 6 }) => fetchPersonalRecipe({ pageParam, pageSize }),
+        getNextPageParam: (lastPage) => {
+            const maxPages = lastPage.totalElements / 5;
+            const nextPage = lastPage.number + 1;
+            return nextPage <= maxPages ? nextPage : undefined;
         },
     });
 
+    useEffect(() => {
+        const onScroll = (event) => {
+          let fetching = false;
+          const { scrollTop, clientHeight, scrollHeight } =
+            event.target.scrollingElement;
+    
+          if (!fetching && scrollHeight - scrollTop <= clientHeight * 1.5) {
+            fetching = true;
+            if (hasNextPage) {
+              fetchNextPage();
+            }
+            // console.log("fetching");
+            fetching = false;
+          }
+        };
+        document.addEventListener("scroll", onScroll);
+    return () => {
+      document.removeEventListener("scroll", onScroll);
+    };
+  }, [hasNextPage, fetchNextPage]);
     
 
-    const { data: recipeTags, isSuccess: isTagSuccessFetch } = useQuery({
+    
+
+    const { data: recipeTags} = useQuery({
         queryKey: ["tags"],
         queryFn: async () => {
             const data = await TagApi.getTags(keycloak.token);
@@ -317,7 +346,7 @@ const Profile = () => {
                                 Add your recipe
                             </Button>
                         </div>
-                        {personalRecipe && <RecipeCardList props={personalRecipe?.data.content} pending="" />}
+                        {personalRecipe && <RecipeCardList props={personalRecipe?.pages.flatMap((page) => page.content)} pending="myRecipe" />}
                     </div>
                 </div>
             </div>}

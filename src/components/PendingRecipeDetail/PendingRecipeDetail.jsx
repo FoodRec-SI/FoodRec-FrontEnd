@@ -27,6 +27,20 @@ const PendingRecipeDetail = (props) => {
 
     const [isApprove, setIsApprove] = useState('APPROVED');
 
+    const reason =[
+        "The recipe is not clear",
+        "The recipe is not complete",
+        "The recipe is not good",
+        "The recipe is not delicious",
+        "The recipe is not healthy",
+        "The recipe is not easy to cook",
+        "The recipe is not easy to understand",
+        "The recipe is not easy to follow",
+        "The recipe is not easy to read",
+        "The recipe is not easy to make",
+        "The recipe is not easy to prepare",
+    ]
+
     const { mutate, isSuccess } = useMutation({
         mutationFn: async () => {
             const data = await ApproveRejectApi.updateStatusPost({ postId, isApprove }, keycloak.token);
@@ -74,7 +88,7 @@ const PendingRecipeDetail = (props) => {
                     Approve
                 </Button>
                 <Dialog header="Why do you want to reject this recipe ???" visible={isOpen} style={{ width: '50vw' }} modal={true} onHide={() => setIsOpen(false)} footer={dialogFooter} >
-                    <ListBox multiple value={selectedValue} onChange={(e) => setSelectedValue(e.value)} options={cities} optionLabel="name" />
+                    <ListBox multiple value={selectedValue} onChange={(e) => setSelectedValue(e.value)} options={reason} />
                 </Dialog>
             </div>
 

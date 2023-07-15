@@ -16,6 +16,9 @@ function RecipeCard({props,pending}) {
         if(pending == "pending"){
             navigate('/pendingRecipeDetail/' + props.postId);
         }
+        if(pending == "myRecipe"){
+            navigate('/myRecipeDetail/' + props.recipeId);
+        }
     }
 
     return (

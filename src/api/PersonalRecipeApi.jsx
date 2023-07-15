@@ -2,18 +2,40 @@ import axios from "axios";
 
 export const PersonalRecipeApi = {
     getPersonalRecipe,
+    getPersonalRecipeByRecipeID,
+    deletePersonalRecipe,
+}
+
+//http://localhost:8080/api/member/recipe/REC000043
+
+function deletePersonalRecipe(token, recipeId) {
+    return instance.delete(`/api/member/recipe/${recipeId}`, {
+        headers: {
+            Authorization: bearerAuth(token),
+        },
+    });
 }
 
 
+//http://localhost:8080/api/member/recipe/REC000030
+
+function getPersonalRecipeByRecipeID(token, recipeId) {
+    return instance.get(`/api/member/recipe/${recipeId}`, {
+        headers: {
+            Authorization: bearerAuth(token),
+        },
+    });
+}
+
 //api/member/recipe?pageNumber=0&pageSize=6
-function getPersonalRecipe(token) {
+function getPersonalRecipe(token,pageParam, pageSize) {
     return instance.get(`/api/member/recipe`, {
         headers: {
             Authorization: bearerAuth(token),
         },
         params: {
-            pageNumber: 1,
-            pageSize: 6
+            pageNumber: pageParam,
+            pageSize: pageSize
         }
     });
 }
