@@ -203,7 +203,7 @@ const LikedRecipeList = (props) => {
           collectionId={props.id}
           postId={recipe.postId}
           name={recipe.recipeName}
-          author={recipe.userId}
+          author={recipe.userName}
           cookingTime={recipe.duration}
           image={recipe.image}
         />

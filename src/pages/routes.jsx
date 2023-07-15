@@ -14,6 +14,7 @@ import SearchPage from "./SearchPage";
 import ImportForm from "../components/ImportForm/ImportForm";
 import AddRecipeForm from "../components/AddRecipeForm/AddRecipeForm";
 import Profile from "../components/Profile/Profile";
+import PlanDetail from "./PlanDetail/PlanDetail";
 
 
 function AppRoutes() {
@@ -33,6 +34,11 @@ function AppRoutes() {
       path: "/meal",
       element: isLogin  ? <Meal /> : <Login />,
       title: "Meal",
+    },
+    {
+      path: "/meal/:id",
+      element: isLogin  ? <PlanDetail /> : <Login />,
+      title: "Plan Detail",
     },
     {
       path: "/liked",

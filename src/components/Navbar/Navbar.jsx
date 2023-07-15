@@ -168,6 +168,7 @@ const Navbar = ({ title }) => {
                       >
                         <MenuItem  onClick={()=>{
                             navigate('/profile');
+                            setOpen(false);
                           }}>
                           <ListItemIcon>
                             <AccountCircleIcon fontSize="small" />

@@ -1,0 +1,230 @@
+.meal-plan {
+  background-color: #f5f5f5;
+}
+
+.title-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  -webkit-box-align: center;
+  align-items: center;
+  max-width: 1400px;
+}
+
+.meal-plan-header {
+  display: flex;
+  width: 100%;
+  height: 82px;
+  background-color: #ffffff;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.header-text {
+  font-size: 32px;
+  line-height: 36px;
+  font-weight: 800;
+  flex: 1 1 0%;
+}
+
+
+
+.header-subtext{
+  flex: 1 1 0%;
+  text-align: right;
+  cursor: pointer;
+}
+
+.header-dateview {
+  display: flex;
+  flex-direction: row;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+}
+
+.navi-left-right {
+  display: flex;
+  height: 32px;
+  width: 32px;
+  border-radius: 16px;
+  color: #757575;
+  border: none;
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+  background-color: transparent;
+}
+
+.dateview {
+  margin-left: 48px;
+  margin-right: 48px;
+  min-width: 205px;
+  text-align: center;
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 700;
+}
+
+.calendar {
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  padding-bottom: 0px;
+  background-color: #ffffff;
+  margin: 0 auto;
+  overflow: hidden;
+  width: 90%;
+  height: 100vh;
+}
+
+.cell {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  border-left: 1px solid #f0f0f0;
+}
+
+.current-day {
+  background-color: #f8f8f8;
+  font-weight: bold;
+}
+
+.weeklist-row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.weeklist-card {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+
+.weeklist-card-header {
+  height: 56px;
+  display: flex;
+  flex-direction: row;
+  margin-left: 16px;
+  margin-right: 16px;
+  margin-top: 16px;
+  -webkit-box-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  align-items: center;
+}
+
+.weeklist-card-header-title {
+  text-transform: capitalize;
+  color: #757575;
+}
+
+.add-meal-button {
+  width: 78px;
+  height: 32px;
+  color: #757575;
+  background-color: #f5f5f5;
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 700;
+  padding: 0px;
+  border-radius: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.add-meal-button:hover {
+  background-color: #f0f0f0;
+}
+
+.weeklist-card-body {
+  overflow-anchor: none;
+}
+
+.weeklist-plan-card {
+  border-radius: 16px;
+  box-shadow: none;
+  background-color: #ffffff;
+  padding: 0px;
+  margin: 16px 16px 0px;
+}
+
+.weeklist-plan-card-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  overflow: hidden;
+  border: 1px solid #f5f5f5;
+  box-sizing: border-box;
+  border-radius: 16px;
+  background-color: #ffffff;
+  transition: all 0.3s ease 0s;
+}
+
+.meal-plan-card-cover {
+  height: 124px;
+}
+
+.plan-image {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.delete-plan-image {
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  -webkit-box-align: center;
+  align-items: center;
+  position: absolute;
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 16px;
+  top: 8px;
+}
+
+.delete-plan-image:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.meal-plan-card-body {
+  padding: 16px;
+}
+
+@media screen and (max-width: 1219px) {
+  .calendar {
+    width: 100%;
+    height: 100%;
+  }
+  .weeklist-row {
+    flex-direction: column;
+  }
+
+  .cell.empty-cell {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 1220px){
+
+ .header-dateview {
+    position: absolute;
+    align-self: center;
+    left: 30%;
+    right: 30%;
+    width: 40%;
+}
+}

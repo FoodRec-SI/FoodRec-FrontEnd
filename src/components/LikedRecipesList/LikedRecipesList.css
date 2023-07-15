@@ -20,7 +20,7 @@
 .liked-container-click{
   display: flex;
   align-items: center;
-  
+  width: 99%;
 }
 
 .liked-container:hover {
