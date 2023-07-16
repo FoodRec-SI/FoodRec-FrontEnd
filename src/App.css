@@ -1,19 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&family=Nunito+Sans:wght@400;500;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&family=Nunito+Sans:wght@400;500;700&display=swap");
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: "Nunito Sans", "Noto Sans SC", sans-serif;
   text-decoration: none;
-
 }
 
-body{
+body {
   background-color: #ffffff;
-  /* background-image: url(src/assets/banner-marble-bkg.jpg);
-  background-repeat: no-repeat;
-  background-size: cover; */
-
   margin: 0 auto;
 }
 
@@ -23,21 +18,21 @@ body{
 }
 
 .sidebar {
-  grid-area: sidebar;
   z-index: 2;
 }
 
 .header {
   grid-area: header;
-  z-index: 1;
+  z-index: 100;
   grid-column: sidebar / content;
 }
 
 .content {
   grid-area: content;
-  padding-top: 16px;
-  width: calc(100vw - 85px);
+  background-color: #f5f5f5;
+  width: calc(100vw - 16.5px);
   margin: 0 auto;
+
 }
 
 .App {
@@ -45,8 +40,10 @@ body{
   object-fit: repeat;
   display: grid;
   /* grid-template-rows: [sidebar header] auto [content] auto; */
-  grid-template-rows: [sidebar] 0px [header] 56px [content] auto;
-  grid-template-columns: [sidebar] 64px [header content] auto;
+  /* grid-template-rows: [sidebar] 0px [header] 56px [content] auto;
+  grid-template-columns: [sidebar] 64px [header content] auto; */
+  grid-template-rows: [header] 64px [content] auto;
+  
 }
 
 .page-container {
@@ -66,4 +63,127 @@ body{
   height: 90.5vh;
 }
 
+.search-bar-container {
+  box-sizing: border-box;
+  width: auto;
+  max-width: 100%;
+  margin-top: 32px;
+  height: 64px;
+}
 
+.search-bar {
+  display: flex;
+  height: 100%;
+  -webkit-box-align: center;
+  align-items: center;
+  padding: 0px 16px;
+  border-radius: 32px;
+  background-color: #ffffff;
+  box-shadow: 0px 2px 16px rgba(0, 0, 0, 0.12);
+}
+
+#search-icon {
+  vertical-align: middle;
+  border-style: none;
+}
+
+.search-bar-form {
+  display: flex;
+  flex: 1 1 0%;
+  padding: 0px 8px;
+}
+
+.in-search-bar {
+  display: flex;
+  flex: 1 1 0%;
+  width: 100%;
+  appearance: none;
+  font-size: 16px;
+  line-height: 26px;
+  font-weight: 300;
+  background-color: transparent;
+  -webkit-tap-highlight-color: transparent;
+  vertical-align: middle;
+  border-width: 0px;
+  outline: 0px !important;
+  touch-action: manipulation;
+}
+
+.search-button {
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 700;
+  padding: 11px 24px;
+  text-transform: uppercase;
+  margin-left: 8px;
+  height: 44px;
+  border-radius: 22px;
+  color: #ffffff;
+  border: 0px solid #000000;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+  background-color: #000000;
+  outline: 0px !important;
+}
+
+.search-page {
+  width: 100%;
+  margin: 0px auto;
+  max-width: 1400px;
+}
+
+.search-content {
+  padding-top: 30px;
+  display: flex;
+  flex-direction: row;
+}
+
+.ant-menu {
+  width: 250px;
+}
+
+.ant-menu-title {
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 20px;
+}
+
+.ant-menu-item {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.ant-menu-item-filter {
+  background-color: transparent;
+  border: 1px solid #000000;
+  border-radius: 30px;
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 400;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.ant-menu-item-filter:hover {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.search-content-recipe {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  flex-direction: column;
+}
+
+.search-content-recipe-title {
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 700;
+  color: #000000;
+  margin-left: 60px;
+  margin-bottom: 10px;
+}

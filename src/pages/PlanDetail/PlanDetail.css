@@ -16,3 +16,13 @@
   background-color: #ffffff;
 }
 
+.plan-detail-header{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 10%;
+  align-items: center;
+  padding: 15px;
+  
+}
+

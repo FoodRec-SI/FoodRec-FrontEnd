@@ -1,6 +1,7 @@
 .like-page-container {
     display: grid;
     grid-template-columns: 1fr 2fr;
+    padding-top: 16px;
   }
 
 
