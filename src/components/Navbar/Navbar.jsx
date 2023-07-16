@@ -1,207 +1,81 @@
 import "./Navbar.css";
-import Avatar from "@mui/material/Avatar";
-import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
-import Popper from "@mui/material/Popper";
-import Grow from "@mui/material/Grow";
-import Paper from "@mui/material/Paper";
-import ClickAwayListener from "@mui/material/ClickAwayListener";
-import MenuList from "@mui/material/MenuList";
-import MenuItem from "@mui/material/MenuItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import Logout from "@mui/icons-material/Logout";
-import Settings from "@mui/icons-material/Settings";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-
+import 'primeicons/primeicons.css';
+import DehazeOutlinedIcon from "@mui/icons-material/DehazeOutlined";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+// import { useEffect, useRef, useState } from "react";
 import { useKeycloak } from "@react-keycloak/web";
 import { useQuery } from "react-query";
-
 
 import { Tooltip } from "@mui/material";
 import { AccountApi } from "../../api/AccountApi";
 
-
-
-
-const Navbar = ({ title }) => {
+const Navbar = ({toggle}) => {
   const { keycloak } = useKeycloak();
   const navigate = useNavigate();
 
   const handleLogInOut = () => {
     if (keycloak.authenticated) {
-      navigate('/');
+      navigate("/");
       keycloak.logout();
-
     } else {
-      navigate('/');
+      navigate("/");
       keycloak.login();
     }
   };
 
   const createAccount = async () => {
-    const response = await AccountApi.createAccount(keycloak.token)
+    const response = await AccountApi.createAccount(keycloak.token);
     if (response.status === 409) {
       console.log("Account already exists");
     }
     if (response.status === 200) {
       return response.status;
     }
+  };
 
-  }
-
-  const { status } = useQuery('createAccount', createAccount);
+  const { status } = useQuery("createAccount", createAccount);
 
   if (status === "error") {
     console.log("error");
   }
 
-  const getLogInOutText = () => {
-    return keycloak.authenticated ? "Logout" : "Sign in";
-  };
-
-  const [open, setOpen] = useState(false);
-  const anchorRef = useRef(null);
-
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
-
-  const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return;
-    }
-
-    setOpen(false);
-  };
-
-  function handleListKeyDown(event) {
-    if (event.key === "Tab") {
-      event.preventDefault();
-      setOpen(false);
-    } else if (event.key === "Escape") {
-      setOpen(false);
-    }
-  }
-
-  // return focus to the button when we transitioned from !open -> open
-  const prevOpen = useRef(open);
-  useEffect(() => {
-    if (prevOpen.current === true && open === false) {
-      anchorRef.current.focus();
-    }
-
-    prevOpen.current = open;
-  }, [open]);
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    const recipeName = e.target.recipeName.value;
-    navigate(`/search?recipes=${recipeName}`);
-  };
+  // const getLogInOutText = () => {
+  //   return keycloak.authenticated ? "Sign out" : "Sign in";
+  // };
 
   return (
     <header className="navbar-container">
       <div className="navbar-start">
+        <div className="bars" onClick={toggle}>
+          <DehazeOutlinedIcon sx={{ fontSize: "1.5rem" }} />
+        </div>
         <span className="food">Food</span>
         <span className="rec">Rec.</span>
       </div>
-      <div className="navbar-middle">
-        <div className="greeting">
-          <h5 className="hello">Hello, </h5>
-          <h3 className="title">{title}</h3>
-        </div>
-        <form className="search-bar" onSubmit={handleSearch}>
-        <input
-          className="in-search-bar" 
-          type="text"
-          placeholder="  What are you craving today?"
-          name="recipeName"
-        />
-        </form>
-      </div>
       <div className="navbar-end">
-        {keycloak.authenticated ? (
-          <div className="navbar-end">
-            <div className="notification-icon">
-              <Tooltip title="Notifications">
-                <NotificationsOutlinedIcon />
-              </Tooltip>
-            </div>
-            <div className="avatar">
-              <Avatar
-                alt="Remy Sharp"
-                src=""
-                ref={anchorRef}
-                id="composition-button"
-                aria-controls={open ? "composition-menu" : undefined}
-                aria-expanded={open ? "true" : undefined}
-                aria-haspopup="true"
-                onClick={handleToggle}
-              />
-            </div>
-            <Popper
-              open={open}
-              anchorEl={anchorRef.current}
-              role={undefined}
-              placement="bottom-start"
-              transition
-              disablePortal
-            >
-              {({ TransitionProps, placement }) => (
-                <Grow
-                  {...TransitionProps}
-                  style={{
-                    filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                    transformOrigin:
-                      placement === "bottom-start" ? "left top" : "left bottom",
-                  }}
-                >
-                  <Paper>
-                    <ClickAwayListener onClickAway={handleClose}>
-                      <MenuList
-                        autoFocusItem={open}
-                        id="composition-menu"
-                        aria-labelledby="composition-button"
-                        onKeyDown={handleListKeyDown}
-                      >
-                        <MenuItem  onClick={()=>{
-                            navigate('/profile');
-                            setOpen(false);
-                          }}>
-                          <ListItemIcon>
-                            <AccountCircleIcon fontSize="small" />
-                          </ListItemIcon>
-                          Profile
-                        </MenuItem>
-                        <MenuItem onClick={handleClose}>
-                          <ListItemIcon>
-                            <Settings fontSize="small" />
-                          </ListItemIcon>
-                          Settings
-                        </MenuItem>
-                        <MenuItem
-                          onClick={
-                            handleLogInOut
-                          }
-                        >
-                          <ListItemIcon>
-                            <Logout fontSize="small" />
-                          </ListItemIcon>
-                          Logout
-                        </MenuItem>
-                      </MenuList>
-                    </ClickAwayListener>
-                  </Paper>
-                </Grow>
-              )}
-            </Popper>
-          </div>
-        ) : (
-          <button className="login-btn" onClick={handleLogInOut}>
-            {getLogInOutText()}
-          </button>
-        )}
+        <div className="search-icon"
+        onClick={() => {
+          navigate("/search");
+        }
+        }
+        >
+          <Tooltip title="Search">
+          <span className="pi pi-search"></span>
+          </Tooltip>
+        </div>
+        {keycloak.authenticated ? <div className="notification-icon">
+          <Tooltip title="Notifications">
+          <span className="pi pi-bell"></span>
+          </Tooltip>
+        </div> : ""}
+        {keycloak.authenticated ? <div className="settings-icon">
+          <Tooltip title="Settings">
+          <span className="pi pi-spin pi-cog"></span>
+          </Tooltip>
+        </div> : ""}
+        { !keycloak.authenticated  ? <div className="login-btn" onClick={handleLogInOut}> 
+          Sign in
+        </div> : ""}
       </div>
     </header>
   );

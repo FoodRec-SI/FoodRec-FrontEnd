@@ -3,6 +3,7 @@ import LikedRecipesList from "../LikedRecipesList/LikedRecipesList";
 import { useQuery } from "react-query";
 import { LikeApi } from "../../api/LikeApi";
 import { useKeycloak } from "@react-keycloak/web";
+import Nothing from "../Nothing/Nothing";
 
 import "./LikeRecipes.css";
 
@@ -33,7 +34,7 @@ const LikeRecipes = () => {
         </div>
       ) : isError|| (recipes && recipes.length === 0) ? (
         <div className="liked-recipe-list-container">
-          <p>There is no recipe in this like page</p>
+          <Nothing />
         </div>
       ) : (
         <LikedRecipesList recipes={recipes} />
