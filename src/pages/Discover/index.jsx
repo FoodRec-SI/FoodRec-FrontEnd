@@ -8,8 +8,14 @@ import { TagApi } from "../../api/TagApi";
 import { useKeycloak } from "@react-keycloak/web";
 import { useQuery,useInfiniteQuery } from "react-query";
 
+import FriendList from "../../components/Test/Test";
+
+
+
 
 const Discover = () => {
+
+
   const { keycloak } = useKeycloak();
   const isLogin = keycloak.authenticated;
   const [tagId, setTagId] = useState('');
