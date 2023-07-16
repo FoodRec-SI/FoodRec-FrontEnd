@@ -1,0 +1,19 @@
+.historyTable{
+    width: 80%;
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+.status-approved{
+    color: #006B21;
+    background-color: #86E49D;
+    padding: 7px 20px;
+    border-radius: 25px;
+}
+
+.status-pending{
+    color: #B30021;
+    background-color: #D893A3;
+    padding: 7px 20px;
+    border-radius: 25px;
+}

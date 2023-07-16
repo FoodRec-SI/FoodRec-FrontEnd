@@ -323,7 +323,7 @@ const Profile = () => {
                             <PButton
                                 icon='pi pi-pencil'
                                 rounded
-                                outlined
+                                label='Edit your tag'
                                 onClick={() => {
                                     setShowTagEdit(true),
                                     setSelectedTags(tempTag),
@@ -339,9 +339,10 @@ const Profile = () => {
                     <div className="profile__info__yourRecipe">
                         <div className="profile__info__yourRecipe__title">
                             <h2>Your Recipe</h2>
-                            <Button variant="outlined" startIcon={<AddIcon />} onClick={handleAddRecipeNavigate}>
+                            <PButton icon='pi pi-plus' rounded onClick={handleAddRecipeNavigate} label='Add New Recipe'></PButton>
+                            {/* <Button variant="outlined" startIcon={<AddIcon />} onClick={handleAddRecipeNavigate}>
                                 Add your recipe
-                            </Button>
+                            </Button> */}
                         </div>
                         {personalRecipe && <RecipeCardList props={personalRecipe?.pages.flatMap((page) => page.content)} pending="myRecipe" />}
                     </div>

@@ -34,7 +34,6 @@ const Navbar = ({ title }) => {
       keycloak.logout();
 
     } else {
-      navigate('/');
       keycloak.login();
     }
   };

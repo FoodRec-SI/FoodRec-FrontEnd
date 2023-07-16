@@ -10,6 +10,7 @@ import PlaylistAddRoundedIcon from "@mui/icons-material/PlaylistAddRounded";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import ChecklistOutlinedIcon from "@mui/icons-material/ChecklistOutlined";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import HistoryIcon from '@mui/icons-material/History';
 
 import { isModerator } from "../../utills/Helper";
 import keycloak from "../../keycloak";
@@ -76,7 +77,12 @@ const Sidebar = ({ setTitle }) => {
     {
       name: "Pending Recipe",
       icon: <AccessTimeIcon sx={{ fontSize: "1.5rem" }} />,
-      path: "/",
+      path: "/PendingRecipe",
+    },
+    {
+      name: "History",
+      icon: <HistoryIcon sx={{ fontSize: "1.5rem" }} />,
+      path: "/History",
     },
   ];
 
