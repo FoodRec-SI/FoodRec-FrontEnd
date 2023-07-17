@@ -4,6 +4,7 @@ import { useQuery } from "react-query";
 import { LikeApi } from "../../api/LikeApi";
 import { useKeycloak } from "@react-keycloak/web";
 import Nothing from "../Nothing/Nothing";
+import Loading from "../Loading/Loading";
 
 import "./LikeRecipes.css";
 
@@ -30,7 +31,7 @@ const LikeRecipes = () => {
       <PlayListHeader likerecipes={recipes} />
       {isLoading ? (
         <div className="liked-recipe-list-container">
-          <p>Loading...</p>
+          <Loading />
         </div>
       ) : isError|| (recipes && recipes.length === 0) ? (
         <div className="liked-recipe-list-container">

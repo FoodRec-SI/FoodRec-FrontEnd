@@ -1,0 +1,26 @@
+.loading{
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.loading-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.loading-spinner{
+  width: 7rem;
+  height: 7rem;  
+}
+
+.loading-text{
+  font-size: 1rem;
+  font-style: italic;
+  margin-top: 1rem;
+  color: #707070;
+}

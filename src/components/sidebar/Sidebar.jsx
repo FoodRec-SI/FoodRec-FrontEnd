@@ -59,6 +59,7 @@ const Sidebar = ({ isOpen, showBackdrop, toggle }) => {
     {
       name: "Pending Recipe",
       icon: <AccessTimeIcon sx={{ fontSize: "1.5rem" }} />,
+      image: "src/assets/4.jpg",
       path: "/",
     },
   ];
