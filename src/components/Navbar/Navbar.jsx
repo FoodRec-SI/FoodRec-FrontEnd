@@ -62,16 +62,16 @@ const Navbar = ({toggle}) => {
         <span className="rec">Rec.</span>
       </div>
       <div className="navbar-end">
-        <div className="search-icon"
+        {isModerator ? null : <div className="search-icon"
         onClick={() => {
           navigate("/search");
         }
         }
         >
-          <Tooltip title="Search">
+          {<Tooltip title="Search">
           <span className="pi pi-search"></span>
-          </Tooltip>
-        </div>
+          </Tooltip>}
+        </div>}
         {keycloak.authenticated ? <div className="notification-icon">
           <Tooltip title="Notifications">
           <span className="pi pi-bell"></span>

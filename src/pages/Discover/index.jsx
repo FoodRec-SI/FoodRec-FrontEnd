@@ -146,7 +146,7 @@ const Discover = () => {
   }
 
   if (status === "error") {
-    return <div>Error fetching recipes</div>;
+    {isLogin ? <LoginBanner onItemClick={handleItemSelection} /> : <Banner />}
   }
 
   return (
