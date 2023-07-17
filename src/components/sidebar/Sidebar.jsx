@@ -10,6 +10,7 @@ import BookmarkRoundedIcon from '@mui/icons-material/BookmarkRounded';
 import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
 import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
 import { useNavigate } from "react-router-dom";
+import HistoryIcon from '@mui/icons-material/History';
 
 import { isModerator } from "../../utills/Helper";
 import keycloak from "../../keycloak";
@@ -59,7 +60,12 @@ const Sidebar = ({ isOpen, showBackdrop, toggle }) => {
     {
       name: "Pending Recipe",
       icon: <AccessTimeIcon sx={{ fontSize: "1.5rem" }} />,
-      path: "/",
+      path: "/PendingRecipe",
+    },
+    {
+      name: "History",
+      icon: <HistoryIcon sx={{ fontSize: "1.5rem" }} />,
+      path: "/History",
     },
   ];
 

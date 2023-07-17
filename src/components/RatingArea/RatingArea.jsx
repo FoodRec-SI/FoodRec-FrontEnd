@@ -67,11 +67,13 @@ const RatingArea = () => {
     const { mutate, onSuccess } = useMutation(
         async () => {
             const response = await RatingApi.updateRating({ "postId": id, "score": value }, keycloak.token);
+            if(response.status === 200){
+                setOpen(false);
+                
+            }
             return response;
         }, {
         onSuccess: () => {
-            setOpen(false);
-            console.log("success");
             personalRatingRefetch();
             ratingDataRefetch();
             percentageRatingRefetch();
@@ -85,20 +87,21 @@ const RatingArea = () => {
 
     return (
         <>
+        {isPercentageRatingSuccess && 
             <div className="rating_area">
                 <h1>Customers Review</h1>
-                {ratingData && <div className='rating_area_overView'>
+                {<div className='rating_area_overView'>
                     <br />
                     <div className="rating_area_overView_score">
                         <Rating
-                            value={ratingData.average}
+                            value={ratingData != null ? ratingData.average : 0}
                             precision={0.5}
                             readOnly
                             sx={{ paddingLeft: "15px" }}
                         />
-                        <p>{ratingData.average} out of 5</p>
+                        <p>{ratingData.average == null ? 0 : ratingData.average } out of 5</p>
                     </div>
-                    <p>{ratingData.raters} Customers rating</p>
+                    <p>{ratingData.raters== null ? 0 : ratingData.raters } Customers rating</p>
                 </div>}
                 <br />
 
@@ -136,7 +139,7 @@ const RatingArea = () => {
 
                                 }}
                                 onChangeActive={(event, newHover) => {
-                                    setHover(newHover);
+                                    setHover( newHover !== -1 ? newHover : value);
                                 }}
 
                                 sx={{ padding: "10px" }}
@@ -146,7 +149,7 @@ const RatingArea = () => {
                         {value > 0 && <Button label="Submit" rounded onClick={handleRating} text />}
                     </div>
                 </Dialog>
-            </div>
+            </div>}
         </>
     );
 }

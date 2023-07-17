@@ -49,7 +49,7 @@ const PendingRecipeDetail = (props) => {
         onSuccess: () => {
             console.log('success update');
             setIsOpen(false);
-            navigate('/pendingRecipe', { state: isApprove });
+            navigate('/', { state: isApprove });
         },
         onError: () => {
             console.log('error update');

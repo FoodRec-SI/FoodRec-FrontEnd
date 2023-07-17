@@ -7,9 +7,11 @@ import { Button } from "primereact/button";
 import { MultiSelect } from "primereact/multiselect";
 import ImageIcon from "@mui/icons-material/Image";
 import { useFormik } from "formik";
+
 import * as Yup from "yup";
 import { classNames } from "primereact/utils";
 
+import Loading from "../Loading/Loading";
 import { TagApi } from "../../api/TagApi";
 import { PostApi } from "../../api/PostApi";
 import { useKeycloak } from "@react-keycloak/web";
@@ -23,6 +25,8 @@ const AddRecipeForm = () => {
   const [isTagError, setIsTagError] = useState(null);
   const [tag, setTag] = useState([]);
 
+  const [ingredients, setIngredients] = useState([]);
+
   const { keycloak } = useKeycloak();
 
   const navigate = useNavigate();
@@ -33,7 +37,7 @@ const AddRecipeForm = () => {
       recipeCalories: "",
       recipeDuration: "",
       recipeDescription: "",
-      recipeIngredients: "",
+      recipeIngredients: ingredients,
       recipeInstructions: "",
     },
     validationSchema: Yup.object({
@@ -41,7 +45,7 @@ const AddRecipeForm = () => {
       recipeCalories: Yup.number().positive("Please enter a positive number").required("Required").typeError("Please enter a positive number"),
       recipeDuration: Yup.number().positive("Please enter a positive number").required("Required").typeError("Please enter a positive number"),
       recipeDescription: Yup.string().required("Required"),
-      recipeIngredients: Yup.string().required("Required"),
+      recipeIngredients: Yup.array().required("Required"),
       recipeInstructions: Yup.string().required("Required"),
     }),
     onSubmit: (values) => {
@@ -53,6 +57,7 @@ const AddRecipeForm = () => {
         setIsTagError("Required");
         return;
       }
+      
       createRecipe();
     },
   });
@@ -89,7 +94,7 @@ const AddRecipeForm = () => {
     data.append("calories", formik.values.recipeCalories);
     data.append("duration", formik.values.recipeDuration);
     data.append("instructions", formik.values.recipeInstructions);
-    data.append("ingredientList", formik.values.recipeIngredients);
+    data.append("ingredientList", formik.values.recipeIngredients.join(","));
     data.append("tagsIdSet", getMatchingTagIds(tag, recipeTags.data));
     data.append("image", fileImage);
     try {
@@ -97,14 +102,18 @@ const AddRecipeForm = () => {
       if (response.status === 200) {
         console.log(response);
         navigate(`/myRecipeDetail/${response.data}`);
-        
+
       }
     } catch (error) {
 
     }
   }
 
-  const { mutate: createRecipe } = useMutation(handleCreateRecipe,)
+  const { mutate: createRecipe, isLoading: creatingNewRecipe } = useMutation(handleCreateRecipe,)
+
+  if(creatingNewRecipe){
+    return <Loading/>
+  }
 
 
   const isFormFieldValid = (name) =>
@@ -155,6 +164,19 @@ const AddRecipeForm = () => {
   }
 
 
+  const addIngredient = () => {
+    setIngredients([...ingredients, ""]);
+  };
+
+
+  const handleIngredientChange = (index, value) => {
+    const updatedIngredients = [...ingredients];
+    updatedIngredients[index] = value;
+    setIngredients(updatedIngredients);
+    formik.setFieldValue('recipeIngredients', updatedIngredients);
+  };
+
+
   return (
     <div>
       <form className="add-recipe-form" onSubmit={formik.handleSubmit}>
@@ -168,6 +190,7 @@ const AddRecipeForm = () => {
               iconPos="right"
               className="p-button-raised p-button-rounded m-2"
               outlined
+              onClick={() => { navigate("/profile") }}
             />
             <Button
               type="submit"
@@ -210,18 +233,21 @@ const AddRecipeForm = () => {
             >
               Calories
             </label>
-            <InputText
-              id="recipe-calories"
-              type="text"
-              name="recipeCalories"
-              value={formik.values.recipeCalories}
-              onChange={formik.handleChange}
-              size={16}
-              className={classNames({
-                "p-invalid": isFormFieldValid("recipeCalories")
-                ,
-              })}
-            />
+            <span className="p-input-icon-right">
+              <i style={{ fontStyle: "normal", textAlign: "center" }}> kcal</i>
+              <InputText
+                type="text"
+                name="recipeCalories"
+                value={formik.values.recipeCalories}
+                onChange={formik.handleChange}
+                size={16}
+                className={classNames({
+                  "p-invalid": isFormFieldValid("recipeCalories")
+                  ,
+                })}
+              />
+            </span>
+
             {getFormErrorMessage("recipeCalories")}
           </div>
           <div className="flex flex-column gap-2 ">
@@ -233,17 +259,20 @@ const AddRecipeForm = () => {
             >
               Duration
             </label>
-            <InputText
-              id="recipe-duration"
-              type="text"
-              name="recipeDuration"
-              value={formik.values.recipeDuration}
-              onChange={formik.handleChange}
-              size={15}
-              className={classNames({
-                "p-invalid": isFormFieldValid("recipeDuration"),
-              })}
-            />
+            <span className="p-input-icon-right">
+              <i style={{ fontStyle: "normal", textAlign: "center" }}> min</i>
+              <InputText
+                id="recipe-duration"
+                type="text"
+                name="recipeDuration"
+                value={formik.values.recipeDuration}
+                onChange={formik.handleChange}
+                size={15}
+                className={classNames({
+                  "p-invalid": isFormFieldValid("recipeDuration"),
+                })}
+              />
+            </span>
             {getFormErrorMessage("recipeDuration")}
           </div>
         </div>
@@ -306,27 +335,54 @@ const AddRecipeForm = () => {
             value={tag}
             options={tagNames}
             display="chip"
-            onChange={(e) => {setTag(e.value) , setIsTagError(null)}}
+            onChange={(e) => { setTag(e.value), setIsTagError(null) }}
             className={classNames({
               "p-invalid": isFormFieldValid("recipeTags"),
             })}
           />
-           {isTagError && <p style={{ fontSize: "small", color: "red" }}>{isTagError}</p>}
+          {isTagError && <p style={{ fontSize: "small", color: "red" }}>{isTagError}</p>}
         </div>
+
+
+
 
         <div className="flex flex-column gap-2 mb-3">
           <label htmlFor="recipe-ingredients">Ingredients</label>
-          <InputTextarea
-            id="recipe-ingredients"
-            type="text"
-            name="recipeIngredients"
-            value={formik.values.recipeIngredients}
-            onChange={formik.handleChange}
-            className={classNames({
-              "p-invalid": isFormFieldValid("recipeIngredients"),
-            })}
-            autoResize
-          />
+          <div style={{alignSelf: "center", width:"70%"}}>
+            {ingredients.map((ingredient, index) => (
+              <div key={index} className="ingredient-item" style={{ padding: "10px 0px", boxSizing:"border-box", display:"flex",justifyContent:"space-between"}}>
+                <InputText
+                  className={classNames({
+                    "p-invalid": isFormFieldValid("recipeIngredients"),
+                  })}
+                  type="text"
+                  value={ingredient}
+                  onChange={(e) => handleIngredientChange(index, e.target.value)}
+                  style={{ width: "82%" }}
+                  placeholder="Ingredient"
+                  required
+                />
+                <Button
+                  icon="pi pi-trash"
+                  type="button"
+                  className="p-button-danger ml-2"
+                  style={{ width: "15%" }}
+                  onClick={() => {
+                    const updatedIngredients = [...ingredients];
+                    updatedIngredients.splice(index, 1);
+                    setIngredients(updatedIngredients);
+                  }}
+                />
+              </div>
+            ))}
+            <Button
+              type="button"
+              label="Add Ingredient"
+              icon="pi pi-plus"
+              onClick={addIngredient}
+              style={{ width: "100%" }}
+            />
+          </div>
           {getFormErrorMessage("recipeIngredients")}
         </div>
         <div className="flex flex-column gap-2">
@@ -348,5 +404,6 @@ const AddRecipeForm = () => {
     </div>
   );
 };
+
 
 export default AddRecipeForm;

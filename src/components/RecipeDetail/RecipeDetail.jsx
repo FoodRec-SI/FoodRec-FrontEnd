@@ -98,9 +98,9 @@ const RecipeDetail = () => {
           <img src={post.image} alt="" />
 
           <Introduction props={post} isPostSuccess isMyRecipe={isMyRecipe} />
-          <Ingredients isPostSuccess />
+          <Ingredients isPostSuccess props={post.ingredientList} />
           <Description props={post} isPostSuccess />
-          <Instruction isPostSuccess />
+          <Instruction isPostSuccess  props={post.instruction}/>
           {isPending === false && isMyRecipe == false &&
             <div className="recipeDetail__rating">
               <RatingArea isPostSuccess />
@@ -217,7 +217,7 @@ function Introduction({ props, isMyRecipe }) {
       {props && (
         <div className="introduction">
           <h1>{props.recipeName}</h1>
-          <p>Author</p>
+          <p>{props.userName}</p>
           <Rating
             name="ratingPoint"
             defaultValue={props.averageScore}
@@ -349,35 +349,18 @@ function Statistic({ amount, nameOfStatisic }) {
   );
 }
 
-function Ingredients() {
-  let listOfIngredients = [
-    "1/2 cup butter, softened",
-    "1½ cup Basmati rice",
+function Ingredients({ props}) {
+  let listOfIngredients = [];
 
-    "100 grams bell peppers (cut in long strips)",
-
-    "150 grams cabbage (finely chopped)",
-
-    "50 grams French beans (finely chopped)",
-
-    "6 tbsp. salad oil",
-
-    "1/2 tsp. aginomotto",
-
-    "1/2 tbsp. chili sauce",
-
-    "1-tbsp. white vinegar",
-
-    "3 tbsp. Sugar",
-
-    "salt",
-  ];
+  if (props !=null) {
+    listOfIngredients = props.split(',');
+  }
 
   return (
     <div className="ingredients">
       <h1>Ingredients</h1>
       <ul>
-        {listOfIngredients.map((ingredient) => (
+        {  listOfIngredients.map((ingredient) => (
           <li key={ingredient}> {ingredient} </li>
         ))}
       </ul>
@@ -394,9 +377,8 @@ function Description({ props }) {
   );
 }
 
-function Instruction() {
-  let instruction =
-    "Wash and soak rice in cold water. After 2 hour boiled water, add salt and rice. Cook the rice. Spread the rice in a plate.Put all chopped vegetables in a cold water for 2 hours. In a pot, heat oil and add squeezed beans, and aginomotto. Cover with a lid and cook for 10 minutes on a low heat. Mix squeezed beans and bell pepper. Stir for 10 minutes. Add salt and mix.Take 3 tbsp. oil in a frying pan. Heat the oil and add sugar. Don 1/2t stir the sugar. Heat until the oil turns brown.Mix rice, vinegar, chili sauce, Soya sauce. Mix all vegetables, and spread chopped spring.Serve with spring in an oval plate.It can be served with curry, chutney or soy sauce.";
+function Instruction({props}) {
+  let instruction = props;
 
   return (
     <div className="instruction">

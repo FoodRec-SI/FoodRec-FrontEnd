@@ -112,7 +112,7 @@ const CollectionCards = () => {
         <CollectionCard
           key={item.collectionId}
           collectionName={item.collectionName}
-          collectionImage={item.image ? item.image : "src/assets/healthyFood.jpg"}
+          collectionImage={item.image ? item.image : "public/assets/healthyFood.jpg"}
           collectionDescription={item.description}
           id={item.collectionId}
           numberOfRecipes={item.countPost}
