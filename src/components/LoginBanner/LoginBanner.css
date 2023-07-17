@@ -4,8 +4,6 @@
   flex-direction: column;
   align-items: center;
   margin: 0 auto;
-  margin-top: 2rem; /* use em or rem unit for margin */
- 
 }
 
 .block{
@@ -22,10 +20,9 @@
 }
 
 .user-banner {
-  width: 90%;
-  height: 20rem; /* use em or rem unit for height */
+  width: 100%;
+  height: 25rem; /* use em or rem unit for height */
   border: 1px solid #e9e7e7;
-  border-radius: 15px;
   display: flex;
   align-items: center;
   position: relative;
@@ -78,3 +75,10 @@ h6 {
 }
 
 
+.search-bar-container-in-home{
+  box-sizing: border-box;
+    width: 100%;
+    max-width: 1000px;
+    margin-top: 32px;
+    height: 64px;
+}

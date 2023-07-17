@@ -1,30 +1,23 @@
 import "./LoginBanner.css";
 import ChipsBanner from "../ChipsBanner/ChipsBanner";
-
-
 import { TagApi } from "../../api/TagApi";
 import { useKeycloak } from "@react-keycloak/web";
 import { useQuery } from "react-query";
-
 import { Rating } from "@mui/material";
 
 const LoginBanner = (props) => {
-
   const { keycloak } = useKeycloak();
   const fetchTags = async () => {
-    const response = await TagApi.getTags(keycloak.token)
+    const response = await TagApi.getTags(keycloak.token);
     return response.data;
-  }
+  };
 
-  const { data : items } = useQuery('items' , fetchTags);
+  const { data: items } = useQuery("items", fetchTags);
 
   const onItemClick = (item) => {
     console.log(item);
     props.onItemClick(item);
   };
-  
-  
-
 
   return (
     <div className="login-banner">
@@ -37,6 +30,22 @@ const LoginBanner = (props) => {
           <div className="rate">
             <Rating name="read-only" value={5} readOnly />
           </div>
+        </div>
+      </div>
+      <div className="search-bar-container-in-home">
+        <div className="search-bar">
+          <span id="search-icon" className="pi pi-search"></span>
+          <form className="search-bar-form" >
+            <input
+              className="in-search-bar"
+              type="text"
+              placeholder="  What are you craving today ?"
+              name="recipeName"
+            />
+            <button type="submit" className="search-button">
+              Search
+            </button>
+          </form>
         </div>
       </div>
       {/* <div className="block"></div> */}

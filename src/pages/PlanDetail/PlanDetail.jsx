@@ -1,7 +1,14 @@
 import './PlanDetail.css'
+import { useState } from 'react';
 
 const PlanDetail = () => {
 
+
+  const [ active, setActive ] = useState(false);
+
+  const handleActive = () => {
+    setActive(!active);
+  }
 
 
   const MealCard = () => {
@@ -25,8 +32,8 @@ const PlanDetail = () => {
     <div className="plan-detail">
       <div className="plan-detail-container">
       <div className="plan-detail-header">
-          <span className="plan-tray">Plan</span>
-          <span className="shop-list-tray">Shop</span>
+          <span className={active ? "active" : "plan-tray"} onClick={handleActive}>Plan</span>
+          <span className={active ? "active" : "shop-list-tray"} onClick={handleActive}>Shop</span>
       </div>
       <div className="plan-detail-body">
         <div className="plan-detail-name-total-calories">

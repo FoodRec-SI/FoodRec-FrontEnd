@@ -12,16 +12,23 @@ import "primereact/resources/themes/lara-light-indigo/theme.css"; // theme
 import "primereact/resources/primereact.css";
 
 function App() {
-  const [title, setTitle] = useState("");
+  // const [title, setTitle] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [showBackdrop, setShowBackdrop] = useState(false);
+  const toggle = () => {
+    setIsOpen(!isOpen), setShowBackdrop(!showBackdrop);
+  };
+
+  
 
   return (
     <div className="App">
       <BrowserRouter>
         <div className="header">
-          <Navbar title={title} />
+          <Navbar toggle = {toggle} />
         </div>
         <div className="sidebar">
-          <Sidebar setTitle={setTitle} />
+        <Sidebar isOpen={isOpen} showBackdrop={showBackdrop} setIsOpen ={setIsOpen} toggle ={toggle}/>
         </div>
         <div className="content">
           <AppRoutes />
