@@ -7,6 +7,8 @@ import keycloak from "./keycloak.jsx";
 import { CircularProgress, Box } from "@mui/material";
 import {QueryClient , QueryClientProvider} from 'react-query'
 import {ReactQueryDevtools} from 'react-query/devtools'
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
 
 
 
