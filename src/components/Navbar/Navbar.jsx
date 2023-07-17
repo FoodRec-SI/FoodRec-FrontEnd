@@ -17,18 +17,20 @@ const Navbar = ({toggle}) => {
 
   const handleLogInOut = () => {
     if (keycloak.authenticated) {
+      navigate("/");
       keycloak.logout();
     } else {
       // keycloak.login();
+      navigate("/");
       keycloak.login();
     }
   };
 
-  useEffect(() => {
-    if (keycloak.authenticated) {
-      isModerator(keycloak) ? navigate("/PendingRecipe") : navigate("/");
-    }
-  }, [keycloak.authenticated]);
+  // useEffect(() => {
+  //   if (keycloak.authenticated) {
+  //     isModerator(keycloak) ? navigate("/PendingRecipe") : navigate("/");
+  //   }
+  // }, [keycloak.authenticated]);
 
   const createAccount = async () => {
     const response = await AccountApi.createAccount(keycloak.token);

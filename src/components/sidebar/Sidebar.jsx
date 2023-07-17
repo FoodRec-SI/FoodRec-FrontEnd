@@ -33,25 +33,25 @@ const Sidebar = ({ isOpen, showBackdrop, toggle }) => {
     {
       name: "Discover Recipes",
       icon: <HomeRoundedIcon sx={{ fontSize: "1.5rem" }} />,
-      image: "src/assets/1.jpg",
+      image: "/assets/1.jpg",
       path: "/",
     },
     {
       name: "Meal planner",
       icon : <FormatListBulletedRoundedIcon sx={{ fontSize: "1.5rem" }} />,
-      image: "src/assets/2.jpg",
+      image: "/assets/2.jpg",
       path: "/meal",
     },
     {
       name: "Liked Recipes",
       icon: <ThumbUpRoundedIcon sx={{ fontSize: "1.5rem" }} />,
-      image: "src/assets/3.jpg",
+      image: "/assets/3.jpg",
       path: "/liked",
     },
     {
       name: "My Collection",
       icon: <BookmarkRoundedIcon sx={{ fontSize: "1.5rem" }} />,
-      image: "src/assets/4.jpg",
+      image:"/assets/4.jpg",
       path: "/collection",
     },
   ];
