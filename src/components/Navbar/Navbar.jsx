@@ -2,12 +2,14 @@ import "./Navbar.css";
 import 'primeicons/primeicons.css';
 import DehazeOutlinedIcon from "@mui/icons-material/DehazeOutlined";
 import { useNavigate } from "react-router-dom";
-// import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { useKeycloak } from "@react-keycloak/web";
 import { useQuery } from "react-query";
 
 import { Tooltip } from "@mui/material";
 import { AccountApi } from "../../api/AccountApi";
+
+import { isModerator } from "../../utills/Helper";
 
 const Navbar = ({toggle}) => {
   const { keycloak } = useKeycloak();
@@ -15,13 +17,18 @@ const Navbar = ({toggle}) => {
 
   const handleLogInOut = () => {
     if (keycloak.authenticated) {
-      navigate("/");
       keycloak.logout();
     } else {
-      navigate("/");
+      // keycloak.login();
       keycloak.login();
     }
   };
+
+  useEffect(() => {
+    if (keycloak.authenticated) {
+      isModerator(keycloak) ? navigate("/PendingRecipe") : navigate("/");
+    }
+  }, [keycloak.authenticated]);
 
   const createAccount = async () => {
     const response = await AccountApi.createAccount(keycloak.token);
@@ -33,7 +40,9 @@ const Navbar = ({toggle}) => {
     }
   };
 
-  const { status } = useQuery("createAccount", createAccount);
+  const { status, refetch } = useQuery("createAccount", createAccount, {
+      enabled: keycloak.authenticated,
+    });
 
   if (status === "error") {
     console.log("error");

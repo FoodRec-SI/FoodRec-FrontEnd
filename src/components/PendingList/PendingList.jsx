@@ -8,6 +8,7 @@ import SortIcon from '@mui/icons-material/Sort';
 import { useKeycloak } from "@react-keycloak/web";
 import { useQuery } from "react-query";
 import { PendingApi } from "../../api/PendingApi";
+import SkeletonCardList from "../Skeleton/SkeletonCardList";
 import './PendingList.css'
 
 
@@ -24,7 +25,6 @@ const PendingList = () => {
         queryKey: ["pendingRecipes"],
         queryFn: async () => {
             const data = await PendingApi.getPendingRecipes(keycloak.token);
-            console.log(data);
             return data;
         },
     });
@@ -33,7 +33,7 @@ const PendingList = () => {
         <>
             <div className="pendingPage">
                 {isLoading ? (
-                    <div>Loading...</div>
+                    <SkeletonCardList />
                 ) : isError ? (
                     <div>Error occurred while fetching data</div>
                 ) : (

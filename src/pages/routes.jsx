@@ -15,6 +15,7 @@ import ImportForm from "../components/ImportForm/ImportForm";
 import AddRecipeForm from "../components/AddRecipeForm/AddRecipeForm";
 import Profile from "../components/Profile/Profile";
 import PlanDetail from "./PlanDetail/PlanDetail";
+import HistoryTable from "../components/HistoryTable/HistoryTable";
 
 
 function AppRoutes() {
@@ -98,7 +99,7 @@ function AppRoutes() {
 
   const moderatorRoutes = [
     {
-      path: "/",
+      path: "/PendingRecipe",
       element: isLogin ? <PendingRecipe /> : <Login />,
       title: "Pending Recipe",
     },
@@ -116,6 +117,11 @@ function AppRoutes() {
       path: "/search",
       element: isLogin ? <SearchPage /> : <Login />,
       title: "SearchPage",
+    },
+    {
+      path: "/History",
+      element: isLogin ? <HistoryTable/> : <Login />,
+      title: "History",
     },
   ];
 

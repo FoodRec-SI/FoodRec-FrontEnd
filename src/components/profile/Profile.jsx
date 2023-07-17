@@ -22,6 +22,7 @@ import { ProfileApi } from '../../api/ProfileApi';
 import { EditProfileApi } from '../../api/EditProfileApi';
 
 import ChipList from '../ChipList/ChipList';
+import Loading from '../Loading/Loading';
 import RecipeCardList from '../RecipeCardList/RecipeCardList'
 import './Profile.css'
 
@@ -135,7 +136,7 @@ const Profile = () => {
             // Handle error
         }
     };
-    const { mutate: updateProfileMutate } = useMutation(
+    const { mutate: updateProfileMutate, isLoading: updatingProfile } = useMutation(
         handleUpdateProfile,
     )
 
@@ -163,6 +164,11 @@ const Profile = () => {
             }
         }
     )
+
+
+    if(loadingUpdateTag || updatingProfile){
+        return <Loading/>
+    }
     //-------End Update Data-------
 
     //-------Event Fucntion-------
@@ -301,21 +307,12 @@ const Profile = () => {
                         </div>
                         <div className='profile__cover__editBtn'>
 
-                            <span className="p-buttonset">
-                                <PButton
-                                    label="Delete"
-                                    icon="pi pi-trash"
-                                    rounded
-                                    onClick={() => setShowDeleteConfirm(true)}
-                                    size="small"
-                                />
                                 <PButton
                                     label="Edit your profile"
                                     icon='pi pi-pencil'
                                     rounded
                                     size="small"
                                     onClick={() => { setVisible(true), setDescription(profileData.data.description) }}></PButton>
-                            </span>
                         </div>
                     </div>
                 </div>
@@ -326,7 +323,7 @@ const Profile = () => {
                             <PButton
                                 icon='pi pi-pencil'
                                 rounded
-                                outlined
+                                label='Edit your tag'
                                 onClick={() => {
                                     setShowTagEdit(true),
                                     setSelectedTags(tempTag),
@@ -342,9 +339,10 @@ const Profile = () => {
                     <div className="profile__info__yourRecipe">
                         <div className="profile__info__yourRecipe__title">
                             <h2>Your Recipe</h2>
-                            <Button variant="outlined" startIcon={<AddIcon />} onClick={handleAddRecipeNavigate}>
+                            <PButton icon='pi pi-plus' rounded onClick={handleAddRecipeNavigate} label='Add New Recipe'></PButton>
+                            {/* <Button variant="outlined" startIcon={<AddIcon />} onClick={handleAddRecipeNavigate}>
                                 Add your recipe
-                            </Button>
+                            </Button> */}
                         </div>
                         {personalRecipe && <RecipeCardList props={personalRecipe?.pages.flatMap((page) => page.content)} pending="myRecipe" />}
                     </div>
