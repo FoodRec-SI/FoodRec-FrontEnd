@@ -32,7 +32,6 @@ body {
   background-color: #f5f5f5;
   width: calc(100vw - 16.5px);
   margin: 0 auto;
-
 }
 
 .App {
@@ -43,7 +42,6 @@ body {
   /* grid-template-rows: [sidebar] 0px [header] 56px [content] auto;
   grid-template-columns: [sidebar] 64px [header content] auto; */
   grid-template-rows: [header] 64px [content] auto;
-  
 }
 
 .page-container {
@@ -126,6 +124,14 @@ body {
   outline: 0px !important;
 }
 
+.search-button:hover {
+  background-color: #292929;
+}
+
+.search-button:active {
+  background-color: #3d3d3d;
+}
+
 .search-page {
   width: 100%;
   margin: 0px auto;
@@ -186,4 +192,59 @@ body {
   color: #000000;
   margin-left: 60px;
   margin-bottom: 10px;
+}
+/* 
+.collection-instruction {
+  display: flex;
+  flex-direction: column;
+  -webkit-box-align: center;
+  margin-right: 24px;
+  width: 300px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  
+} */
+
+.collection-container {
+  display: flex;
+  flex-direction: row;
+  margin-top: 16px !important;
+  padding-bottom: 120px;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.collection-wrapper {
+  background-color: #ffffff;
+  border-radius: 16px;
+  width: 100%;
+  height: 100%;
+}
+
+.collection-outline {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.collection-header {
+  display: flex;
+  width: 100%;
+  height: 82px;
+  background-color: #ffffff;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  margin-bottom: 20px;
+ 
+}
+
+.collection-title {
+  font-size: 32px;
+  line-height: 36px;
+  font-weight: 800;
+  flex: 1 1 0%;
+  max-width: 1400px
 }

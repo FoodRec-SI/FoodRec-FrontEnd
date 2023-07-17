@@ -9,8 +9,7 @@ import { useKeycloak } from "@react-keycloak/web";
 import { useQuery, useInfiniteQuery } from "react-query";
 import RecipeCard from "../../components/RecipeCard/RecipeCard";
 import Slider from "react-slick";
-import "slick-carousel/slick/slick.css"; 
-import "slick-carousel/slick/slick-theme.css";
+
 
 const Arrows = ({ className, style, onClick }) => {
   return (
@@ -158,7 +157,6 @@ const Discover = () => {
           pending={""}
         /> */}
         <Slider {...settings}
-       
         >
           {posts && posts.content
             ? posts.content.map((post) => (

@@ -137,8 +137,8 @@ const MealPlan = () => {
       <div className="weeklist-plan-card">
         <a className='weeklist-plan-card-container' href="">
           <div className='meal-plan-card-cover'>
-           <img className='delete-plan-image' src="src/assets/du12fuc9b8u__7_13_2023..png" alt="" /> 
-          <img className='plan-image' src="src/assets/healthyFood.jpg" alt="" />
+           <img className='delete-plan-image' src="public/assets/du12fuc9b8u__7_13_2023..png" alt="" /> 
+          <img className='plan-image' src="public/assets/healthyFood.jpg" alt="" />
           </div>
           <div className="meal-plan-card-body">
             <h3>Plan Name</h3>
