@@ -7,8 +7,11 @@ import { PostApi } from "../../api/PostApi";
 import { TagApi } from "../../api/TagApi";
 import { useKeycloak } from "@react-keycloak/web";
 import { useQuery, useInfiniteQuery } from "react-query";
+
+import Nothing from "../../components/Nothing/Nothing";
 import RecipeCard from "../../components/RecipeCard/RecipeCard";
-import Slider from "react-slick";
+
+import Carousel from 'react-multi-carousel';
 
 
 const Arrows = ({ className, style, onClick }) => {
@@ -18,60 +21,28 @@ const Arrows = ({ className, style, onClick }) => {
       style={{
         ...style,
         display: "block",
-        background: "black",
-
+        backgroundColor: "black",
+        borderRadius: "50%",
+        padding: "0",
+        margin: "0",
+        border: "none",
       }}
       onClick={onClick}
     >
-      
+
     </div>
   );
 };
 
 const Discover = () => {
-  const settings = {
-    dots: false,
-    infinite: false,
-    speed: 800,
-    slidesToShow: 4,
-    slidesToScroll: 4,
-    initialSlide: 0,
-    nextArrow: <Arrows />,
-    prevArrow: <Arrows />,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-          infinite: true,
-          dots: false,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          initialSlide: 2,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  };
+
   const { keycloak } = useKeycloak();
   const isLogin = keycloak.authenticated;
   const [tagId, setTagId] = useState("");
 
   const fetchRecipes = async ({ pageParam, pageSize }) => {
     const response = await PostApi.getPosts(pageParam, pageSize);
-    // console.log(response.data);
+    console.log(response.data);
     return response.data;
   };
 
@@ -107,27 +78,27 @@ const Discover = () => {
     }
   );
 
-  useEffect(() => {
-    const onScroll = (event) => {
-      let fetching = false;
-      const { scrollTop, clientHeight, scrollHeight } =
-        event.target.scrollingElement;
+  // useEffect(() => {
+  //   const onScroll = (event) => {
+  //     let fetching = false;
+  //     const { scrollTop, clientHeight, scrollHeight } =
+  //       event.target.scrollingElement;
 
-      if (!fetching && scrollHeight - scrollTop <= clientHeight * 1.5) {
-        fetching = true;
-        if (hasNextPage) {
-          fetchNextPage();
-        }
-        // console.log("fetching");
-        fetching = false;
-      }
-    };
+  //     if (!fetching && scrollHeight - scrollTop <= clientHeight * 1.5) {
+  //       fetching = true;
+  //       if (hasNextPage) {
+  //         fetchNextPage();
+  //       }
+  //       // console.log("fetching");
+  //       fetching = false;
+  //     }
+  //   };
 
-    document.addEventListener("scroll", onScroll);
-    return () => {
-      document.removeEventListener("scroll", onScroll);
-    };
-  }, [hasNextPage, fetchNextPage]);
+  //   document.addEventListener("scroll", onScroll);
+  //   return () => {
+  //     document.removeEventListener("scroll", onScroll);
+  //   };
+  // }, [hasNextPage, fetchNextPage]);
 
   if (status === "loading") {
     return (
@@ -143,36 +114,19 @@ const Discover = () => {
       </>
     );
   }
-
   if (status === "error") {
-    {isLogin ? <LoginBanner onItemClick={handleItemSelection} /> : <Banner />}
+    return (
+      <>
+        {isLogin ? <LoginBanner onItemClick={handleItemSelection} /> : <Banner />}
+        <Nothing />
+      </>
+    )
   }
-
   return (
     <>
       {isLogin ? <LoginBanner onItemClick={handleItemSelection} /> : <Banner />}
-      <div style={{ width: "90%", margin: "0 auto" , }}>
-        {/* <RecipeCardList
-          props={posts && posts.content ? posts.content : data.pages.flatMap((page) => page.content)}
-          pending={""}
-        /> */}
-        <Slider {...settings}
-        >
-          {posts && posts.content
-            ? posts.content.map((post) => (
-                <RecipeCard key={post.postId} props={post} />
-              ))
-            : data.pages
-                .flatMap((page) => page.content)
-                .map((post) => <RecipeCard key={post.postId} props={post} />)}
-        </Slider>
-       
-      </div>
-      {/* {hasNextPage && (
-        <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
-          {isFetchingNextPage ? "Loading more..." : "Load more"}
-        </button>
-      )} */}
+
+
     </>
   );
 };

@@ -13,11 +13,17 @@ const postStatus = {
     PENDING: "PENDING_APPROVAL"
 }
 
+
+//http://localhost:8080/api/moderator/posts/view?pageNumber=1&pageSize=10
 function getUpdatedPendingRecipes(token, page, size) {
-    return instance.get(`api/moderator/posts`, {
+    return instance.get(`/api/moderator/posts/view`, {
         headers: {
             Authorization: bearerAuth(token),
         },
+        params: {
+            pageNumber: page,
+            pageSize: size,
+        }
     }
     );
 }

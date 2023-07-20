@@ -1,5 +1,5 @@
 import "./Sidebar.css";
-// import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 // import { useLocation } from "react-router-dom";
 
@@ -28,6 +28,13 @@ const Sidebar = ({ isOpen, showBackdrop, toggle }) => {
     }
   };
 
+  useEffect(() => {
+    if(isModerator(keycloak)){
+      navigate('/PendingRecipe');
+    }
+  }, [keycloak.authenticated])
+
+  
 
   const UserMenuItems = [
     {
@@ -38,7 +45,7 @@ const Sidebar = ({ isOpen, showBackdrop, toggle }) => {
     },
     {
       name: "Meal planner",
-      icon : <FormatListBulletedRoundedIcon sx={{ fontSize: "1.5rem" }} />,
+      icon: <FormatListBulletedRoundedIcon sx={{ fontSize: "1.5rem" }} />,
       image: "/assets/2.jpg",
       path: "/meal",
     },
@@ -51,7 +58,7 @@ const Sidebar = ({ isOpen, showBackdrop, toggle }) => {
     {
       name: "My Collection",
       icon: <BookmarkRoundedIcon sx={{ fontSize: "1.5rem" }} />,
-      image:"/assets/4.jpg",
+      image: "/assets/4.jpg",
       path: "/collection",
     },
   ];
@@ -84,78 +91,78 @@ const Sidebar = ({ isOpen, showBackdrop, toggle }) => {
       >
         <div className="body-section">
           <div className="card-wrapper">
-          {UserMenuItems.map((item, index) => (
-            <NavLink
-              to={item.path}
-              key={index}
-              className={(link) => (link.isActive ? "active" : "link")}
-              onClick={toggle}
-            >
-              <div className="nav-card-container"
-              style={{
-                display: isOpen ? "block" : "none",
-                transition: "all 0.5s ease-in-out",
-              }}
+            {UserMenuItems.map((item, index) => (
+              <NavLink
+                to={item.path}
+                key={index}
+                className={(link) => (link.isActive ? "active" : "link")}
+                onClick={toggle}
               >
-                <div className="nav-card"
-                style={{
-                  display: isOpen ? "flex" : "none",
-                  transition: "all 0.5s ease-in-out",
-                  backgroundImage: `url(${item.image})`,
-                  backgroundPosition: "center",
-                  backgroundSize: "cover",
-                  backgroundRepeat: "no-repeat",
-                }}
+                <div className="nav-card-container"
+                  style={{
+                    display: isOpen ? "block" : "none",
+                    transition: "all 0.5s ease-in-out",
+                  }}
                 >
-                  <div className="nav-card-content"
-                  >
-                  <div className="nav-card-icon">{item.icon}</div>            
-                  <div
+                  <div className="nav-card"
                     style={{
-                      display: isOpen ? "block" : "none",
+                      display: isOpen ? "flex" : "none",
                       transition: "all 0.5s ease-in-out",
+                      backgroundImage: `url(${item.image})`,
+                      backgroundPosition: "center",
+                      backgroundSize: "cover",
+                      backgroundRepeat: "no-repeat",
                     }}
-                    className="nav-card-title"
                   >
-                    {item.name}
+                    <div className="nav-card-content"
+                    >
+                      <div className="nav-card-icon">{item.icon}</div>
+                      <div
+                        style={{
+                          display: isOpen ? "block" : "none",
+                          transition: "all 0.5s ease-in-out",
+                        }}
+                        className="nav-card-title"
+                      >
+                        {item.name}
+                      </div>
+                    </div>
                   </div>
                 </div>
-                </div>
-              </div>
-            </NavLink>
-          ))}
-        </div>
-         <div className="profile-btn" style={{
-                  display: isOpen ? "flex" : "none",
-                  marginTop: "32px",
-                  fontSize: "16px",
-                  fontWeight: "700",
-                  color: "#000000",
-                  lineHeight: "22px",
-                  cursor: "pointer",
-         }}
-         onClick={()=>{
-          navigate('/profile');
-          toggle();
+              </NavLink>
+            ))}
+          </div>
+          {isModerator(keycloak) == false && <div className="profile-btn" style={{
+            display: isOpen ? "flex" : "none",
+            marginTop: "32px",
+            fontSize: "16px",
+            fontWeight: "700",
+            color: "#000000",
+            lineHeight: "22px",
+            cursor: "pointer",
+          }}
+            onClick={() => {
+              navigate('/profile');
+              toggle();
+            }
+            }
+          >
+            My Account
+          </div>}
+          <div className="sign-out" style={{
+            display: isOpen ? "flex" : "none",
+            marginTop: "32px",
+            fontSize: "16px",
+            fontWeight: "700",
+            color: "#FF283F",
+            lineHeight: "22px",
+            cursor: "pointer",
           }
           }
-         >
-           My Account
-         </div>
-         <div className="sign-out" style={{
-                  display: isOpen ? "flex" : "none",
-                  marginTop: "32px",
-                  fontSize: "16px",
-                  fontWeight: "700",
-                  color: "#FF283F",
-                  lineHeight: "22px",
-                  cursor: "pointer",
-         }
-        }     
-        onClick={() => handleLogInOut()}
-         >
+            onClick={() => handleLogInOut()}
+          >
             Sign out
-         </div>
+          </div>
         </div>
       </div>
       <div

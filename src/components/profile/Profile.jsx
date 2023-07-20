@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 
-import { Avatar, Button } from '@mui/material';
+import { Button } from '@mui/material';
 import TextField from '@mui/material/TextField';
-import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import ImageIcon from '@mui/icons-material/Image';
 
@@ -24,6 +23,7 @@ import { EditProfileApi } from '../../api/EditProfileApi';
 import ChipList from '../ChipList/ChipList';
 import Loading from '../Loading/Loading';
 import RecipeCardList from '../RecipeCardList/RecipeCardList'
+import AddRecipeForm from '../AddRecipeForm/AddRecipeForm';
 import './Profile.css'
 
 const Profile = () => {
@@ -42,6 +42,8 @@ const Profile = () => {
     const [profileImage, setProfileImage] = useState(null);
     const [backgroundImage, setBackgroundImage] = useState(null);
 
+    const [isError, setIsError] = useState(null);
+
     const [fileAvatar, setFileAvatar] = useState(null);
     const [fileBackground, setFileBackground] = useState(null);
 
@@ -50,6 +52,7 @@ const Profile = () => {
     const [selectedTags, setSelectedTags] = useState([]);
 
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [showAddRecipe , setShowAddRecipe] = useState(false);
     
     const { data: profileData, isLoading: loadingProfile, refetch } = useQuery({
         queryKey: ["profile"],
@@ -71,7 +74,8 @@ const Profile = () => {
         queryKey: ["personalRecipes"],
         queryFn: ({ pageParam = 0, pageSize = 6 }) => fetchPersonalRecipe({ pageParam, pageSize }),
         getNextPageParam: (lastPage) => {
-            const maxPages = lastPage.totalElements / 5;
+            if(lastPage.totalElements === 0) return undefined;
+            const maxPages = lastPage.totalElements / 6;
             const nextPage = lastPage.number + 1;
             return nextPage <= maxPages ? nextPage : undefined;
         },
@@ -184,9 +188,14 @@ const Profile = () => {
     };
 
     const handleDropImage = (file) => {
-        let validExtensions = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/svg+xml'];
+        let validExtensions = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+        if(file.size > 3000000){
+            setIsError("Image size must be less than 3MB");
+            return;
+          }
         if (validExtensions.includes(file.type)) {
             let fileReader = new FileReader();
+            
             fileReader.onload = () => {
                 let fileURL = fileReader.result;
                 setPreviewImg(fileURL);
@@ -197,8 +206,9 @@ const Profile = () => {
             } else {
                 setFileBackground(file)
             }
+            setIsError(null);
         } else {
-            alert('This is not an Image File!');
+            setIsError("Invalid file type");
         }
     };
 
@@ -210,10 +220,6 @@ const Profile = () => {
         e.preventDefault();
         let file = e.target.files[0];
         handleDropImage(file);
-    }
-
-    const handleAddRecipeNavigate = () => {
-        navigate('/AddRecipe');
     }
 
     const getMatchingTagIds = (tagNames, tagObjects) => {
@@ -292,7 +298,7 @@ const Profile = () => {
     //-------End Dialog Footer-------
 
     if (loadingProfile)
-        return (<div>Loading...</div>)
+        return (<Loading />)
 
     return (
         <>
@@ -311,7 +317,7 @@ const Profile = () => {
                                     label="Edit your profile"
                                     icon='pi pi-pencil'
                                     rounded
-                                    size="small"
+                                    
                                     onClick={() => { setVisible(true), setDescription(profileData.data.description) }}></PButton>
                         </div>
                     </div>
@@ -339,12 +345,12 @@ const Profile = () => {
                     <div className="profile__info__yourRecipe">
                         <div className="profile__info__yourRecipe__title">
                             <h2>Your Recipe</h2>
-                            <PButton icon='pi pi-plus' rounded onClick={handleAddRecipeNavigate} label='Add New Recipe'></PButton>
+                            <PButton icon='pi pi-plus' rounded onClick={()=>setShowAddRecipe(true)} label='Add New Recipe'></PButton>
                             {/* <Button variant="outlined" startIcon={<AddIcon />} onClick={handleAddRecipeNavigate}>
                                 Add your recipe
                             </Button> */}
                         </div>
-                        {personalRecipe && <RecipeCardList props={personalRecipe?.pages.flatMap((page) => page.content)} pending="myRecipe" />}
+                        {personalRecipe != null ? <RecipeCardList props={personalRecipe?.pages.flatMap((page) => page.content)} pending="myRecipe" /> : <div>Loading...</div>}
                     </div>
                 </div>
             </div>}
@@ -396,7 +402,7 @@ const Profile = () => {
                 </div>
 
             </Dialog>}
-            <Dialog header="Edit your image" visible={openEditImage} style={{ width: '50vw' }}
+            <Dialog header="Edit your image" visible={openEditImage} style={{ width: '70vw' }}
                 footer={footerEditImage}
                 onHide={() => {
                     setOpenEditImage(false)
@@ -418,6 +424,7 @@ const Profile = () => {
                         {!previewImg && <input type='file' hidden onChange={handleInputFileChange} />}
                         {previewImg && <img src={previewImg} style={isAvatar ? { borderRadius: "50%", objectFit: "cover", objectPosition: "center", height: "100%", width: "100%" } : { width: "100%", height: "100%" }} alt="" />}
                     </div>
+                    {isError && <p style={{ color: "red" }}>{isError}</p>}
                 </div>
             </Dialog>
             <Dialog
@@ -442,7 +449,7 @@ const Profile = () => {
                         placeholder="Select Tags"
                         filter
                         filterInputAutoFocus
-                        panelStyle={{ maxHeight: "300px", maxWidth: "50vw" }}
+                        panelStyle={{ maxHeight: "300px", maxWidth: "70vw" }}
                         className='multiSelectTag'
                         closeIcon="pi pi-times"
                     />}
@@ -456,6 +463,15 @@ const Profile = () => {
                 accept={() => setShowDeleteConfirm(false)}
                 reject={() => setShowDeleteConfirm(false)}
             />
+            <Dialog 
+                header="Add your recipe"
+                visible={showAddRecipe}
+                style={{ width: '90vw' }}
+                onHide={() => setShowAddRecipe(false)}
+                footer={null}
+            >
+                <AddRecipeForm/>
+            </Dialog>
         </>
 
     );

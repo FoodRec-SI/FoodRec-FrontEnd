@@ -11,7 +11,7 @@ import { AccountApi } from "../../api/AccountApi";
 
 import { isModerator } from "../../utills/Helper";
 
-const Navbar = ({toggle}) => {
+const Navbar = ({ toggle }) => {
   const { keycloak } = useKeycloak();
   const navigate = useNavigate();
 
@@ -43,8 +43,8 @@ const Navbar = ({toggle}) => {
   };
 
   const { status, refetch } = useQuery("createAccount", createAccount, {
-      enabled: keycloak.authenticated,
-    });
+    enabled: keycloak.authenticated,
+  });
 
   if (status === "error") {
     console.log("error");
@@ -64,27 +64,28 @@ const Navbar = ({toggle}) => {
         <span className="rec">Rec.</span>
       </div>
       <div className="navbar-end">
-        {isModerator ? null : <div className="search-icon"
-        onClick={() => {
-          navigate("/search");
-        }
-        }
-        >
-          {<Tooltip title="Search">
-          <span className="pi pi-search"></span>
-          </Tooltip>}
-        </div>}
+        {isModerator == true ? "" :
+          <div className="search-icon"
+            onClick={() => {
+              navigate("/search");
+            }
+            }
+          >
+            {<Tooltip title="Search">
+              <span className="pi pi-search"></span>
+            </Tooltip>}
+          </div>}
         {keycloak.authenticated ? <div className="notification-icon">
           <Tooltip title="Notifications">
-          <span className="pi pi-bell"></span>
+            <span className="pi pi-bell"></span>
           </Tooltip>
         </div> : ""}
         {keycloak.authenticated ? <div className="settings-icon">
           <Tooltip title="Settings">
-          <span className="pi pi-spin pi-cog"></span>
+            <span className="pi pi-spin pi-cog"></span>
           </Tooltip>
         </div> : ""}
-        { !keycloak.authenticated  ? <div className="login-btn" onClick={handleLogInOut}> 
+        {!keycloak.authenticated ? <div className="login-btn" onClick={handleLogInOut}>
           Sign in
         </div> : ""}
       </div>
