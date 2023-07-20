@@ -15,8 +15,8 @@ const SearchPage = () => {
     setRecipeName(recipeName);
   };
 
-  const fetchRecipes = async ({ pageParam, pageSize }) => {
-    const response = await PostApi.getPosts(pageParam, pageSize);
+  const fetchRecipes = async ({ pageParam, pageSize,sortPost , sortType }) => {
+    const response = await PostApi.getPosts(pageParam, pageSize,sortPost , sortType);
     // console.log(response.data);
     return response.data;
   };
@@ -28,7 +28,7 @@ const SearchPage = () => {
     status: postStatus,
   } = useInfiniteQuery(
     "posts",
-    ({ pageParam = 0, pageSize = 8 }) => fetchRecipes({ pageParam, pageSize }),
+    ({ pageParam = 0, pageSize = 8,sortPost="CREATED_TIME" , sortType="ACCENDING" }) => fetchRecipes({ pageParam, pageSize,sortPost , sortType }),
     {
       getNextPageParam: (lastPage) => {
         const maxPages = lastPage.totalElements / 5;
@@ -117,10 +117,6 @@ const SearchPage = () => {
       <div className="search-content">
         <div className="ant-menu">
           <div className="ant-menu-title">Filter</div>
-          <div className="ant-menu-item">
-            <div className="ant-menu-item-filter">Sort by Rating</div>
-            <div className="ant-menu-item-filter">Sort by Upload Date</div>
-          </div>
         </div>
         <div className="search-content-recipe">
           <div className="search-content-recipe-title">Popular Recipes</div>

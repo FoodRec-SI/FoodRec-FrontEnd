@@ -68,11 +68,13 @@ const Sidebar = ({ isOpen, showBackdrop, toggle }) => {
       name: "Pending Recipe",
       icon: <AccessTimeIcon sx={{ fontSize: "1.5rem" }} />,
       path: "/PendingRecipe",
+      image:"/assets/4.jpg",
     },
     {
       name: "History",
       icon: <HistoryIcon sx={{ fontSize: "1.5rem" }} />,
       path: "/History",
+      image: "/assets/3.jpg",
     },
   ];
 
