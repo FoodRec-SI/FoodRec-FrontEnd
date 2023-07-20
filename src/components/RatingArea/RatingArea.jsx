@@ -11,6 +11,7 @@ import { useKeycloak } from "@react-keycloak/web";
 import { useQuery, useMutation, QueryClient } from 'react-query';
 
 import { Dialog } from 'primereact/dialog';
+import { startOfDay } from 'date-fns/fp';
 
 const queryClient = new QueryClient();
 
@@ -59,7 +60,7 @@ const RatingArea = () => {
         ["percentageRating", id],
         async () => {
             const response = await RatingApi.getPercnetageRating(keycloak.token, id);
-
+            console.log(response.data);
             return response.data;
         },
     );
@@ -104,12 +105,19 @@ const RatingArea = () => {
                     <p>{ratingData.raters== null ? 0 : ratingData.raters } Customers rating</p>
                 </div>}
                 <br />
+                
+                    <>
+                    {percentageRatingData && <CountRatingPoint key={5} value={percentageRatingData.five_stars} star={5}/>}
+                    {percentageRatingData && <CountRatingPoint key={4} value={percentageRatingData.four_stars} star={4}/>}
+                    {percentageRatingData && <CountRatingPoint key={3} value={percentageRatingData.three_stars} star={3}/>}
+                    {percentageRatingData && <CountRatingPoint key={2} value={percentageRatingData.two_stars} star={2}/>}
+                    {percentageRatingData && <CountRatingPoint key={1} value={percentageRatingData.one_star} star={1}/>}
+                    </>
+                    
+                
 
-                <CountRatingPoint />
-                <CountRatingPoint />
-                <CountRatingPoint />
-                <CountRatingPoint />
-                <CountRatingPoint />
+                
+                
                 <br />
                 <Button label="Rating now" text rounded severity="info" onClick={() => {
                     setValue(personalRatingData.rating);
@@ -154,16 +162,17 @@ const RatingArea = () => {
     );
 }
 
-function CountRatingPoint() {
+function CountRatingPoint({value, star}) {
     return (
         <div className="rating_area_countRatingPoint">
-            <p>5 stars</p>
+            <p>{star} stars</p>
             <div style={{ width: '70%', }}>
                 <ProgressBar
-                    value={65}
-                    showValue={false}
+                    value={value}
+                    showValue={value}
                     color='#faaf00'
-                    style={{ height: '12px' }}
+                    
+                    style={{ height: '16px' }}
                 />
             </div>
             <p>65%</p>

@@ -2,26 +2,41 @@ import './HistoryTable.css'
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { Dialog } from 'primereact/dialog';
+
+
+import { useState } from 'react';
+import { useKeycloak } from "@react-keycloak/web";
+import { useQuery } from "react-query";
+
+import { PendingApi } from '../../api/PendingApi';
+
+import Loading from '../Loading/Loading';
+import RecipeDetail from '../RecipeDetail/RecipeDetail';
 
 const HistoryTable = () => {
 
-    const data = [
-        { name: '1', date: '2021-10-10', status: 'Approved' },
-        { name: '2', date: '2021-10-10', status: 'Pending' },
-        { name: '3', date: '2021-10-10', status: 'Approved' },
-        { name: '4', date: '2021-10-10', status: 'Pending' },
-        { name: '5', date: '2021-10-10', status: 'Approved' },
-        { name: '6', date: '2021-10-10', status: 'Pending' },
-    ]
+    const { keycloak } = useKeycloak();
 
+    const [selectedRecipe, setSelectedRecipe] = useState(null);
+
+    const [openSelectedRecipe, setOpenSelectedRecipe] = useState(false);
+
+    const { data: historyData, isLoading, error, refetch, isSuccess } = useQuery(
+        ["pending", 1, 10],
+        async () => {
+            const response = await PendingApi.getUpdatedPendingRecipes(keycloak.token, 1, 10);
+            return response.data.content;
+        },
+    );
     const statusTemplate = (rowData) => {
         return (
             <div>
-                {rowData.status === 'Approved' ?
+                {rowData.postStatus === 'APPROVED' ?
 
-                    <span className="status-approved">{rowData.status}</span>
+                    <span className="status-approved">{rowData.postStatus}</span>
                     :
-                    <span className="status-pending">{rowData.status}</span>
+                    <span className="status-pending">{rowData.postStatus}</span>
                 }
             </div>
         );
@@ -33,17 +48,36 @@ const HistoryTable = () => {
         </div>
     );
 
+    if (isLoading) return <Loading />
+
 
     return (
         <>
-            <div className="historyTable">
-                <DataTable header={header} value={data} stripedRows paginator sortMode="multiple" rows={5} rowsPerPageOptions={[5, 10]} size="large">
-                    <Column align="center" field="name" header="PostID"></Column>
-                    <Column align="center" field="name" header="Name" sortable></Column>
-                    <Column align="center" field="date" header="Date" sortable></Column>
-                    <Column align="center" field="status" header="Status" body={statusTemplate} sortable></Column>
-                </DataTable>
-            </div>
+            {isSuccess &&
+                <div className="historyTable">
+                    <DataTable
+                        selectionMode="single"
+                        onSelectionChange={(e) => {
+                            setOpenSelectedRecipe(true)
+                            setSelectedRecipe(e.value.postId)
+                        }}
+                        header={header} value={historyData}
+                        stripedRows
+                        paginator
+                        sortMode="multiple"
+                        rows={5}
+                        rowsPerPageOptions={[5, 10]}
+                        size="large">
+                        <Column align="center" field="postId" header="PostID"></Column>
+                        <Column align="center" field="recipeName" header="Name" sortable></Column>
+                        <Column align="center" field="verifiedTime" header="Date" sortable></Column>
+                        <Column align="center" field="postStatus" header="Status" body={statusTemplate} sortable></Column>
+                    </DataTable>
+                </div>}
+
+            <Dialog header="Recipe Detail" visible={openSelectedRecipe} style={{ width: '70vw' }} onHide={() => {setOpenSelectedRecipe(false)}}>
+                <RecipeDetail recipeId={selectedRecipe} />
+            </Dialog>
         </>
     );
 }

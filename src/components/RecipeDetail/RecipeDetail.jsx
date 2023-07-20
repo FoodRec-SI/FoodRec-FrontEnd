@@ -10,8 +10,11 @@ import ClickAwayListener from "@mui/material/ClickAwayListener";
 import MenuList from "@mui/material/MenuList";
 import MenuItem from "@mui/material/MenuItem";
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { ConfirmDialog } from 'primereact/confirmdialog';
+import { Dialog } from 'primereact/dialog';
+
 
 import "./RecipeDetail.css";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
@@ -21,11 +24,11 @@ import RatingArea from "../RatingArea/RatingArea";
 import RecommendeRcipe from "../RecommendRecipe/RecommendRecipe";
 import SkeletonRecipeDetail from "../Skeleton/SkeletonRecipeDetail";
 import MyRecipeDetail from "../MyRecipeDetail/MyRecipeDetail";
-
-import { CollectionApi } from "../../api/CollectionApi";
+import AddRecipeForm from "../AddRecipeForm/AddRecipeForm";
 
 import { useState, useRef, useEffect } from "react";
 
+import { CollectionApi } from "../../api/CollectionApi";
 import { PostApi } from "../../api/PostApi";
 import { PendingApi } from "../../api/PendingApi";
 import { LikeApi } from "../../api/LikeApi";
@@ -33,25 +36,32 @@ import { PersonalRecipeApi } from "../../api/PersonalRecipeApi";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { useKeycloak } from "@react-keycloak/web";
 
-const RecipeDetail = () => {
+const RecipeDetail = ({ recipeId }) => {
 
   const { keycloak } = useKeycloak();
-  const { postId } = useParams();
+  let postId = null;
   const location = useLocation();
   let isPending = false;
   let isMyRecipe = false;
   const url = location.pathname;
   let fetchPostById;
 
-
-  if (url.includes("pendingRecipeDetail")) {
+  if (recipeId != null) {
+    postId = recipeId;
     isPending = true;
-  } else if (url.includes("myRecipeDetail")) {
-    isMyRecipe = true;
-  } else if (url.includes("recipeDetail")) {
-    isPending = false;
-    isMyRecipe = false;
+  } else {
+    postId = useParams().postId;
+    if (url.includes("pendingRecipeDetail")) {
+      isPending = true;
+    } else if (url.includes("myRecipeDetail")) {
+      isMyRecipe = true;
+    } else if (url.includes("recipeDetail")) {
+      isPending = false;
+      isMyRecipe = false;
+    }
   }
+
+
 
   if (isPending === true) {
     fetchPostById = async () => {
@@ -91,16 +101,16 @@ const RecipeDetail = () => {
     isPostSuccess &&
     <div className="recipeDetail__wrapper">
       <div className="recipeDetailContainer">
-        {isPending === true && (
+        {isPending === true && recipeId == null && (
           <PendingRecipeDetail postId={postId} />
         )}
         {post && <div className="recipeDetail">
           <img src={post.image} alt="" />
 
-          <Introduction props={post} isPostSuccess isMyRecipe={isMyRecipe} />
+          <Introduction props={post} isPostSuccess isMyRecipe={isMyRecipe} recipeId={recipeId} />
           <Ingredients isPostSuccess props={post.ingredientList} />
           <Description props={post} isPostSuccess />
-          <Instruction isPostSuccess  props={post.instruction}/>
+          <Instruction isPostSuccess props={post.instructions} />
           {isPending === false && isMyRecipe == false &&
             <div className="recipeDetail__rating">
               <RatingArea isPostSuccess />
@@ -119,7 +129,7 @@ const RecipeDetail = () => {
   );
 };
 
-function Introduction({ props, isMyRecipe }) {
+function Introduction({ props, isMyRecipe, recipeId }) {
 
 
   const { keycloak } = useKeycloak();
@@ -127,6 +137,7 @@ function Introduction({ props, isMyRecipe }) {
   const anchorRef = useRef(null);
   const queryClient = useQueryClient();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
   const navigate = useNavigate();
 
   const handleToggle = () => {
@@ -227,8 +238,8 @@ function Introduction({ props, isMyRecipe }) {
           <div className="showTag">
             {<ChipList tags={props.tagDTOList} />}
           </div>
-          <div className="userFeature">
-            {/* button x 3*/}
+
+          {recipeId ==null &&  <div className="userFeature">
             <Tooltip title="Add to collection" placement="top">
               <IconButton
                 aria-label="addToCollection"
@@ -309,7 +320,18 @@ function Introduction({ props, isMyRecipe }) {
               </IconButton>
             </Tooltip>}
 
+            {isMyRecipe == true && <Tooltip title="Edit Recipe" placement="top">
+              <IconButton aria-label="delete" color="primary"
+                onClick={() => { setOpenEditDialog(true) }}
+              >
+                <EditIcon fontSize="large" />
+              </IconButton>
+            </Tooltip>}
+
+
+
           </div>
+          }
           <div className="recipeStatistic">
             <Statistic amount={9} nameOfStatisic="ingredients" />
             <Statistic amount={props.duration} nameOfStatisic="minutes" />
@@ -331,6 +353,10 @@ function Introduction({ props, isMyRecipe }) {
               console.log("cancel");
             }}
           />
+
+          <Dialog header="Edit Recipe" visible={openEditDialog} style={{ width: '90vw' }} onHide={() => setOpenEditDialog(false)}>
+            <AddRecipeForm post={props} setOpenEditDialog={setOpenEditDialog} />
+          </Dialog>
         </div>
       )}
 
@@ -349,19 +375,19 @@ function Statistic({ amount, nameOfStatisic }) {
   );
 }
 
-function Ingredients({ props}) {
+function Ingredients({ props }) {
   let listOfIngredients = [];
 
-  if (props !=null) {
-    listOfIngredients = props.split(',');
+  if (props != null) {
+    listOfIngredients = props.split('|');
   }
 
   return (
     <div className="ingredients">
       <h1>Ingredients</h1>
       <ul>
-        {  listOfIngredients.map((ingredient) => (
-          <li key={ingredient}> {ingredient} </li>
+        {listOfIngredients.map((ingredient, index) => (
+          <li key={index}> {ingredient} </li>
         ))}
       </ul>
     </div>
@@ -377,7 +403,7 @@ function Description({ props }) {
   );
 }
 
-function Instruction({props}) {
+function Instruction({ props }) {
   let instruction = props;
 
   return (
