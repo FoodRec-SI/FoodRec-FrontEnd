@@ -4,7 +4,22 @@ export const PersonalRecipeApi = {
     getPersonalRecipe,
     getPersonalRecipeByRecipeID,
     deletePersonalRecipe,
+    updatePersonalRecipe,
 }
+
+
+//http://localhost:8080/api/member/recipe
+
+function updatePersonalRecipe(data, token) {
+    return instance.put(`/api/member/recipe`, data, {
+      headers: {
+        Authorization: bearerAuth(token),
+        'Content-Type':'multipart/form-data'
+      },
+    });
+  }
+
+
 
 //http://localhost:8080/api/member/recipe/REC000043
 
@@ -28,7 +43,7 @@ function getPersonalRecipeByRecipeID(token, recipeId) {
 }
 
 //api/member/recipe?pageNumber=0&pageSize=6
-function getPersonalRecipe(token,pageParam, pageSize) {
+function getPersonalRecipe(token, pageParam, pageSize) {
     return instance.get(`/api/member/recipe`, {
         headers: {
             Authorization: bearerAuth(token),
