@@ -2,82 +2,30 @@ import { useState, useEffect } from "react";
 import LoginBanner from "../../components/LoginBanner/LoginBanner";
 import RecipeCardList from "../../components/RecipeCardList/RecipeCardList";
 import SkeletonCardList from "../../components/Skeleton/SkeletonCardList";
-import Banner from "../../components/Banner/Banner";
+import Banner from "../../components/banner/Banner";
 import { PostApi } from "../../api/PostApi";
 import { TagApi } from "../../api/TagApi";
 import { useKeycloak } from "@react-keycloak/web";
 import { useQuery, useInfiniteQuery } from "react-query";
-import RecipeCard from "../../components/RecipeCard/RecipeCard";
-import Slider from "react-slick";
 
 
-const Arrows = ({ className, style, onClick }) => {
-  return (
-    <div
-      className={className}
-      style={{
-        ...style,
-        display: "block",
-        background: "black",
 
-      }}
-      onClick={onClick}
-    >
-      
-    </div>
-  );
-};
 
 const Discover = () => {
-  const settings = {
-    dots: false,
-    infinite: false,
-    speed: 800,
-    slidesToShow: 4,
-    slidesToScroll: 4,
-    initialSlide: 0,
-    nextArrow: <Arrows />,
-    prevArrow: <Arrows />,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-          infinite: true,
-          dots: false,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          initialSlide: 2,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  };
+  
   const { keycloak } = useKeycloak();
   const isLogin = keycloak.authenticated;
   const [tagId, setTagId] = useState("");
 
-  const fetchRecipes = async ({ pageParam, pageSize }) => {
-    const response = await PostApi.getPosts(pageParam, pageSize);
+  const fetchRecipes = async ({ pageParam, pageSize,sortPost , sortType }) => {
+    const response = await PostApi.getPosts(pageParam, pageSize,sortPost , sortType);
     // console.log(response.data);
     return response.data;
   };
 
   const { data, fetchNextPage, hasNextPage, status } = useInfiniteQuery(
     "posts",
-    ({ pageParam = 0, pageSize = 8 }) => fetchRecipes({ pageParam, pageSize }),
+    ({ pageParam = 0, pageSize = 8,sortPost="CREATED_TIME" , sortType="ACCENDING" }) => fetchRecipes({ pageParam, pageSize,sortPost , sortType }),
     {
       getNextPageParam: (lastPage) => {
         const maxPages = lastPage.totalElements / 5;
@@ -152,20 +100,11 @@ const Discover = () => {
     <>
       {isLogin ? <LoginBanner onItemClick={handleItemSelection} /> : <Banner />}
       <div style={{ width: "90%", margin: "0 auto" , }}>
-        {/* <RecipeCardList
+         <RecipeCardList
           props={posts && posts.content ? posts.content : data.pages.flatMap((page) => page.content)}
           pending={""}
-        /> */}
-        <Slider {...settings}
-        >
-          {posts && posts.content
-            ? posts.content.map((post) => (
-                <RecipeCard key={post.postId} props={post} />
-              ))
-            : data.pages
-                .flatMap((page) => page.content)
-                .map((post) => <RecipeCard key={post.postId} props={post} />)}
-        </Slider>
+        /> 
+        
        
       </div>
       {/* {hasNextPage && (

@@ -5,7 +5,7 @@ const Nothing = () => {
   return ( 
     <div className="nothing">
       <div className="nothing-header">
-        <img className='nothing-img' src="public/assets/Nothing.png" alt="Nothing" />
+        <img className='nothing-img' src="/assets/Nothing.png" alt="Nothing" />
       </div>
       <div className="nothing-text">
         <h2 className='nothing-alert'>Nothing to see here</h2>

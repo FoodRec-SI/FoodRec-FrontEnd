@@ -18,9 +18,9 @@ function createRecipe(data, token) {
   });
 }
 
-function getPosts(pageNumber,pageSize){
+function getPosts(pageNumber,pageSize,sortPost,sortType){
   return instance.get(`/api/public/posts`, {
-    params: { pageNumber , pageSize  },
+    params: { pageNumber , pageSize , sortPost , sortType },
   
   });
 }

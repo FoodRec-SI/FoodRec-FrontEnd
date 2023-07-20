@@ -13,7 +13,7 @@ import RecipeDetail from "../components/RecipeDetail/RecipeDetail";
 import SearchPage from "./SearchPage";
 import ImportForm from "../components/ImportForm/ImportForm";
 import AddRecipeForm from "../components/AddRecipeForm/AddRecipeForm";
-import Profile from "../components/Profile/Profile";
+import Profile from "../components/profile/Profile";
 import PlanDetail from "./PlanDetail/PlanDetail";
 import HistoryTable from "../components/HistoryTable/HistoryTable";
 
@@ -41,7 +41,7 @@ function AppRoutes() {
       title: "Meal",
     },
     {
-      path: "/meal/:id",
+      path: "/meal/:mealId",
       element: isLogin  ? <PlanDetail /> : <Login />,
       title: "Plan Detail",
     },

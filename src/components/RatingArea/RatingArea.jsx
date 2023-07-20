@@ -87,7 +87,7 @@ const RatingArea = () => {
 
     return (
         <>
-        {isPercentageRatingSuccess && 
+        
             <div className="rating_area">
                 <h1>Customers Review</h1>
                 {<div className='rating_area_overView'>
@@ -149,7 +149,8 @@ const RatingArea = () => {
                         {value > 0 && <Button label="Submit" rounded onClick={handleRating} text />}
                     </div>
                 </Dialog>
-            </div>}
+            </div>
+            
         </>
     );
 }

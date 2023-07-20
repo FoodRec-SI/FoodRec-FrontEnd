@@ -8,7 +8,7 @@ export const LikeApi = {
 };
 
 function getLikes(pageParam, pageSize, token) {
-  return instance.get(`/api/member/like`, {
+  return instance.get(`/api/member/post/like`, {
     params: { pageNumber: pageParam, pageSize },
     headers: {
       Authorization: bearerAuth(token),

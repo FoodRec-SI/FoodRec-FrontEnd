@@ -154,7 +154,7 @@ const PlayListHeader = (props) => {
             ) : props.likerecipes && props.likerecipes.length ? (
               <img src={props.likerecipes[0].image} alt="Liked Recipe" />
             ) : (
-              <img src="public/assets/healthyFood.jpg" alt="Healthy Food" />
+              <img src="/assets/healthyFood.jpg" alt="Healthy Food" />
             )}
           </div>
           <div className="playlist-header-title">

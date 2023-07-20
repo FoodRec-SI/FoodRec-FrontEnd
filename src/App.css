@@ -141,42 +141,38 @@ body {
 .search-content {
   padding-top: 30px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 .ant-menu {
-  width: 250px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  height: 40px;
+  margin-bottom: 32px;
+  border-radius: 22px;
+  color: #000000;
+  border: 1px solid #000000;
+  cursor: pointer;
+  background-color: transparent;
 }
 
 .ant-menu-title {
-  font-size: 20px;
-  line-height: 24px;
+  font-size: 14px;
+  line-height: 18px;
   font-weight: 700;
   color: #000000;
-  margin-bottom: 20px;
 }
 
-.ant-menu-item {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+.ant-menu:hover {
+  background-color: #efefef;
 }
 
-.ant-menu-item-filter {
-  background-color: transparent;
-  border: 1px solid #000000;
-  border-radius: 30px;
-  font-size: 20px;
-  line-height: 24px;
-  font-weight: 400;
-  padding: 12px;
-  cursor: pointer;
+.ant-menu:active {
+  background-color: #dcdcdc;
 }
 
-.ant-menu-item-filter:hover {
-  background-color: #000000;
-  color: #ffffff;
-}
 
 .search-content-recipe {
   display: flex;
