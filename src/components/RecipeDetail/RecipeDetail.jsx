@@ -402,7 +402,7 @@ function Introduction({ props, isMyRecipe, recipeId, refetchRecipeDetail }) {
             </Tooltip>
 
             <Tooltip title="Twitter" placement="top">
-              <TwitterShareButton url={shareUrl} title={props.recipeName}>
+              <TwitterShareButton url={shareUrl} quote={props.recipeName}>
                 <TwitterIcon size={30} round={true} />
               </TwitterShareButton> 
 
