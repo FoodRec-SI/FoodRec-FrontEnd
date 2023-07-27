@@ -10,7 +10,10 @@ import Loading from "../../components/Loading/Loading";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-const SearchPage = () => {
+
+
+
+const SearchPage = ({isAddToPlan,renderMeal,setRenderMeal,mealId}) => {
   const { keycloak } = useKeycloak();
   const  {searchName}  = useParams();
   const [recipeName, setRecipeName] = useState(searchName);
@@ -36,7 +39,6 @@ const SearchPage = () => {
       sortPost,
       sortType
     );
-    // console.log(response.data);
     return response.data;
   };
 
@@ -63,7 +65,6 @@ const SearchPage = () => {
     }
   );
 
-  console.log(data);
 
   useEffect(() => {
     const onScroll = (event) => {
@@ -162,7 +163,10 @@ const SearchPage = () => {
                     ? data && data.pages.flatMap((page) => page.content)
                     : recipes
                 }
-                pending=""
+                pending={isAddToPlan}
+                renderMeal={renderMeal} 
+                setRenderMeal={setRenderMeal} 
+                mealId={mealId}
               />
             </>
           ) : (

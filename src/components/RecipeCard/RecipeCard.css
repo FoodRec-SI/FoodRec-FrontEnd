@@ -6,7 +6,7 @@
   height: fit-content;
   width: 270px;
   margin: 10px;
-  
+  position: relative;
   border-radius:  10px;
   
   border: 1px solid #d5d1d1 ;
@@ -81,6 +81,12 @@
 .recipeCard__time p {
   padding-left: 2px;
   font-size: 14px;
+}
+
+.add-meal-button{
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 
