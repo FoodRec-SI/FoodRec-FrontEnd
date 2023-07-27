@@ -2,7 +2,6 @@ import './TopRecipe.css'
 
 const TopRecipe = (props) => {
 
-  console.log(props)
 
   return ( 
     <div className="top-recipe-container">

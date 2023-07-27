@@ -155,7 +155,9 @@ const Sidebar = ({ isOpen, showBackdrop, toggle }) => {
           >
             My Account
           </div>}
-          <div className="sign-out" style={{
+          {
+            keycloak.authenticated ?(
+            <div className="sign-out" style={{
             display: isOpen ? "flex" : "none",
             marginTop: "32px",
             fontSize: "16px",
@@ -168,7 +170,9 @@ const Sidebar = ({ isOpen, showBackdrop, toggle }) => {
             onClick={() => handleLogInOut()}
           >
             Sign out
-          </div>
+          </div>) : (
+            null
+          )}
         </div>
       </div>
       <div

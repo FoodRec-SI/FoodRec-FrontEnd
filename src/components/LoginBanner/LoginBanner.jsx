@@ -30,7 +30,7 @@ const LoginBanner = (props) => {
   const { data: items } = useQuery("items", fetchTags);
 
   const onItemClick = (item) => {
-    console.log(item);
+  
     props.onItemClick(item);
   };
 

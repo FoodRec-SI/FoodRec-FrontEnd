@@ -2,6 +2,7 @@ import TopRecipe from "../../components/TopRecipe/TopRecipe";
 import { PostApi } from "../../api/PostApi";
 import { useQuery } from "react-query";
 import { useKeycloak } from "@react-keycloak/web";
+import { handleLogError } from "../../utills/Helper";
 
 const TopTier = () => {
   const { keycloak } = useKeycloak();
@@ -11,7 +12,7 @@ const TopTier = () => {
       const response = await PostApi.getTopPost(keycloak.token);
       return response.data;
     } catch (error) {
-      console.log(error);
+      handleLogError(error);
     }
   };
 

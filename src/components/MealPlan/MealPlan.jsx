@@ -45,12 +45,10 @@ const MealPlan = () => {
         .required("Required"),
     }),
     onSubmit: (values) => {
-      console.log("Plan Name:", values.planName);
-      console.log("Plan Description:", values.planDescription);
-      console.log("Day:", values.day);
+    
 
       createNewPlan(values);
-      console.log(values);
+   
       setVisible(false);
       formik.resetForm();
     },
@@ -73,8 +71,7 @@ const MealPlan = () => {
   const formattedLastDay = format(lastDayOfWeek, "MMM-dd");
 
   const fetchPlanList = async () => {
-    console.log(firstDayOfWeek);
-    console.log(lastDayOfWeek);
+  
     const response = await PlanApi.getPlan(
       firstDayOfWeek,
       lastDayOfWeek,
@@ -89,9 +86,9 @@ const MealPlan = () => {
   );
 
   const createPlan = async (data) => {
-    console.log(data);
+  
     // const newPlanDate = formatISO(planDate, { representation: "date" });
-    // console.log(newPlanDate);
+   
     const response = await PlanApi.createPlan(data, keycloak.token);
     return response.data;
   };
@@ -104,7 +101,7 @@ const MealPlan = () => {
 
   const deletePlan = async (planId) => {
     const response = await PlanApi.deletePlan(planId, keycloak.token);
-    console.log(planId);
+    
     return response.data;
   };
 

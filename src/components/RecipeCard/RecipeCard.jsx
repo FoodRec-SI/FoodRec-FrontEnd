@@ -72,7 +72,7 @@ function RecipeCard({ props, pending, renderMeal, setRenderMeal, mealId }) {
                 </div>
             </div>
             {isAddToPlan == true && isSuccess && <button
-                className="add-meal-button"
+                className="add-meal-button-recipe-card"
                 onClick={
                     handleAddToPlan
                 }

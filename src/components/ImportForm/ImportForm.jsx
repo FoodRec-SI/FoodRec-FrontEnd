@@ -119,7 +119,7 @@ const ImportForm = () => {
             setNewRecipe(tempRecipe);
         }
         else {
-            console.log(errors);
+  
             setError(errors);
             setOpenSnackbar(true);
         }
@@ -273,7 +273,7 @@ function StepGenerate(props) {
     }
 
     useEffect(() => {
-        console.log(step);
+  
     }, [step])
     return (
         <>
