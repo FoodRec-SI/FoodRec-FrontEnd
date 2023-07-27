@@ -14,7 +14,7 @@ import { Dialog } from "primereact/dialog";
 
 
 
-const SearchPage = ({isAddToPlan,renderMeal,setRenderMeal,mealId}) => {
+const SearchPage = ({ isAddToPlan, renderMeal, setRenderMeal, mealId }) => {
   const { keycloak } = useKeycloak();
   const { searchName } = useParams();
   const [recipeName, setRecipeName] = useState(searchName);
@@ -23,8 +23,8 @@ const SearchPage = ({isAddToPlan,renderMeal,setRenderMeal,mealId}) => {
 
   let AddToPlan = "";
 
-  if(isAddToPlan != null){
-      AddToPlan = isAddToPlan;
+  if (isAddToPlan != null) {
+    AddToPlan = isAddToPlan;
   }
 
   const handleResetSearch = (e) => {
@@ -47,6 +47,7 @@ const SearchPage = ({isAddToPlan,renderMeal,setRenderMeal,mealId}) => {
       sortPost,
       sortType
     );
+    console.log(response.data);
     return response.data;
   };
 
@@ -136,7 +137,7 @@ const SearchPage = ({isAddToPlan,renderMeal,setRenderMeal,mealId}) => {
     }
   );
 
-  
+
 
   const handleSortChange = (sortPost, sortType) => {
     // Fetch data with the new sorting options
@@ -152,6 +153,7 @@ const SearchPage = ({isAddToPlan,renderMeal,setRenderMeal,mealId}) => {
   }
 
   return (
+    
     <div className="search-page">
       <div className="search-bar-container">
         <div className="search-bar">
@@ -173,7 +175,7 @@ const SearchPage = ({isAddToPlan,renderMeal,setRenderMeal,mealId}) => {
         {/* <div className="ant-menu">
           <div className="ant-menu-title">Filter</div>
         </div> */}
-        <div className="search-content-recipe">
+        {data.pages && <div className="search-content-recipe">
           {isLoading ? (
             <Loading />
           ) : !recipes && !recipeName ? (
@@ -238,8 +240,8 @@ const SearchPage = ({isAddToPlan,renderMeal,setRenderMeal,mealId}) => {
                     : recipes
                 }
                 pending={AddToPlan}
-                renderMeal={renderMeal} 
-                setRenderMeal={setRenderMeal} 
+                renderMeal={renderMeal}
+                setRenderMeal={setRenderMeal}
                 mealId={mealId}
               />
             </>
@@ -256,9 +258,10 @@ const SearchPage = ({isAddToPlan,renderMeal,setRenderMeal,mealId}) => {
               </button>
             </div>
           )}
-        </div>
+        </div>}
       </div>
     </div>
+  
   );
 };
 

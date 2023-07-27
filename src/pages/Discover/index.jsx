@@ -110,7 +110,7 @@ const Discover = () => {
       queryFn: async () => {
         if (profileData.tagsCollection == null) {
           const data = await PostApi.getPosts(0, 16, "CREATED_TIME", "ACCENDING");
-        
+          
           return data.data.content;
         }
         else {
@@ -140,7 +140,7 @@ const Discover = () => {
 
     const fetchPostByTag = async (tagId) => {
       const response = await TagApi.getPostByTag(tagId, keycloak.token);
-      return response.data;
+      return response.data.content;
     };
 
     const shouldFetchData = Boolean(tagId);
