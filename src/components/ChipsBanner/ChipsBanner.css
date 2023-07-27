@@ -34,8 +34,9 @@
 .chips-wrapper {
   border-radius: 16px;
   padding: 8px;
-  margin-top: 16px;
+  margin-top: 56px;
   width: 100%;
+  max-width: 1250px;
   overflow-x: auto;
   position: relative;
 }

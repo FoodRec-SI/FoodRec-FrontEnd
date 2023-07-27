@@ -3,10 +3,10 @@
   position: fixed;
   display: flex;
   flex-direction: row;
-  top: 0;
+  top: -1;
   left: 0;
   right: 0;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   z-index: 20;
   border-bottom-width: 1px;
@@ -14,12 +14,25 @@
   border-bottom-color: rgb(230, 230, 230);
   background-color: white;
   padding-left: 50px;
-  padding-right: 50px;
+  padding-right: 50px;;
+}
+
+.navbar-wrapper{
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .navbar-start {
   display: flex;
   align-items: center;
+}
+
+.logo{
+  cursor: pointer;
 }
 
 .bars {

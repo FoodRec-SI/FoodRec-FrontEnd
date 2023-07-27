@@ -1,8 +1,19 @@
 .plan-detail {
   background-color: #f5f5f5;
   width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
+}
+
+.plan-detail-name-wrapper{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
 }
 
 .plan-detail-name{
@@ -13,7 +24,7 @@
 }
 
 .plan-deatil-calories{
-  margin-top: 16px;
+  margin-top: 10px;
   padding-top: 10px;
   padding-bottom: 10px;
   transition: box-shadow 0.15s ease-in-out;
@@ -39,7 +50,7 @@
   flex-direction: column;
   margin: 15px;
   width: 100%;
-  max-width: 1400px;
+  max-width: 1200px;
   height: 100%;
 }
 
@@ -57,6 +68,7 @@
   flex-direction: column;
   width: 100%;
   height: 100%;
+  min-height: 60vh;
   gap: 15px;
 }
 
@@ -70,12 +82,24 @@
 .plan-detail-meal-card:hover {
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.12);
 }
+
+.meal-card-header{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 .meal-card-header-title {
   font-size: 14px;
   padding-bottom: 10px;
   padding-top: 15px;
   padding-left: 20px;
   padding-right: 20px;
+  flex: 1;
+}
+
+.meal-card-header-button{
+  margin-right: 1.2rem;
 }
 
 .meal-card-body {

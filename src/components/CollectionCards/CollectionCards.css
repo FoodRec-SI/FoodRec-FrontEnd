@@ -1,7 +1,7 @@
 .collection-cards {
   display: flex;
   flex-wrap: wrap;
-  margin: 40px;
+  margin: 10px;
   overflow-x: hidden;
 }
 
@@ -205,3 +205,18 @@ collection-card.add-collection .save-cancel-block {
   height: 1em;
   background: #bababa;
 }
+
+@media screen and (max-width: 767px) {
+  .collection-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .collection-wrapper {
+    width: 100%;
+    max-width: 250px;
+ 
+  }
+}
+  

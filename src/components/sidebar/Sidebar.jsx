@@ -83,16 +83,16 @@ const Sidebar = ({ isOpen, showBackdrop, toggle }) => {
   }
 
   return (
-    <div className="sidebar-container">
+    <div className="sidebar-container" >
       <div
         style={{
           width: isOpen ? "400px" : "0px",
-          transition: "all 0.3s ease-in-out",
+          transition: "all 0.2s ease-in-out",
         }}
         className="open-menu"
       >
-        <div className="body-section">
-          <div className="card-wrapper">
+        <div className="body-section" >
+          <div className="card-wrapper" >
             {UserMenuItems.map((item, index) => (
               <NavLink
                 to={item.path}
@@ -103,13 +103,15 @@ const Sidebar = ({ isOpen, showBackdrop, toggle }) => {
                 <div className="nav-card-container"
                   style={{
                     display: isOpen ? "block" : "none",
-                    transition: "all 0.5s ease-in-out",
+                    opacity: isOpen ? "1" : "0",
+                    transition: "all 0.9s ease-in-out",
                   }}
                 >
                   <div className="nav-card"
                     style={{
                       display: isOpen ? "flex" : "none",
-                      transition: "all 0.5s ease-in-out",
+                      opacity: isOpen ? "1" : "0",
+                      transition: "all 0.9s ease-in-out",
                       backgroundImage: `url(${item.image})`,
                       backgroundPosition: "center",
                       backgroundSize: "cover",
@@ -118,7 +120,9 @@ const Sidebar = ({ isOpen, showBackdrop, toggle }) => {
                   >
                     <div className="nav-card-content"
                     >
-                      <div className="nav-card-icon">{item.icon}</div>
+                      <div className="nav-card-icon" style={{
+                        display: isOpen ? "block" : "none"
+                      }}>{item.icon}</div>
                       <div
                         style={{
                           display: isOpen ? "block" : "none",

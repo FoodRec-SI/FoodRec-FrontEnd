@@ -1,74 +1,211 @@
 import "./PlanDetail.css";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { Menu as PrimeMenu} from "primereact/menu";
+import { Dialog } from "primereact/dialog";
+import { MultiSelect } from "primereact/multiselect";
+import { InputText } from "primereact/inputtext";
 import { useParams } from "react-router-dom";
 import { PlanApi } from "../../api/PlanApi";
+import { TagApi } from "../../api/TagApi";
 import { useKeycloak } from "@react-keycloak/web";
 import { useQuery } from "react-query";
+import { useMutation } from "react-query";
+import { useQueryClient } from "react-query";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import { IconButton } from "@mui/material";
+import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutlineRounded";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import Loading from "../../components/Loading/Loading";
+import ClickAwayListener from '@mui/material/ClickAwayListener';
+import Grow from '@mui/material/Grow';
+import Paper from '@mui/material/Paper';
+import Popper from '@mui/material/Popper';
+import MenuItem from '@mui/material/MenuItem';
+import MenuList from '@mui/material/MenuList';
+
 
 const PlanDetail = () => {
+  const { mealId } = useParams();
+  const { keycloak } = useKeycloak();
+  const queryClient = useQueryClient();
+  const [visible, setVisible] = useState(false);
+  const [renderMeal, setRenderMeal] = useState([]);
+  const [shopVisible, setShopVisible] = useState(false);
+  const [saved, setSaved] = useState(false);
 
-  const {mealId} = useParams();
-  const {keycloak}= useKeycloak();
+  const menu1 = useRef(null);
 
-  const fetchPlanDetail = () =>{
-    const response = PlanApi.getPlanDetail(mealId,keycloak.token)
-    console.log(response);
-    return response;
-  }
+  const formik = useFormik({
+    initialValues: {
+      mealName: "",
+      maxCalories: "",
+      tagIds: [],
+    },
+    validationSchema: Yup.object({
+      mealName: Yup.string().required("Required"),
+      maxCalories: Yup.number()
+        .positive("Please enter a positive number")
+        .required("Required")
+        .typeError("Please enter a positive number"),
+      tagIds: Yup.array().required("Required"),
+    }),
+    onSubmit: (values) => {
+      createNewPlan(values);
+      setVisible(false);
+      formik.resetForm();
+    },
+  });
 
-  const {data,status} = useQuery("planDetail",fetchPlanDetail)
+  const addBlankMeal = () => {
+    setRenderMeal([...renderMeal, { mealName: "Temp Meal", postDTOList: [] }]);
+  };
 
-  console.log(data)
+  const generateIngredientList = async () => {
+    const response = await PlanApi.generateIngredientList(
+      mealId,
+      keycloak.token
+    );
+    const ingredientsItems = Object.entries(response.data).map(
+      ([key, value]) => {
+        return {
+          key,
+          value,
+        };
+      }
+    );
 
+    return ingredientsItems;
+  };
 
+  const {
+    data: ingredients,
+    refetch,
+    isFetching,
+  } = useQuery("ingredientList", generateIngredientList, {
+    enabled: false,
+  });
 
-  const DATA = [
+  const handleGeneratedIngredientList = () => {
+    setShopVisible(true);
+    refetch();
+  };
+
+  const planItems = [
     {
-      id: "1",
-      name: "meal 1",
-      recipes: [
-        {
-          id: "1",
-          name: "name 1",
-          image: "url(/assets/healthyFood.jpg)",
-        },
-        {
-          id: "2",
-          name: "name 2",
-          image: "url(/assets/healthyFood.jpg)",
-        },
-        {
-          id: "4",
-          name: "name 4",
-          image: "url(/assets/healthyFood.jpg)",
-        },
-      ],
+      label: "Save plan",
+      icon: "pi pi-save",
+      command: () => setSaved(true),
     },
     {
-      id: "2",
-      name: "meal 2",
-      recipes: [
-        {
-          id: "3",
-          name: "name 3",
-          image: "url(/assets/healthyFood.jpg)",
-        },
-      ],
+      label: "Generate new meal",
+      icon: "pi pi-sync",
+      command: () => setVisible(true),
     },
     {
-      id: "3",
-      name: "meal 3",
-      recipes: [],
+      label: "Change plan name",
+      icon: "pi pi-refresh",
+    },
+    {
+      label: "Add a blank meal",
+      icon: "pi pi-fw pi-plus",
+      command: () => addBlankMeal(),
+    },
+    {
+      label: "Generate shopping list",
+      icon: "pi pi-shopping-bag",
+      command: () => handleGeneratedIngredientList(),
     },
   ];
 
-  const [meal, setMeal] = useState(DATA);
+  const fetchPlanDetail = async () => {
+    const response = await PlanApi.getPlanDetail(mealId, keycloak.token);
+    return response.data;
+  };
+  const { data, isLoading, isError } = useQuery("planDetail", fetchPlanDetail);
 
-  console.log(meal);
+  const [meal, setMeal] = useState([]);
 
+  useEffect(() => {
+    if (data && data.mealSet) {
+      setMeal(data);
+      setRenderMeal(generatedMeal(data.mealSet));
+    } else {
+      setMeal({ mealSet: [] });
+    }
+  }, [data]);
+
+  const createMeal = async (data) => {
+    const response = await PlanApi.createMeal(data, keycloak.token);
+    console.log(response.data);
+    setMeal([...(!meal.mealSet ? meal : meal.mealSet), response.data]);
+    setRenderMeal(
+      generatedMeal([...(!meal.mealSet ? meal : meal.mealSet), response.data])
+    );
+    return response.data;
+  };
+
+  const { mutate: createNewPlan } = useMutation(createMeal);
+
+  const { data: recipeTags } = useQuery({
+    queryKey: ["tags"],
+    queryFn: async () => {
+      const data = await TagApi.getTags(keycloak.token);
+      return data;
+    },
+  });
+
+  const updatePlan = async (data) => {
+    console.log(data);
+    const response = await PlanApi.updatePlan(data, keycloak.token);
+    return response.data;
+  };
+
+  const { mutate: updatePlanDetail } = useMutation(updatePlan, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("planDetail");
+    },
+  });
+
+  const handleUpdatePlan = () => {
+    const updatedData = {
+      planId: mealId,
+      mealPerPlanList: renderMeal.map((item) => ({
+        mealId: item.mealId,
+        mealName: item.mealName,
+        currentCalories: item.currentCalories,
+        postList: item.postDTOList.map((post) => ({
+          postId: post.postId,
+        })),
+      })),
+    };
+    console.log(updatedData);
+    updatePlanDetail(updatedData);
+    setSaved(false);
+  };
+
+  const handleDialogHide = () => {
+    formik.resetForm(); // Reset formik state
+    setVisible(false); // Hide the dialog
+  };
+
+  const generatedMeal = (meal) => {
+    if (!Array.isArray(meal) || meal.length === 0) {
+      return [];
+    }
+    meal &&
+      meal.map((item) => {
+        item.postDTOList &&
+          item.postDTOList.map((post, index) => {
+            post.id = item.mealId + post.postId + index;
+          });
+      });
+    return meal;
+  };
+
+  // console.log(renderMeal);
+  // console.log(meal);
 
   const handleDragDrop = (result) => {
     const { source, destination, type } = result;
@@ -84,48 +221,72 @@ const PlanDetail = () => {
     }
 
     if (type === "group") {
-      const newMeal = [...meal];
+      const newMeal = [...renderMeal];
       const [removed] = newMeal.splice(source.index, 1);
       newMeal.splice(destination.index, 0, removed);
       setMeal(newMeal);
       return;
     }
 
-    console.log({source, destination});
+    console.log({ source, destination });
 
-    const mealSourceIndex = meal.findIndex( (item) => item.id === source.droppableId);
-    const mealDestinationIndex = meal.findIndex( (item) => item.id === destination.droppableId);
-    const newSourceFoods = [...meal[mealSourceIndex].recipes];
-    const newDestinationFoods = source.droppableId !== destination.droppableId ?  [...meal[mealDestinationIndex].recipes] : newSourceFoods;
+    const mealSourceIndex = renderMeal.findIndex(
+      (item) => item.mealId === source.droppableId
+    );
+    const mealDestinationIndex = renderMeal.findIndex(
+      (item) => item.mealId === destination.droppableId
+    );
+    const newSourceFoods = [...renderMeal[mealSourceIndex].postDTOList];
+    const newDestinationFoods =
+      source.droppableId !== destination.droppableId
+        ? [...renderMeal[mealDestinationIndex].postDTOList]
+        : newSourceFoods;
 
     const [removed] = newSourceFoods.splice(source.index, 1);
     newDestinationFoods.splice(destination.index, 0, removed);
-    
-    const newMealList = [...meal];
+
+    const newMealList = [...renderMeal];
 
     newMealList[mealSourceIndex] = {
-      ...meal[mealSourceIndex],
-      recipes: newSourceFoods
-    }
+      ...renderMeal[mealSourceIndex],
+      postDTOList: newSourceFoods,
+    };
 
     newMealList[mealDestinationIndex] = {
-      ...meal[mealDestinationIndex],
-      recipes: newDestinationFoods
-    }
+      ...renderMeal[mealDestinationIndex],
+      postDTOList: newDestinationFoods,
+    };
 
-    setMeal(newMealList);
+    setRenderMeal(newMealList);
   };
 
+  // if (status === "loading") {
+  //   return <div>Loading...</div>;
+  // }
+  const deletePost = (mealId, postId) => {
+    setRenderMeal((prevMeals) =>
+      prevMeals.map((meal) => {
+        if (meal.mealId === mealId) {
+          meal.postDTOList = meal.postDTOList.filter(
+            (post) => post.postId !== postId
+          );
+        }
+        return meal;
+      })
+    );
+  };
 
-
-  const RecipeCard = ({ props }) => {
+  const RecipeCard = ({ props, mealId }) => {
+    const handleDeletePost = () => {
+      deletePost(mealId, props.postId);
+    };
     return (
       <div className="plan-detail-recipe-card">
         <div className="plan-detail-card">
           <div className="plan-detail-card-image">
             <div
               style={{
-                background: "url(/assets/healthyFood.jpg)",
+                background: `url(${props.image})`,
                 backgroundSize: "auto 50px",
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center",
@@ -136,12 +297,12 @@ const PlanDetail = () => {
             ></div>
           </div>
           <div className="plan-detail-card-title">
-            <div className="food-name">{props.name}</div>
+            <div className="food-name">{props.recipeName}</div>
             <span className="food-serve">1 serving</span>
           </div>
           <div className="plan-detail-card-button">
-            <IconButton>
-              <MoreHorizOutlinedIcon />
+            <IconButton onClick={handleDeletePost}>
+              <RemoveCircleOutlineRoundedIcon />
             </IconButton>
           </div>
         </div>
@@ -150,21 +311,134 @@ const PlanDetail = () => {
   };
 
   const MealCard = ({ props }) => {
+    const [open, setOpen] = useState(false);
+    const anchorRef = useRef(null);
+  
+    const handleToggle = () => {
+      setOpen((prevOpen) => !prevOpen);
+    };
+  
+    const handleClose = (event) => {
+      if (anchorRef.current && anchorRef.current.contains(event.target)) {
+        return;
+      }
+  
+      setOpen(false);
+    };
+  
+    function handleListKeyDown(event) {
+      if (event.key === 'Tab') {
+        event.preventDefault();
+        setOpen(false);
+      } else if (event.key === 'Escape') {
+        setOpen(false);
+      }
+    }
+  
+    // return focus to the button when we transitioned from !open -> open
+    const prevOpen = useRef(open);
+    useEffect(() => {
+      if (prevOpen.current === true && open === false) {
+        anchorRef.current.focus();
+      }
+  
+      prevOpen.current = open;
+    }, [open]);
 
-    console.log(props);
- 
+    const deleteMeal = async (mealId) => {
+      await setRenderMeal((prevMeals) =>
+        prevMeals.filter((meal) => meal.mealId !== mealId)
+      );
+      console.log(mealId);
+    };
+
+    // const mealItems = [
+    //   {
+    //     label: "Change meal name",
+    //     icon: "pi pi-refresh",
+    //   },
+    //   {
+    //     label: "Add new recipe",
+    //     icon: "pi pi-fw pi-plus",
+    //   },
+    //   {
+    //     label: "Delete this meal",
+    //     icon: "pi pi-trash",
+    //     command: () => deleteMeal(),
+    //   },
+    // ];
+
+    const totalCalories = props.postDTOList.reduce(
+      (total, item) => total + item.calories,
+      0
+    );
+
     return (
-      <div className="plan-detail-meal-card" >
+      <div className="plan-detail-meal-card">
         <div className="meal-card-header">
           <div className="meal-card-header-title">
-            <h3>{props.name}</h3>
-            <span>Calories</span>
+            <h3>{props.mealName}</h3>
+            <span>{totalCalories} Calories</span>
           </div>
+          <div
+            className="meal-card-header-button"
+            ref={anchorRef}
+            id="composition-button"
+            aria-controls={open ? 'composition-menu' : undefined}
+            aria-expanded={open ? 'true' : undefined}
+            aria-haspopup="true"
+            onClick={handleToggle}
+          >
+            <IconButton>
+              <MoreHorizOutlinedIcon />
+            </IconButton>
+          </div>
+          <Popper
+          open={open}
+          anchorEl={anchorRef.current}
+          role={undefined}
+          placement="top-start"
+          transition
+          disablePortal
+          
+        >
+          {({ TransitionProps, placement }) => (
+            <Grow
+              {...TransitionProps}
+              style={{
+                transformOrigin:
+                  placement === 'bottom-start' ? 'left top' : 'left bottom',
+                
+              }}
+            >
+              <Paper >
+                <ClickAwayListener onClickAway={handleClose}>
+                  <MenuList
+                    autoFocusItem={open}
+                    id="composition-menu"
+                    aria-labelledby="composition-button"
+                    onKeyDown={handleListKeyDown}
+                  >
+                    <MenuItem onClick={handleClose}>Change meal name</MenuItem>
+                    <MenuItem onClick={handleClose}>Add new recipe</MenuItem>
+                  <MenuItem onClick={() =>{
+                    deleteMeal(props.mealId)
+                  }}>Delete this meal</MenuItem>
+                  </MenuList>
+                </ClickAwayListener>
+              </Paper>
+            </Grow>
+          )}
+        </Popper>
         </div>
-        <Droppable droppableId={props.id} >
+        <Droppable droppableId={props.mealId}>
           {(provided) => (
-            <div className="meal-card-body" {...provided.droppableProps} ref={provided.innerRef}>
-              {   props.recipes.map((item, index) => (
+            <div
+              className="meal-card-body"
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {props.postDTOList.map((item, index) => (
                 <Draggable key={item.id} draggableId={item.id} index={index}>
                   {(provided) => (
                     <div
@@ -172,13 +446,17 @@ const PlanDetail = () => {
                       {...provided.dragHandleProps}
                       ref={provided.innerRef}
                     >
-                      <RecipeCard key={item.id} props={item} />
+                      <RecipeCard
+                        key={item.postId}
+                        props={item}
+                        mealId={props.mealId}
+                      />
                     </div>
                   )}
                 </Draggable>
               ))}
               {provided.placeholder}
-            </div>       
+            </div>
           )}
         </Droppable>
       </div>
@@ -189,7 +467,7 @@ const PlanDetail = () => {
     <div className="plan-detail">
       <div className="plan-detail-container">
         <div className="plan-detail-header">
-          <span
+          {/* <span
           // className={active ? "active" : "plan-tray"}
           >
             Plan
@@ -198,22 +476,167 @@ const PlanDetail = () => {
           // className={active ? "active" : "shop-list-tray"}
           >
             Shop
-          </span>
+          </span> */}
+          <Dialog
+            header="Shopping List"
+            visible={shopVisible}
+            style={{ width: "50vw" }}
+            onHide={() => setShopVisible(false)}
+          >
+            {isFetching ? (
+              <Loading />
+            ) : (
+              ingredients?.map((item, index) => (
+                <div className="ingredient-list" key={index}>
+                  <div>{item.name}</div>
+                  <div>{item.quantity}</div>
+                </div>
+              ))
+            )}
+          </Dialog>
+          <Dialog
+            visible={saved}
+            style={{ width: "30vw" }}
+            onHide={() => setSaved(false)}
+          >
+            <div className="confirm-delete">
+              <div className="check-again">Save your plan?</div>
+              <div className="check-again-text">This plan will be updated</div>
+              <div className="check-button">
+                <button
+                  className="cancel-confirm"
+                  onClick={() => setSaved(false)}
+                >
+                  CANCEL
+                </button>
+                <button
+                  className="delete-confirm"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleUpdatePlan();
+                  }}
+                >
+                  Update
+                </button>
+              </div>
+            </div>
+          </Dialog>
         </div>
         <div className="plan-detail-body">
           <div className="plan-detail-name-total-calories">
-            <div className="plan-detail-name">Plan Name</div>
+            <div className="plan-detail-name-wrapper">
+              <div className="plan-detail-name">{data && data?.planName}</div>
+              <div
+                className="plan-detail-plan-button"
+                onClick={(event) => menu1.current.toggle(event)}
+              >
+                <PrimeMenu model={planItems} popup ref={menu1} />
+                <IconButton>
+                  <MoreHorizOutlinedIcon />
+                </IconButton>
+              </div>
+              <Dialog
+                header="Create new meal"
+                visible={visible}
+                onHide={handleDialogHide}
+                style={{ width: "50vw" }}
+                breakpoints={{ "960px": "75vw", "641px": "100vw" }}
+              >
+                <form className="m-0">
+                  <div className="p-fluid p-formgrid p-grid">
+                    <div className="flex flex-column gap-2 mb-3">
+                      <label htmlFor="mealName">Meal name</label>
+                      <InputText
+                        id="mealName"
+                        name="mealName"
+                        type="text"
+                        className="p-inputtext-sm p-d-block"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.mealName}
+                      />
+                      {formik.touched.mealName && formik.errors.mealName ? (
+                        <small className="p-error">
+                          {formik.errors.mealName}
+                        </small>
+                      ) : null}
+                    </div>
+                    <div className="flex flex-column gap-2 mb-3">
+                      <label htmlFor="maxCalories">Max calories</label>
+                      <InputText
+                        id="maxCalories"
+                        name="maxCalories"
+                        type="text"
+                        className="p-inputtext-sm p-d-block"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.maxCalories}
+                      />
+                      {formik.touched.maxCalories &&
+                      formik.errors.maxCalories ? (
+                        <small className="p-error">
+                          {formik.errors.maxCalories}
+                        </small>
+                      ) : null}
+                    </div>
+                    <div className="flex flex-column gap-2 mb-3">
+                      <label htmlFor="tagIds">Tags</label>
+                      <MultiSelect
+                        id="tagIds"
+                        name="tagIds"
+                        className="p-inputtext-sm p-d-block"
+                        options={recipeTags?.data?.map((tag) => ({
+                          value: tag.tagId,
+                          label: tag.tagName,
+                        }))}
+                        display="chip"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.tagIds}
+                      />
+                      {formik.touched.tagIds && formik.errors.tagIds ? (
+                        <small className="p-error">
+                          {formik.errors.tagIds}
+                        </small>
+                      ) : null}
+                    </div>
+                    <button
+                      className="add-plan-submit"
+                      type="submit"
+                      onClick={formik.handleSubmit}
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </form>
+              </Dialog>
+            </div>
+
             <div className="plan-deatil-calories">
-              <span className="calo">Total Calories</span>
+              <span className="calo">
+                Total Calories : {data && data.calories}
+              </span>
             </div>
           </div>
-          <DragDropContext onDragEnd={handleDragDrop}>
-            <div className="plan-detail-meal-list">
-              {meal.map((item) => (
-                <MealCard key={item.id} props={item} />
-              ))}
-            </div>
-          </DragDropContext>
+          {isLoading ? (
+            <Loading />
+          ) : isError ? (
+            <div>Error fetching data...</div>
+          ) : (
+            <>
+              <DragDropContext onDragEnd={handleDragDrop}>
+                <div className="plan-detail-meal-list">
+                  {renderMeal.length === 0 ? (
+                    <p>No meal</p>
+                  ) : (
+                    renderMeal.map((item) => (
+                      <MealCard key={item.mealId} props={item} />
+                    ))
+                  )}
+                </div>
+              </DragDropContext>
+            </>
+          )}
         </div>
       </div>
     </div>

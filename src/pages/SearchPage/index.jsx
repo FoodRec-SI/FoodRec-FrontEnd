@@ -1,22 +1,41 @@
+/* eslint-disable react/no-unescaped-entities */
 import RecipeCardList from "../../components/RecipeCardList/RecipeCardList";
 import { PostApi } from "../../api/PostApi";
 import { useKeycloak } from "@react-keycloak/web";
 import { useQuery } from "react-query";
 import { useInfiniteQuery } from "react-query";
 import { useState, useEffect } from "react";
+import { handleLogError } from "../../utills/Helper";
+import Loading from "../../components/Loading/Loading";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const SearchPage = () => {
   const { keycloak } = useKeycloak();
-  const [recipeName, setRecipeName] = useState("");
+  const  {searchName}  = useParams();
+  const [recipeName, setRecipeName] = useState(searchName);
+  const navigate = useNavigate();
+
+  const handleResetSearch = (e) => {
+    e.preventDefault();
+    setRecipeName("");
+    navigate(`/search`);
+  }
 
   const handleSearch = (e) => {
     e.preventDefault();
     const recipeName = e.target.recipeName.value;
     setRecipeName(recipeName);
+    navigate(`/search/${recipeName}`);
   };
 
-  const fetchRecipes = async ({ pageParam, pageSize,sortPost , sortType }) => {
-    const response = await PostApi.getPosts(pageParam, pageSize,sortPost , sortType);
+  const fetchRecipes = async ({ pageParam, pageSize, sortPost, sortType }) => {
+    const response = await PostApi.getPosts(
+      pageParam,
+      pageSize,
+      sortPost,
+      sortType
+    );
     // console.log(response.data);
     return response.data;
   };
@@ -26,9 +45,15 @@ const SearchPage = () => {
     fetchNextPage,
     hasNextPage,
     status: postStatus,
+    
   } = useInfiniteQuery(
     "posts",
-    ({ pageParam = 0, pageSize = 8,sortPost="CREATED_TIME" , sortType="ACCENDING" }) => fetchRecipes({ pageParam, pageSize,sortPost , sortType }),
+    ({
+      pageParam = 0,
+      pageSize = 8,
+      sortPost = "CREATED_TIME",
+      sortType = "ACCENDING",
+    }) => fetchRecipes({ pageParam, pageSize, sortPost, sortType }),
     {
       getNextPageParam: (lastPage) => {
         const maxPages = lastPage.totalElements / 5;
@@ -68,11 +93,15 @@ const SearchPage = () => {
   // }, [recipeName]);
 
   const fetchSearchRecipes = async () => {
-    const response = await PostApi.getPostsByName(recipeName, keycloak.token);
-    return response.data.content;
+    try {
+      const response = await PostApi.getPostsByName(recipeName, keycloak.token);
+      return response.data.content;
+    } catch (error) {
+      handleLogError(error);
+    }
   };
 
-  const { status: searchStatus, data: recipes } = useQuery(
+  const {  data: recipes , isLoading } = useQuery(
     ["recipes", recipeName],
     fetchSearchRecipes,
     {
@@ -80,13 +109,7 @@ const SearchPage = () => {
     }
   );
 
-  if (searchStatus === "loading") {
-    return <div>Loading...</div>;
-  }
-
-  if (searchStatus === "error") {
-    return <div>No Recipes Found</div>;
-  }
+  
 
   if (postStatus === "loading") {
     return <div>Loading...</div>;
@@ -115,19 +138,43 @@ const SearchPage = () => {
         </div>
       </div>
       <div className="search-content">
-        <div className="ant-menu">
+        {/* <div className="ant-menu">
           <div className="ant-menu-title">Filter</div>
-        </div>
+        </div> */}
         <div className="search-content-recipe">
-          <div className="search-content-recipe-title">Popular Recipes</div>
-          <RecipeCardList
-            props={
-              !recipes
-                ? data && data.pages.flatMap((page) => page.content)
-                : recipes
-            }
-            pending=""
-          />
+          {isLoading ? (
+            <Loading />
+          ) :
+          !recipes && !recipeName ? (
+            <>
+            <div style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              
+            }}>
+              <div className="search-content-recipe-title">Popular Recipes</div>
+              
+            </div>
+              <RecipeCardList
+                props={
+                  !recipes
+                    ? data && data.pages.flatMap((page) => page.content)
+                    : recipes
+                }
+                pending=""
+              />
+            </>
+          ) : (
+            <div className="search-nothing-content">
+             
+              <div className="empty-title">We don't find anything matching your search.</div>
+              <div className="empty-content">Try another search or reove your filter</div>
+              <button className="reset-button" onClick={handleResetSearch}>Reset Search</button>
+            </div>
+          )} 
+
+
         </div>
       </div>
     </div>

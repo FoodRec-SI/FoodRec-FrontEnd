@@ -8,8 +8,8 @@
 }
 
 body {
-  background-color: #ffffff;
   margin: 0 auto;
+  background-color: #f5f5f5;
 }
 
 #root {
@@ -18,30 +18,28 @@ body {
 }
 
 .sidebar {
-  z-index: 2;
+  z-index: 99;
+  grid-area: sidebar;
 }
 
 .header {
   grid-area: header;
   z-index: 100;
-  grid-column: sidebar / content;
+  /* grid-column: sidebar / content; */
 }
 
 .content {
   grid-area: content;
+  margin-top: 65px;
   background-color: #f5f5f5;
-  width: calc(100vw - 16.5px);
-  margin: 0 auto;
+  /* width: calc(100vw - 16.5px); */
+  width: 100%;
 }
 
 .App {
   height: 100%;
   object-fit: repeat;
-  display: grid;
-  /* grid-template-rows: [sidebar header] auto [content] auto; */
-  /* grid-template-rows: [sidebar] 0px [header] 56px [content] auto;
-  grid-template-columns: [sidebar] 64px [header content] auto; */
-  grid-template-rows: [header] 64px [content] auto;
+  display: flex;
 }
 
 .page-container {
@@ -135,7 +133,7 @@ body {
 .search-page {
   width: 100%;
   margin: 0px auto;
-  max-width: 1400px;
+  max-width: 1200px;
 }
 
 .search-content {
@@ -173,7 +171,6 @@ body {
   background-color: #dcdcdc;
 }
 
-
 .search-content-recipe {
   display: flex;
   width: 100%;
@@ -186,8 +183,8 @@ body {
   line-height: 24px;
   font-weight: 700;
   color: #000000;
-  margin-left: 60px;
-  margin-bottom: 10px;
+  margin-left: 10px;
+  margin-bottom: 16px;
 }
 /* 
 .collection-instruction {
@@ -207,7 +204,8 @@ body {
   flex-direction: row;
   margin-top: 16px !important;
   padding-bottom: 120px;
-  width: 90%;
+  width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -234,7 +232,6 @@ body {
   -webkit-box-pack: center;
   justify-content: center;
   margin-bottom: 20px;
- 
 }
 
 .collection-title {
@@ -242,5 +239,44 @@ body {
   line-height: 36px;
   font-weight: 800;
   flex: 1 1 0%;
-  max-width: 1400px
+  max-width: 1200px;
+}
+
+.search-nothing-content {
+  display: flex;
+  flex-direction: column;
+  margin-top: 120px;
+  -webkit-box-align: center;
+  align-items: center;
+}
+
+.empty-title {
+  text-align: center;
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 700;
+}
+
+.empty-content {
+  margin-top: 17px;
+  text-align: center;
+  font-size: 16px;
+  line-height: 26px;
+  font-weight: 300;
+}
+
+.reset-button {
+  width: 177px;
+  margin-top: 48px;
+  height: 44px;
+  border-radius: 22px;
+  color: #ffffff;
+  border: 0px solid #000000;
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 700;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+  background-color: #000000;
+  outline: 0px !important;
 }

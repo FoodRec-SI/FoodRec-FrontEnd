@@ -177,6 +177,9 @@ const RecipeDetail = ({ recipeId }) => {
 
         </div>}
       </div>
+      {isPending === false && isMyRecipe == false && <div className="recommendRecipe">
+        {/* <RecommendeRcipe /> */}
+      </div>}
     </div>
   );
 };

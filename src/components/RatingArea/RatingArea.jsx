@@ -62,7 +62,7 @@ const RatingArea = ({ refetchRecipeDetail, isPostSuccess }) => {
         },
     );
 
-    const { mutate, onSuccess } = useMutation(
+    const { mutate } = useMutation(
         async () => {
             const dataToRating = { "postId": id, "score": value }
             const response = await RatingApi.updateRating(dataToRating, keycloak.token);
@@ -70,11 +70,13 @@ const RatingArea = ({ refetchRecipeDetail, isPostSuccess }) => {
         }, {
         onSuccess: () => {
             setOpen(false);
+            setOpen(false);
             queryClient.invalidateQueries(["post", id]);
             refetchRecipeDetail();
             personalRatingRefetch();
             ratingDataRefetch();
             percentageRatingRefetch();
+
         }
     }
 
@@ -97,9 +99,9 @@ const RatingArea = ({ refetchRecipeDetail, isPostSuccess }) => {
                             readOnly
                             sx={{ paddingLeft: "15px" }}
                         />
-                        <p>{ratingData == "" ? 0 : ratingData.average} out of 5</p>
+                        {ratingData && <p>{ratingData == "" ? 0 : ratingData.average} out of 5</p>}
                     </div>
-                    <p>{ratingData == "" ? 0 : ratingData.raters} Customers rating</p>
+                    {ratingData &&<p>{ratingData == "" ? 0 : ratingData.raters} Customers rating</p>}
                 </div>}
                 <br />
 
@@ -126,7 +128,7 @@ const RatingArea = ({ refetchRecipeDetail, isPostSuccess }) => {
                         <div style={{ display: "flex", alignItems: "center", }}>
                             <Rating
                                 name="hover-feedback"
-                                // value={personalRatingData ? personalRatingData.rating : value}
+                                
                                 value={value}
                                 precision={1}
                                 getLabelText={getLabelText}

@@ -25,3 +25,4 @@ export const handleLogError = (error) => {
 export function bearerAuth(token) {
   return `Bearer ${token}`;
 }
+
