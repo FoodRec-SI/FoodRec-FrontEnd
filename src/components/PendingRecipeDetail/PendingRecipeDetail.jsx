@@ -11,6 +11,7 @@ import { Dialog } from 'primereact/dialog';
 import { ListBox } from 'primereact/listbox';
 
 import './PendingRecipeDetail.css';
+import { set } from 'date-fns';
 
 
 
@@ -25,7 +26,7 @@ const PendingRecipeDetail = (props) => {
 
     const { keycloak } = useKeycloak();
 
-    const [isApprove, setIsApprove] = useState('APPROVED');
+    const [isApprove, setIsApprove] = useState('');
 
     const reason =[
         "The recipe is not clear",
@@ -41,13 +42,25 @@ const PendingRecipeDetail = (props) => {
         "The recipe is not easy to prepare",
     ]
 
+
+
+    const handleApproveAndReject = (updateState) => {
+        setIsApprove(updateState);
+        mutate(updateState);
+    }
+
+    const dialogFooter = (
+        <div>
+            {selectedValue.length > 0 && <PButton label="Submit" icon="pi pi-check" onClick={() => handleApproveAndReject('DELETED')} />}
+        </div>
+    );
+
     const { mutate, isSuccess } = useMutation({
-        mutationFn: async () => {
-            const data = await ApproveRejectApi.updateStatusPost({ postId, isApprove }, keycloak.token);
+        mutationFn: async (status) => {
+            const data = await ApproveRejectApi.updateStatusPost({ postId, status }, keycloak.token);
             return data;
         },
         onSuccess: () => {
-            console.log('success update');
             setIsOpen(false);
             navigate('/PendingRecipe', { state: isApprove });
         },
@@ -55,22 +68,6 @@ const PendingRecipeDetail = (props) => {
             console.log('error update');
         }
     });
-
-    const handleApproveAndReject = (updateState) => {
-        if (updateState === 'approve') {
-            setIsApprove('APPROVED');
-        }
-        if (updateState === 'reject') {
-            setIsApprove('REJECTED');
-        }
-        mutate();
-    }
-
-    const dialogFooter = (
-        <div>
-            {selectedValue.length > 0 && <PButton label="Submit" icon="pi pi-check" onClick={() => handleApproveAndReject('reject')} />}
-        </div>
-    );
 
     return (
         <div className="recipeDetailPending">
@@ -83,7 +80,7 @@ const PendingRecipeDetail = (props) => {
                 </Button>
 
                 <Button color='success' variant="outlined" sx={{ fontSize: "27px", height: "52px", width: "170px", borderRadius: "25px", margin: "10px" }}
-                    onClick={() => handleApproveAndReject('approve')}
+                    onClick={() => handleApproveAndReject('APPROVED')}
                 >
                     Approve
                 </Button>
