@@ -11,12 +11,21 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Dialog } from "primereact/dialog";
 
-const SearchPage = () => {
+
+
+
+const SearchPage = ({isAddToPlan,renderMeal,setRenderMeal,mealId}) => {
   const { keycloak } = useKeycloak();
   const { searchName } = useParams();
   const [recipeName, setRecipeName] = useState(searchName);
   const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
+
+  let AddToPlan = "";
+
+  if(isAddToPlan != null){
+      AddToPlan = isAddToPlan;
+  }
 
   const handleResetSearch = (e) => {
     e.preventDefault();
@@ -38,7 +47,6 @@ const SearchPage = () => {
       sortPost,
       sortType
     );
-    // console.log(response.data);
     return response.data;
   };
 
@@ -64,7 +72,6 @@ const SearchPage = () => {
     }
   );
 
-  console.log(data);
 
   useEffect(() => {
     const onScroll = (event) => {
@@ -230,7 +237,10 @@ const SearchPage = () => {
                     ? data && data.pages.flatMap((page) => page.content)
                     : recipes
                 }
-                pending=""
+                pending={AddToPlan}
+                renderMeal={renderMeal} 
+                setRenderMeal={setRenderMeal} 
+                mealId={mealId}
               />
             </>
           ) : (

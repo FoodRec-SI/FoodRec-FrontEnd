@@ -28,7 +28,6 @@ const loadingComponent = (
     </Box>
 );
 
-console.log(keycloak);
 const queryClient = new QueryClient()
 
 ReactDOM.createRoot(document.getElementById("root")).render(

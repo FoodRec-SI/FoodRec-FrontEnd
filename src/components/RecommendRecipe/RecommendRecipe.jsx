@@ -9,7 +9,7 @@ const RecommendRecipe = (props) => {
  
   const {keycloak} = useKeycloak();
   const tags = props.tags.map((tag) => tag.tagId);
-  console.log(tags);
+
 
 
     const fetchRecommendRecipe = async () => {
@@ -23,7 +23,7 @@ const RecommendRecipe = (props) => {
         fetchRecommendRecipe
     );
 
-  console.log(recommendRecipe);
+
 
   if (status === "loading") {
     return <Loading />;

@@ -100,7 +100,7 @@ const RecipeDetail = ({ recipeId }) => {
     };
   } else {
     fetchPostById = async () => {
-      const response = await PostApi.getPostById(postId, keycloak.token);
+      const response = await PostApi.getPostById(postId);
       if (response.status === 200) {
         return response.data;
       }

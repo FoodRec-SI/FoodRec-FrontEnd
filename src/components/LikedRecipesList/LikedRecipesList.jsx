@@ -83,7 +83,7 @@ const LikedRecipe = (props) => {
   );
 
   if (status === "error") {
-    console.log("error");
+    return <div>error</div>;
   }
 
   const unlikePost = async () => {

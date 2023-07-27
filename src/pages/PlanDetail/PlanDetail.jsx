@@ -29,6 +29,8 @@ import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined
 import ControlPointDuplicateIcon from '@mui/icons-material/ControlPointDuplicate';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import { handleLogError } from "../../utills/Helper";
+import SearchPage from "../SearchPage";
+
 import { Toast } from 'primereact/toast';
 const PlanDetail = () => {
   const { mealId } = useParams();
@@ -39,7 +41,9 @@ const PlanDetail = () => {
   const [shopVisible, setShopVisible] = useState(false);
   const [saved, setSaved] = useState(false);
   
-  const [addNewRecipe, setAddNewRecipe] = useState(false);
+  // const [addNewRecipe, setAddNewRecipe] = useState(false);
+
+
 
   const menu1 = useRef(null);
   const toast = useRef(null);
@@ -296,9 +300,11 @@ const PlanDetail = () => {
   };
 
   const MealCard = ({ props }) => {
-    const [open, setOpen] = useState(false);
+
+    const [open, setOpen] = useState(false);  
     const anchorRef = useRef(null);
     const [changeName, setChangeName] = useState(false);
+    const [addNewRecipe, setAddNewRecipe] = useState(false);
 
     const [tempName, setTempName] = useState("");
     const [isErrorTempName, setIsErrorTempName] = useState(false);
@@ -335,43 +341,34 @@ const PlanDetail = () => {
     
 
     const deleteMeal = (mealId) => {
-      console.log("before delete rerender " , renderMeal);
       setRenderMeal((prevMeals) =>{
        const testMeal = prevMeals.filter((meal) => meal.mealId !== mealId)
-       console.log("test meal" , testMeal);
         return testMeal;
     });
       // Remove the deleted meal from the `meal` state as well.
-      setMeal((prevMeals) => {
-         prevMeals && prevMeals.mealSet && prevMeals.mealSet.filter((meal) => meal.mealId !== mealId)
-        });
+      setMeal([...(!meal.mealSet ? meal : meal.mealSet)].filter((meal) => meal.mealId !== mealId))
 
     };
-    console.log("after delete rerender " , renderMeal);
-
-
     const totalCalories = props.postDTOList&&props.postDTOList.reduce(
       (total, item) => total + item.calories,
       0
     );
 
-    const handleChangeMealName = () => {
-      console.log("im in");
-        if(tempName === "") {
-          setIsErrorTempName(true);
-        } else {
-          setChangeName(false);
-          setRenderMeal((prevMeals) =>
-            prevMeals.map((meal) => {
-              if (meal.mealId === props.mealId) {
-                meal.mealName = tempName;
-              }
-              return meal;
-            })
-          );
-        }
-    }
-
+    const handleChangeMealName = (mealId) => {
+      if (tempName === "") {
+        setIsErrorTempName(true);
+      } else {
+        setRenderMeal((prevMeals) =>
+          prevMeals.map((meal) => {
+            if (meal.mealId === mealId) {
+              meal.mealName = tempName;
+            }
+            return meal;
+          })
+        );
+        setChangeName(false);
+      }
+    };
 
     return (
       <div className="plan-detail-meal-card">
@@ -457,7 +454,7 @@ const PlanDetail = () => {
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {props.postDTOList.map((item, index) => (
+              {props.postDTOList&&props.postDTOList.map((item, index) => (
                 <Draggable key={item.id} draggableId={item.id} index={index}>
                   {(provided) => (
                     <div
@@ -506,6 +503,14 @@ const PlanDetail = () => {
           </button>
         </Dialog>
 
+        <Dialog
+            header="Add new recipe"
+            visible={addNewRecipe}
+            onHide={() => setAddNewRecipe(false)}
+            style={{ width: "80vw" }}
+          >
+            <SearchPage isAddToPlan ={"AddToPlan"} renderMeal={renderMeal} setRenderMeal={setRenderMeal} mealId={props.mealId}/>
+          </Dialog>
 
       </div>
     );
@@ -514,7 +519,7 @@ const PlanDetail = () => {
   const totalCaloriesInPlan = renderMeal.reduce(
     (totalCalories, meal) =>
       totalCalories +
-      meal.postDTOList.reduce((total, post) => total + post.calories, 0),
+      meal.postDTOList&&meal.postDTOList.reduce((total, post) => total + post.calories, 0),
     0
   );
 
@@ -532,15 +537,7 @@ const PlanDetail = () => {
           // className={active ? "active" : "shop-list-tray"}
           >
             Shop
-          </span> */}
-          <Dialog
-            header="Add new recipe"
-            visible={addNewRecipe}
-            onHide={() => setAddNewRecipe(false)}
-            style={{ width: "50vw" }}
-            breakpoints={{ "960px": "75vw", "641px": "100vw" }}
-          >
-          </Dialog>
+          </span> */} 
 
           <Dialog
             header="Shopping List"
