@@ -44,7 +44,7 @@ const Sidebar = ({ isOpen, showBackdrop, toggle }) => {
       path: "/",
     },
     {
-      name: "Meal planner",
+      name: "Meal Planner",
       icon: <FormatListBulletedRoundedIcon sx={{ fontSize: "1.5rem" }} />,
       image: "/assets/2.jpg",
       path: "/meal",
@@ -104,14 +104,14 @@ const Sidebar = ({ isOpen, showBackdrop, toggle }) => {
                   style={{
                     display: isOpen ? "block" : "none",
                     opacity: isOpen ? "1" : "0",
-                    transition: "all 0.9s ease-in-out",
+                    transition: "all 0.3s ease-in-out",
                   }}
                 >
                   <div className="nav-card"
                     style={{
                       display: isOpen ? "flex" : "none",
                       opacity: isOpen ? "1" : "0",
-                      transition: "all 0.9s ease-in-out",
+                      transition: "all 0.3s ease-in-out",
                       backgroundImage: `url(${item.image})`,
                       backgroundPosition: "center",
                       backgroundSize: "cover",

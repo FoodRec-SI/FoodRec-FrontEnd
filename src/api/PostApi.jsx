@@ -6,6 +6,7 @@ export const PostApi = {
   getPosts,
   getPostById,
   createRecipe,
+  getTopPost,
 };
 
 //http://localhost:8080/api/member/recipe
@@ -36,6 +37,14 @@ function getPostById(postId, token) {
 function getPostsByName(recipeName, token) {
   return instance.get(`/api/public/posts/search`,  {
     params: { recipeName },
+    headers: {
+      Authorization: bearerAuth(token),
+    },
+  });
+}
+
+function getTopPost(token) {
+  return instance.get(`/api/public/posts/average-score`, {
     headers: {
       Authorization: bearerAuth(token),
     },

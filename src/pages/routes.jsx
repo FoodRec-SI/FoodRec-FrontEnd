@@ -16,6 +16,7 @@ import AddRecipeForm from "../components/AddRecipeForm/AddRecipeForm";
 import Profile from "../components/profile/Profile";
 import PlanDetail from "./PlanDetail/PlanDetail";
 import HistoryTable from "../components/HistoryTable/HistoryTable";
+import TopTier from "./TopTier";
 
 
 function AppRoutes() {
@@ -37,7 +38,7 @@ function AppRoutes() {
     },
     {
       path: "/top-list",
-      element: <Discover />,
+      element: <TopTier />,
       title: "Top List",
     },
     {
