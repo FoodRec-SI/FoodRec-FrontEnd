@@ -36,6 +36,9 @@ function RecipeCard({ props, pending, renderMeal, setRenderMeal, mealId }) {
             const response = await PostApi.getPostById(props.postId);
             return response.data;
         },
+        {
+            enabled: isAddToPlan,
+        }
     );
 
     const handleAddToPlan = () => {

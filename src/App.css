@@ -280,3 +280,65 @@ body {
   background-color: #000000;
   outline: 0px !important;
 }
+
+.hero-content-wrapper{
+  padding-top: 48px;
+  padding-bottom: 48px;
+  padding-left: 48px;
+  padding-right: 48px;
+}
+
+.hero-content-button{
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  background-color: #000000;
+  width: 100%;
+  max-width: 90px;
+  margin: 0 auto;
+}
+
+.hero-topic{
+  margin: 0 auto;
+  width: 100%;
+  max-width: 680px;
+  box-sizing: border-box;
+  font-size: 32px;
+  line-height: 36px;
+  font-weight: 800;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.hero-description{
+  margin: 0 auto;
+  width: 100%;
+  max-width: 680px;
+  box-sizing: border-box;
+  margin-top: 16px;
+  font-size: 16px;
+  line-height: 26px;
+  font-weight: 300;
+  color: #757575;
+  text-align: center;
+}
+
+.filter{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  margin-right : 26px;
+  cursor: pointer;
+  border-radius: 16px;
+  padding: 3px;
+}
+
+.filter:hover{
+  color: #000000;
+  background-color: #c5c5c5;
+}

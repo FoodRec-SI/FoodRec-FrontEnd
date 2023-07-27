@@ -5,14 +5,19 @@ import { useNavigate } from "react-router-dom";
 import { useKeycloak } from "@react-keycloak/web";
 import { useQuery } from "react-query";
 
+import {Dialog} from 'primereact/dialog';
+import { useState } from "react";
+
 import { Tooltip } from "@mui/material";
 import { AccountApi } from "../../api/AccountApi";
 
 import { isModerator } from "../../utills/Helper";
+import { set } from "date-fns";
 
 const Navbar = ({ toggle }) => {
   const { keycloak } = useKeycloak();
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
 
   const handleBacktoHome = () => {
     navigate("/");
@@ -41,11 +46,11 @@ const Navbar = ({ toggle }) => {
       console.log("Account already exists");
     }
     if (response.status === 200) {
-      return response.status;
+      return response.data;
     }
   };
 
-  const { status } = useQuery("createAccount", createAccount, {
+  const { data: isFirstTime , status } = useQuery("createAccount", createAccount, {
     enabled: keycloak.authenticated,
   });
 
@@ -53,11 +58,21 @@ const Navbar = ({ toggle }) => {
     console.log("error");
   }
 
+  if(isFirstTime === "New"){
+      setOpen(true);
+  }
+
   // const getLogInOutText = () => {
   //   return keycloak.authenticated ? "Sign out" : "Sign in";
   // };
 
+  const handleCompleteProfile = () => {
+    setOpen(false);
+    navigate("/profile", {state:"new"});
+  }
+
   return (
+    <>
     <header className="navbar-container">
       <div className="navbar-wrapper">
       <div className="navbar-start">
@@ -97,6 +112,11 @@ const Navbar = ({ toggle }) => {
       </div>
       </div>
     </header>
+    <Dialog header="Welcome to FoodRec" visible={open} style={{ width: '50vw' }} onHide={() => setOpen(false)}>
+      <p>Thank you for joining us. Please fill in your information to get started.</p>
+      <p>Click <span onClick={handleCompleteProfile} style={{color:"blue",textDecoration:"underline",cursor:"pointer"}}>HERE</span> to fill in your information.</p>
+    </Dialog>
+    </>
   );
 };
 

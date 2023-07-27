@@ -18,11 +18,11 @@ const Discover = () => {
   const isLogin = keycloak.authenticated;
   const [tagId, setTagId] = useState("");
 
-  if (isLogin) {
+  if (!isLogin) {
 
     const fetchRecipes = async ({ pageParam, pageSize, sortPost, sortType }) => {
       const response = await PostApi.getPosts(pageParam, pageSize, sortPost, sortType);
-      // console.log(response.data);
+      console.log(response.data);
       return response.data;
     };
 
@@ -38,25 +38,6 @@ const Discover = () => {
       }
     );
 
-    const handleItemSelection = (item) => {
-      console.log(item);
-      setTagId(item.tagId);
-    };
-
-    const fetchPostByTag = async (tagId) => {
-      const response = await TagApi.getPostByTag(tagId, keycloak.token);
-      return response.data;
-    };
-
-    const shouldFetchData = Boolean(tagId);
-
-    const { data: posts } = useQuery(
-      ["posts", tagId],
-      () => fetchPostByTag(tagId),
-      {
-        enabled: shouldFetchData,
-      }
-    );
 
     useEffect(() => {
       const onScroll = (event) => {
@@ -83,11 +64,9 @@ const Discover = () => {
     if (status === "loading") {
       return (
         <>
-          {isLogin ? (
-            <LoginBanner onItemClick={handleItemSelection} />
-          ) : (
-            <Banner />
-          )}
+
+          <Banner />
+
           <div style={{ width: "90%", margin: "0 auto" }}>
             <SkeletonCardList />
           </div>
@@ -101,33 +80,90 @@ const Discover = () => {
 
     return (
       <>
-        {isLogin ? <LoginBanner onItemClick={handleItemSelection} /> : <Banner />}
+        <Banner />
         <div style={{ width: "100%", margin: "0 auto", maxWidth: "1200px" }}>
           <RecipeCardList
-            props={posts && posts.content ? posts.content : data.pages.flatMap((page) => page.content)}
+            props={data.pages.flatMap((page) => page.content)}
             pending={""}
           />
         </div>
-        {/* {hasNextPage && (
-        <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
-          {isFetchingNextPage ? "Loading more..." : "Load more"}
-        </button>
-      )} */}
       </>
     );
   } else {
+
+    const handleItemSelection = (item) => {
+      setTagId(item.tagId);
+    };
+
     const { data: profileData, isLoading: loadingProfile, refetch } = useQuery({
       queryKey: ["profile"],
       queryFn: async () => {
         const data = await ProfileApi.getProfile(keycloak.token, keycloak.tokenParsed.sub);
-        return data;
+        return data.data;
       },
+    });
+
+    const { data: posts, isLoading: loadingPosts, isSuccess } = useQuery({
+      queryKey: ["posts"],
+      queryFn: async () => {
+        if (profileData.tagsCollection == null) {
+          const data = await PostApi.getPosts(0, 16, "CREATED_TIME", "ACCENDING");
+          console.log(data.data);
+          return data.data.content;
+        }
+        else {
+          const tempTagArray = profileData.tagsCollection.map((tag) => tag.tagId);
+          const tagIdsString = tempTagArray.join(',');
+          const data = await PostApi.getPostsByTags(tagIdsString, 0, 16, keycloak.token);
+          return data.data.content;
+        }
+      },
+      enabled: profileData!=null,
 
     });
 
+    if (loadingPosts) {
+      <>
+
+        {isLogin ? <LoginBanner onItemClick={handleItemSelection} /> : <Banner />}
+
+        <div style={{ width: "90%", margin: "0 auto" }}>
+          <SkeletonCardList />
+        </div>
+      </>
+    }
+
+
+    
+
+    const fetchPostByTag = async (tagId) => {
+      const response = await TagApi.getPostByTag(tagId, keycloak.token);
+      return response.data;
+    };
+
+    const shouldFetchData = Boolean(tagId);
+
+    const { data: postsbyTag } = useQuery(
+      ["posts", tagId],
+      () => fetchPostByTag(tagId),
+      {
+        enabled: shouldFetchData,
+      }
+    );
+
+
+
     return (
       <>
-        <h1>not login</h1>
+        {posts && <div>
+          <LoginBanner onItemClick={handleItemSelection} />
+          <div style={{ width: "100%", margin: "0 auto", maxWidth: "1200px" }}>
+            <RecipeCardList
+              props={postsbyTag ? postsbyTag : posts}
+              pending={""}
+            />
+          </div>
+        </div>}
       </>
     )
   }

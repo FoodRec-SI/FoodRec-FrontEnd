@@ -62,26 +62,12 @@ const PlanDetail = () => {
     },
   });
 
-  const addBlankMeal = () => {
-    setRenderMeal([...renderMeal, { mealName: "Temp Meal", postDTOList: [] }]);
-  };
-
   const generateIngredientList = async () => {
     const response = await PlanApi.generateIngredientList(
       mealId,
       keycloak.token
     );
-    const ingredientsItems = Object.entries(response.data).map(
-      ([key, value]) => {
-        return {
-          key,
-          value,
-        };
-      }
-    );
-
-    return ingredientsItems;
-  };
+        return response.data; };
 
   const {
     data: ingredients,
@@ -106,15 +92,6 @@ const PlanDetail = () => {
       label: "Generate new meal",
       icon: "pi pi-sync",
       command: () => setVisible(true),
-    },
-    {
-      label: "Change plan name",
-      icon: "pi pi-refresh",
-    },
-    {
-      label: "Add a blank meal",
-      icon: "pi pi-fw pi-plus",
-      command: () => addBlankMeal(),
     },
     {
       label: "Generate shopping list",
@@ -352,9 +329,11 @@ const PlanDetail = () => {
       await setRenderMeal((prevMeals) =>
         prevMeals.filter((meal) => meal.mealId !== mealId)
       );
+      handleUpdatePlan();
+      console.log(mealId);
     };
 
-    const totalCalories = props.postDTOList.reduce(
+    const totalCalories = props.postDTOList&&props.postDTOList.reduce(
       (total, item) => total + item.calories,
       0
     );
@@ -539,10 +518,10 @@ const PlanDetail = () => {
             {isFetching ? (
               <Loading />
             ) : (
-              ingredients?.map((item, index) => (
-                <div className="ingredient-list" key={index}>
-                  <div>{item.name}</div>
-                  <div>{item.quantity}</div>
+              ingredients &&
+              ingredients?.map((item) => (
+                <div key={item}>
+                  {item}
                 </div>
               ))
             )}
