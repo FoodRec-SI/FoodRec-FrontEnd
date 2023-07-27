@@ -1,6 +1,7 @@
-import { Rating, IconButton } from "@mui/material";
+import { Rating, IconButton, Button } from "@mui/material";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from "@mui/icons-material/Share";
 import Tooltip from "@mui/material/Tooltip";
 import Popper from "@mui/material/Popper";
@@ -25,6 +26,7 @@ import RecommendeRcipe from "../RecommendRecipe/RecommendRecipe";
 import SkeletonRecipeDetail from "../Skeleton/SkeletonRecipeDetail";
 import MyRecipeDetail from "../MyRecipeDetail/MyRecipeDetail";
 import AddRecipeForm from "../AddRecipeForm/AddRecipeForm";
+import PleaseLogin from "../PleaseLogin/PleaseLogin";
 
 import { useState, useRef, useEffect } from "react";
 
@@ -39,6 +41,16 @@ import { useKeycloak } from "@react-keycloak/web";
 const RecipeDetail = ({ recipeId }) => {
 
   const { keycloak } = useKeycloak();
+  const isLogin = keycloak?.authenticated;
+
+  if(isLogin == false){
+    return (
+      <>
+        <PleaseLogin/>
+      </>
+    )
+  }
+
   let postId = null;
   const location = useLocation();
   let isPending = false;
@@ -87,7 +99,7 @@ const RecipeDetail = ({ recipeId }) => {
     };
   }
 
-  const { data: post, isSuccess: isPostSuccess, status } = useQuery(["post", postId], fetchPostById);
+  const { data: post, isSuccess: isPostSuccess, status, refetch: refetchRecipeDetail } = useQuery(["post", postId], fetchPostById);
 
   if (status === "loading") {
     return (
@@ -97,6 +109,9 @@ const RecipeDetail = ({ recipeId }) => {
     )
   }
 
+
+
+
   return (
     isPostSuccess &&
     <div className="recipeDetail__wrapper">
@@ -104,34 +119,81 @@ const RecipeDetail = ({ recipeId }) => {
         {isPending === true && recipeId == null && (
           <PendingRecipeDetail postId={postId} />
         )}
-        {post && <div className="recipeDetail">
-          <img src={post.image} alt="" />
 
-          <Introduction props={post} isPostSuccess isMyRecipe={isMyRecipe} recipeId={recipeId} />
-          <Ingredients isPostSuccess props={post.ingredientList} />
-          <Description props={post} isPostSuccess />
-          <Instruction isPostSuccess props={post.instructions} />
+        {post && <div className="recipeDetail">
+          <div className="recipeDetail__introduction">
+            <div>
+              <h1 style={{ fontSize: "40px" }}>{post.recipeName}</h1>
+              <h5 style={{ fontWeight: "300", fontSize: "20px" }}>{post.userName}</h5>
+            </div>
+            <div className="recipeDetail__rating">
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Rating
+                  name="ratingPoint"
+                  defaultValue={post.averageScore}
+                  precision={0.1}
+                  readOnly
+                />
+                <p style={{ marginLeft: "10px", textAlign: "center" }}>( {post.averageScore} )</p>
+              </div>
+              <div className="showTag" style={{ marginTop: "10px" }}>
+                {<ChipList tags={post.tagDTOList} />}
+              </div>
+            </div>
+            <div className="recipeDetail__statistic">
+              <Statistics props={post.calories} name="Calories" />
+              <span className="line"></span>
+              <Statistics props={post.duration} name="Minutes" />
+              <span className="line"></span>
+              {post.ingredientList && <Statistics props={post.ingredientList.split("|").length} name="Ingredients" />}
+            </div>
+            <Introduction props={post} isMyRecipe={isMyRecipe} recipeId={recipeId} refetchRecipeDetail={refetchRecipeDetail} />
+          </div>
+
+          <div className="recipeDetail__image">
+            <img src={post.image} alt="" />
+          </div>
+
+          <div className="recipeDetail__description">
+            <Description props={post} />
+          </div>
+
+          <div className="recipeDetail__ingredient">
+            <Ingredients props={post.ingredientList} />
+          </div>
+
+          <div className="recipeDetail__instruction">
+            <Instruction props={post.instructions ? post.instructions : post.instruction } />
+          </div>
+
           {isPending === false && isMyRecipe == false &&
             <div className="recipeDetail__rating">
-              <RatingArea isPostSuccess />
+              <RatingArea isPostSuccess refetchRecipeDetail={refetchRecipeDetail}/>
             </div>
           }
           {isMyRecipe == true && isPending == false && <div className="myRecipeDetail">
             <MyRecipeDetail recipeId={post.recipeId} />
           </div>}
+
         </div>}
       </div>
       {isPending === false && isMyRecipe == false && <div className="recommendRecipe">
         {/* <RecommendeRcipe /> */}
       </div>}
     </div>
-
   );
 };
 
-function Introduction({ props, isMyRecipe, recipeId }) {
+function Statistics({ props, name }) {
+  return (
+    <div className="statistics">
+      <p>{props}</p>
+      <p>{name}</p>
+    </div>
+  );
+}
 
-
+function Introduction({ props, isMyRecipe, recipeId, refetchRecipeDetail }) {
   const { keycloak } = useKeycloak();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
@@ -139,11 +201,9 @@ function Introduction({ props, isMyRecipe, recipeId }) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const navigate = useNavigate();
-
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
-
   const handleClose = (event) => {
     if (anchorRef.current.contains(event)) {
       return;
@@ -191,12 +251,17 @@ function Introduction({ props, isMyRecipe, recipeId }) {
         postId: props.postId,
       },
       keycloak.token)
-    console.log(response);
   };
 
 
 
-  const { mutate: addToCollection } = useMutation(handleAddToCollection);
+  const { mutate: addToCollection } = useMutation(handleAddToCollection,
+    {
+      onSuccess: () => {
+        refetchRecipeDetail()
+      }
+    }
+  );
 
 
   const likePost = async () => {
@@ -208,7 +273,7 @@ function Introduction({ props, isMyRecipe, recipeId }) {
 
   const { mutate: like } = useMutation(likePost, {
     onSuccess: () => {
-      queryClient.invalidateQueries("likedRecipes");
+      refetchRecipeDetail();
     },
   });
 
@@ -227,21 +292,9 @@ function Introduction({ props, isMyRecipe, recipeId }) {
     <>
       {props && (
         <div className="introduction">
-          <h1>{props.recipeName}</h1>
-          <p>{props.userName}</p>
-          <Rating
-            name="ratingPoint"
-            defaultValue={props.averageScore}
-            precision={0.1}
-            readOnly
-          />
-          <div className="showTag">
-            {<ChipList tags={props.tagDTOList} />}
-          </div>
-
-          {recipeId ==null &&  <div className="userFeature">
+          {recipeId == null && <div className="userFeature">
             <Tooltip title="Add to collection" placement="top">
-              <IconButton
+              <Button
                 aria-label="addToCollection"
                 ref={anchorRef}
                 id="composition-button"
@@ -249,9 +302,11 @@ function Introduction({ props, isMyRecipe, recipeId }) {
                 aria-expanded={open ? "true" : undefined}
                 aria-haspopup="true"
                 onClick={handleToggle}
+                startIcon={<PlaylistAddIcon fontSize="large" />}
+                sx={{ color: "black" }}
               >
-                <PlaylistAddIcon fontSize="large" />
-              </IconButton>
+                Add to collection
+              </Button>
             </Tooltip>
 
             <Popper
@@ -298,45 +353,45 @@ function Introduction({ props, isMyRecipe, recipeId }) {
               )}
             </Popper>
 
-            <Tooltip title="Add to favorite" placement="top">
-              <IconButton aria-label="addToFavorite"
+            {/* <Button variant="outlined" startIcon={<DeleteIcon />}>
+              Delete
+            </Button> */}
+
+            <Tooltip title={props.liked ? "Liked" : "Add to favorite"} placement="top">
+              <Button aria-label="addToFavorite"
                 onClick={like}
+                startIcon={props.liked ? <FavoriteIcon fontSize="large" color="error" /> : <FavoriteBorderIcon fontSize="large" />}
+                sx={{ color: "black" }}
               >
-                <FavoriteBorderIcon fontSize="large" />
-              </IconButton>
+                Like
+              </Button>
             </Tooltip>
 
-            <Tooltip title="Share recipe" placement="top">
+            {/* <Tooltip title="Share recipe" placement="top">
               <IconButton aria-label="shareRecipe">
                 <ShareIcon fontSize="large" />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
 
             {isMyRecipe == true && <Tooltip title="Delete Recipe" placement="top">
-              <IconButton aria-label="delete" color="error"
+              <Button aria-label="delete" color="error"
                 onClick={() => { setOpenDeleteDialog(true) }}
+                startIcon={<DeleteIcon fontSize="large" />}
               >
-                <DeleteIcon fontSize="large" />
-              </IconButton>
+                Delete
+              </Button>
             </Tooltip>}
 
             {isMyRecipe == true && <Tooltip title="Edit Recipe" placement="top">
-              <IconButton aria-label="delete" color="primary"
+              <Button aria-label="delete" color="primary"
                 onClick={() => { setOpenEditDialog(true) }}
+                startIcon={<EditIcon fontSize="large" />}
               >
-                <EditIcon fontSize="large" />
-              </IconButton>
+                Edit
+              </Button>
             </Tooltip>}
-
-
-
           </div>
           }
-          <div className="recipeStatistic">
-            <Statistic amount={9} nameOfStatisic="ingredients" />
-            <Statistic amount={props.duration} nameOfStatisic="minutes" />
-            <Statistic amount={props.calories} nameOfStatisic="calories" />
-          </div>
           <ConfirmDialog
             visible={openDeleteDialog}
             onHide={() => setOpenDeleteDialog(false)}
@@ -350,12 +405,11 @@ function Introduction({ props, isMyRecipe, recipeId }) {
             }}
             reject={() => {
               setOpenDeleteDialog(false);
-              console.log("cancel");
             }}
           />
 
           <Dialog header="Edit Recipe" visible={openEditDialog} style={{ width: '90vw' }} onHide={() => setOpenEditDialog(false)}>
-            <AddRecipeForm post={props} setOpenEditDialog={setOpenEditDialog} />
+            <AddRecipeForm post={props} setOpenEditDialog={setOpenEditDialog} refetchRecipeDetail={refetchRecipeDetail} />
           </Dialog>
         </div>
       )}
@@ -364,32 +418,35 @@ function Introduction({ props, isMyRecipe, recipeId }) {
   );
 }
 
-function Statistic({ amount, nameOfStatisic }) {
-  return (
-    <div className="statistic">
-      <div className="amount">
-        <h2>{amount}</h2>
-      </div>
-      <p>{nameOfStatisic}</p>
-    </div>
-  );
-}
 
 function Ingredients({ props }) {
   let listOfIngredients = [];
-
   if (props != null) {
     listOfIngredients = props.split('|');
   }
-
   return (
     <div className="ingredients">
       <h1>Ingredients</h1>
-      <ul>
+
+      <ul style={{ listStyleType: "none" }}>
         {listOfIngredients.map((ingredient, index) => (
-          <li key={index}> {ingredient} </li>
+          <li key={index} style={{ padding: "5px" }}>
+            
+          <span style={{
+            display: "inline-flex",
+            width: "35px",
+            height: "35px",
+            borderRadius: "50%",
+            alignItems: "center",
+            justifyContent: "center",
+            lineHeight: "25px",
+            marginRight: "5px",
+            backgroundColor: "#f5f5f5",
+            border: "1px solid black",
+          }}>{index + 1} </span> {ingredient} </li>
         ))}
       </ul>
+
     </div>
   );
 }
