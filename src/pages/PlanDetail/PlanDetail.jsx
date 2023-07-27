@@ -24,6 +24,7 @@ import Paper from "@mui/material/Paper";
 import Popper from "@mui/material/Popper";
 import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
+import SearchPage from "../SearchPage";
 
 const PlanDetail = () => {
   const { mealId } = useParams();
@@ -34,7 +35,7 @@ const PlanDetail = () => {
   const [shopVisible, setShopVisible] = useState(false);
   const [saved, setSaved] = useState(false);
   
-  const [addNewRecipe, setAddNewRecipe] = useState(false);
+
 
 
 
@@ -285,9 +286,11 @@ const PlanDetail = () => {
   };
 
   const MealCard = ({ props }) => {
-    const [open, setOpen] = useState(false);
+
+    const [open, setOpen] = useState(false);  
     const anchorRef = useRef(null);
     const [changeName, setChangeName] = useState(false);
+    const [addNewRecipe, setAddNewRecipe] = useState(false);
 
     const [tempName, setTempName] = useState("");
     const [isErrorTempName, setIsErrorTempName] = useState(false);
@@ -350,7 +353,6 @@ const PlanDetail = () => {
         setChangeName(false);
       }
     };
-
 
     return (
       <div className="plan-detail-meal-card">
@@ -478,10 +480,19 @@ const PlanDetail = () => {
           </button>
         </Dialog>
 
+        <Dialog
+            header="Add new recipe"
+            visible={addNewRecipe}
+            onHide={() => setAddNewRecipe(false)}
+            style={{ width: "80vw" }}
+          >
+            <SearchPage isAddToPlan ={"AddToPlan"} renderMeal={renderMeal} setRenderMeal={setRenderMeal} mealId={props.mealId}/>
+          </Dialog>
 
       </div>
     );
   };
+
 
   return (
     <div className="plan-detail">
@@ -496,17 +507,7 @@ const PlanDetail = () => {
           // className={active ? "active" : "shop-list-tray"}
           >
             Shop
-          </span> */}
-          <Dialog
-            header="Add new recipe"
-            visible={addNewRecipe}
-            onHide={() => setAddNewRecipe(false)}
-            style={{ width: "50vw" }}
-            breakpoints={{ "960px": "75vw", "641px": "100vw" }}
-          >
-            
-            
-          </Dialog>
+          </span> */} 
 
           <Dialog
             header="Shopping List"

@@ -36,7 +36,6 @@ const PendingRecipe = () => {
                     </Alert>
                 </Snackbar>
             }
-
             <PendingList />
         </>
     )

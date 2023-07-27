@@ -27,10 +27,10 @@ function getPosts(pageNumber,pageSize,sortPost,sortType){
   });
 }
 
-function getPostById(postId, token) {
-  return instance.get(`/api/member/post/${postId}`, {
+function getPostById(postId) {
+  return instance.get(`/api/public/post/${postId}`, {
     headers: {
-      Authorization: bearerAuth(token),
+
     },
   });
 }

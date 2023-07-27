@@ -5,7 +5,6 @@ export const ApproveRejectApi = {
 };
 
 function updateStatusPost(data, token) {
-  console.log(data);
   return instance.put(
     `/api/moderator/post`,
     {
