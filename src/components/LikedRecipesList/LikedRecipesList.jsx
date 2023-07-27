@@ -9,6 +9,7 @@ import MenuList from "@mui/material/MenuList";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+
 import { useKeycloak } from "@react-keycloak/web";
 import { useMutation } from "react-query";
 import { CollectionApi } from "../../api/CollectionApi";
@@ -83,7 +84,7 @@ const LikedRecipe = (props) => {
   );
 
   if (status === "error") {
-    return <div>error</div>;
+    console.log("error");
   }
 
   const unlikePost = async () => {

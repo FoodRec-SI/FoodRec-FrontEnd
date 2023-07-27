@@ -689,7 +689,28 @@ const PlanDetail = () => {
               <DragDropContext onDragEnd={handleDragDrop}>
                 <div className="plan-detail-meal-list">
                   {renderMeal.length === 0 ? (
+                    <div style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: "100%",
+                      width: "100%",
+                      textAlign: "center",
+                      fontSize: "20px",
+                      fontWeight: "bold",
+                      color: "#4f4f4f",
+                      marginTop: "50px",
+                    }}>
                     <p>No meal</p>
+                    <p>Click on the button below to create a new meal</p>
+                    <button
+                      className="add-plan-submit"
+                      onClick={() => setVisible(true)}
+                    >
+                      Create new meal
+                    </button>
+                    </div>
                   ) : (
                     renderMeal.map((item) => (
                       <MealCard key={item.mealId} props={item}/>
