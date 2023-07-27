@@ -33,7 +33,7 @@ const PlanDetail = () => {
   const [renderMeal, setRenderMeal] = useState([]);
   const [shopVisible, setShopVisible] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [changeName, setChangeName] = useState(false);
+  
   const [addNewRecipe, setAddNewRecipe] = useState(false);
 
 
@@ -307,11 +307,12 @@ const PlanDetail = () => {
     );
   };
 
-  const MealCard = ({ props , renderMeal , setRenderMeal }) => {
+  const MealCard = ({ props }) => {
     const [open, setOpen] = useState(false);
     const anchorRef = useRef(null);
+    const [changeName, setChangeName] = useState(false);
 
-    const [tempName, setTempName] = useState(props.mealName);
+    const [tempName, setTempName] = useState("");
     const [isErrorTempName, setIsErrorTempName] = useState(false);
 
     const handleToggle = () => {
@@ -354,24 +355,22 @@ const PlanDetail = () => {
       (total, item) => total + item.calories,
       0
     );
-    console.log(renderMeal)
 
-    const handleChangeMealName = () => {
-      console.log("im in");
-        if(tempName === "") {
-          setIsErrorTempName(true);
-        } else {
-          setChangeName(false);
-          setRenderMeal((prevMeals) =>
-            prevMeals.map((meal) => {
-              if (meal.mealId === props.mealId) {
-                meal.mealName = tempName;
-              }
-              return meal;
-            })
-          );
-        }
-    }
+    const handleChangeMealName = (mealId) => {
+      if (tempName === "") {
+        setIsErrorTempName(true);
+      } else {
+        setRenderMeal((prevMeals) =>
+          prevMeals.map((meal) => {
+            if (meal.mealId === mealId) {
+              meal.mealName = tempName;
+            }
+            return meal;
+          })
+        );
+        setChangeName(false);
+      }
+    };
 
 
     return (
@@ -418,7 +417,10 @@ const PlanDetail = () => {
                       aria-labelledby="composition-button"
                       onKeyDown={handleListKeyDown}
                     >
-                      <MenuItem onClick={() => { setTempName(props.mealName); setChangeName(true) }}>
+                      <MenuItem onClick={() => { 
+                        setChangeName(true) 
+                        setTempName(props.mealName)
+                        }}>
                         Change meal name
                       </MenuItem>
                       <MenuItem onClick={() => setAddNewRecipe(true)}>
@@ -488,7 +490,10 @@ const PlanDetail = () => {
           </div>
           <button
             className="add-plan-submit"
-            onClick = {handleChangeMealName}
+            onClick={(e) => {
+              e.preventDefault();
+              handleChangeMealName(props.mealId); // Call the function here
+            }}
           >
             Submit
           </button>
@@ -677,7 +682,7 @@ const PlanDetail = () => {
                     <p>No meal</p>
                   ) : (
                     renderMeal.map((item) => (
-                      <MealCard key={item.mealId} props={item} renderMeal={renderMeal} setRenderMeal={setRenderMeal}/>
+                      <MealCard key={item.mealId} props={item}/>
                     ))
                   )}
                 </div>
