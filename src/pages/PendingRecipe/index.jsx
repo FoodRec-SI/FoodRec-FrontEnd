@@ -31,8 +31,8 @@ const PendingRecipe = () => {
         <>
             {status &&
                 <Snackbar open={open} autoHideDuration={1000*2} key={'top' + 'right'} onClose={handleClose} anchorOrigin= {{vertical:'top',horizontal:'right'}}>
-                    <Alert severity={status == "approve" ? 'success' : 'error'} sx={{ width: '100%' }}>
-                        {status === "approve" ? "Recipe has been Approved !" : "Recipe has been Rejected !"}
+                    <Alert severity={status == "APPROVED" ? 'success' : 'error'} sx={{ width: '100%' }}>
+                        {status === "APPROVED" ? "Recipe has been Approved !" : "Recipe has been Rejected !"}
                     </Alert>
                 </Snackbar>
             }

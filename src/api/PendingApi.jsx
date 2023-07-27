@@ -47,7 +47,9 @@ function getUpdatedPendingRecipes(token, page, size) {
                 Authorization: bearerAuth(token),
             },
             params: {
-                postStatuses: postStatus.PENDING
+                postStatuses: postStatus.PENDING,
+                pageSize: 20,
+                pageNumber: 0,
             }
         });
     }
