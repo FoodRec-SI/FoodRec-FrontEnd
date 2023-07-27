@@ -16,7 +16,6 @@ function Banner() {
 
         <div className="banner">
             <div className="banner__info">
-                <img className='backgroundBanner' src="public/assets/banner-marble-bkg.jpg" alt="" />
                 <div className="left">
                     <p className='captionName'>
                         {beforeText}
@@ -26,8 +25,8 @@ function Banner() {
                     <h4 className='captionDescription'>{captionDescription}</h4>
                 </div>
                 <div className="right">
-                    <img className='dishImage01' src="public/assets/delicious-food-black-board-removebg-preview.png" alt="" />
-                    <img className='dishImage02' src="public/assets/tagliatelle-pasta-with-tomatoes-chicken-removebg-preview.png" alt="" />
+                    <img className='dishImage01' src="/assets/delicious-food-black-board-removebg-preview.png" alt="" />
+                    <img className='dishImage02' src="/assets/tagliatelle-pasta-with-tomatoes-chicken-removebg-preview.png" alt="" />
                 </div>
             </div>
         </div>

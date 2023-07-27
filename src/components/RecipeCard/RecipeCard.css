@@ -24,12 +24,16 @@
   border-radius: 10px 10px 0px 0px;
   object-fit: cover;
   object-position: center;
+  
 }
 
 .recipeCard p {
   max-height: calc(var(--scale)*54px);
   font-size: 16px;
-  /* overflow: hidden; */
+  margin-top: 5px;
+  
+  
+  
 }
 
 .recipeCard__info {
@@ -54,9 +58,8 @@
   max-width: calc(var(--scale)*260px);
   margin-top: 5px;
   margin-bottom: 5px;
-  /* overflow: hidden;
-  text-overflow: ellipsis; */
-  text-warp: balance;
+  overflow: hidden;
+  text-overflow: ellipsis;
   
 }
 

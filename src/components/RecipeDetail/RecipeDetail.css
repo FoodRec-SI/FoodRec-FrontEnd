@@ -1,29 +1,158 @@
-.recipeDetail__wrapper{
+:root {
+    --backgroundColor: #ffffff;
+}
+
+.recipeDetail__wrapper {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
 }
 
-.recipeDetailContainer{
-    width: 75%;
+.recipeDetailContainer {
+    width: 100%;
+    max-width: 1200px;
     display: flex;
     flex-direction: column;
 }
 
 
-.recipeDetail{
+.recipeDetail {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    grid-template-rows: 340px repeat(2, auto);
+    row-gap: 10px;
     height: 100%;
-    padding: 30px;
-    border: 2px solid #000000;
+    
     border-radius: 25px;
     margin: 0 auto;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 15px;
 }
 
-.recipeDetail img{
+.recipeDetail__introduction{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.recipeDetail__statistic {
+    display: flex;
+    align-items: center;
+    /* Align children vertically */
+    justify-content: space-between;
+    /* Add space between children */
+    gap: 10px;
+    /* Adds space between Statistics components */
+    padding: 5px;
+
+}
+
+.line {
+    display: block;
+    width: 1px;
+    /* Set the width to define the line's thickness */
+    height: 70px;
+    /* Make the line have the full height of the div */
+    background-color: #ccc;
+    /* Set the color of the line */
+}
+
+.statistics {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.statistics p:nth-child(1) {
+    font-size: 32px;
+}
+
+.statistics p:nth-child(2) {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.userFeature{
+    display: flex;
+    gap: 25px;
+}
+
+.recipeDetail__image{
+    margin: 0 auto; 
+    text-align: center;
+}
+
+.recipeDetail__image img{
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 8px;
+    margin: 0 auto; 
+    height: 337px;
+}
+
+.recipeDetail__description{
+    padding: 20px;
+    
+}
+
+.recipeDetail__ingredient{
+    padding: 20px;
+}
+
+.ingredients li{
+    font-size: 20px;
+}
+.recipeDetail__instruction{
+    grid-column: 1 / 3;
+}
+
+
+.instruction{
+    
+    padding: 20px;
+}
+
+.instruction h1{
+    font-size: 2em;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.instruction p{
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.recipeDetail__rating{
+    grid-column: 1 / 3;
+    margin: 0 auto;
+    width: 70%;
+}
+
+.myRecipeDetail{
+    grid-column: 1 / 3;
+    height: 100%
+}
+
+@media (max-width: 800px) {
+    .recipeDetail{
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+
+
+
+
+
+/*.recipeDetail img{
     max-width: 95%;
-    /* height: fit-content; */
     object-fit: cover;
     object-position: center;
     border-radius: 40px;
@@ -37,7 +166,6 @@
 }
 
 .introduction{
-    /* display: grid; */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -174,7 +302,6 @@
     }
     .recipeDetail{
         width: 100%;
-        /* padding: 5px; */
     }
     .recipeDetail__rating{
         width: 90%;
@@ -229,7 +356,7 @@
         width: 100%;
         padding: 0;
     }
-}
+} */
 
 
 /* @media (max-width: 1536px) {

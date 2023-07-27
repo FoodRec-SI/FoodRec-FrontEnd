@@ -4,6 +4,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Dialog } from 'primereact/dialog';
 
+import { format } from 'date-fns'
 
 import { useState } from 'react';
 import { useKeycloak } from "@react-keycloak/web";
@@ -23,9 +24,9 @@ const HistoryTable = () => {
     const [openSelectedRecipe, setOpenSelectedRecipe] = useState(false);
 
     const { data: historyData, isLoading, error, refetch, isSuccess } = useQuery(
-        ["pending", 1, 10],
+        ["pending", 0, 20],
         async () => {
-            const response = await PendingApi.getUpdatedPendingRecipes(keycloak.token, 1, 10);
+            const response = await PendingApi.getUpdatedPendingRecipes(keycloak.token, 0, 20);
             return response.data.content;
         },
     );
@@ -42,13 +43,23 @@ const HistoryTable = () => {
         );
     }
 
+    const dateTemplate = (rowData) => {
+        return (
+            <div>
+                {format(new Date(rowData.verifiedTime), 'dd/MM/yyyy')}
+            </div>
+        );
+    }
+
+
     const header = (
         <div className="table-header">
-            HELLO
+            <h1>Revision History</h1>
         </div>
     );
 
     if (isLoading) return <Loading />
+
 
 
     return (
@@ -70,7 +81,7 @@ const HistoryTable = () => {
                         size="large">
                         <Column align="center" field="postId" header="PostID"></Column>
                         <Column align="center" field="recipeName" header="Name" sortable></Column>
-                        <Column align="center" field="verifiedTime" header="Date" sortable></Column>
+                        <Column align="center" field="verifiedTime" header="Date" body={dateTemplate} sortable></Column>
                         <Column align="center" field="postStatus" header="Status" body={statusTemplate} sortable></Column>
                     </DataTable>
                 </div>}
