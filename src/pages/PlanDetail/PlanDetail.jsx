@@ -36,6 +36,8 @@ const PlanDetail = () => {
   const [changeName, setChangeName] = useState(false);
   const [addNewRecipe, setAddNewRecipe] = useState(false);
 
+
+
   const menu1 = useRef(null);
 
   const formik = useFormik({
@@ -116,7 +118,6 @@ const PlanDetail = () => {
 
   const createMeal = async (data) => {
     const response = await PlanApi.createMeal(data, keycloak.token);
-    console.log(response.data);
     setMeal([...(!meal.mealSet ? meal : meal.mealSet), response.data]);
     setRenderMeal(
       generatedMeal([...(!meal.mealSet ? meal : meal.mealSet), response.data])
@@ -135,7 +136,6 @@ const PlanDetail = () => {
   });
 
   const updatePlan = async (data) => {
-    console.log(data);
     const response = await PlanApi.updatePlan(data, keycloak.token);
     return response.data;
   };
@@ -158,7 +158,6 @@ const PlanDetail = () => {
         })),
       })),
     };
-    console.log(updatedData);
     updatePlanDetail(updatedData);
     setSaved(false);
   };
@@ -182,8 +181,6 @@ const PlanDetail = () => {
     return meal;
   };
 
-  // console.log(renderMeal);
-  // console.log(meal);
 
   const handleDragDrop = (result) => {
     const { source, destination, type } = result;
@@ -206,7 +203,6 @@ const PlanDetail = () => {
       return;
     }
 
-    console.log({ source, destination });
 
     const mealSourceIndex = renderMeal.findIndex(
       (item) => item.mealId === source.droppableId
@@ -287,10 +283,13 @@ const PlanDetail = () => {
       </div>
     );
   };
-  
-  const MealCard = ({ props }) => {
+
+  const MealCard = ({ props , renderMeal , setRenderMeal }) => {
     const [open, setOpen] = useState(false);
     const anchorRef = useRef(null);
+
+    const [tempName, setTempName] = useState(props.mealName);
+    const [isErrorTempName, setIsErrorTempName] = useState(false);
 
     const handleToggle = () => {
       setOpen((prevOpen) => !prevOpen);
@@ -334,6 +333,25 @@ const PlanDetail = () => {
       (total, item) => total + item.calories,
       0
     );
+    console.log(renderMeal)
+
+    const handleChangeMealName = (mealId) => {
+      console.log("im in");
+        if(tempName === "") {
+          setIsErrorTempName(true);
+        } else {
+          setChangeName(false);
+          setRenderMeal((prevMeals) =>
+            prevMeals.map((meal) => {
+              if (meal.mealId === mealId) {
+                meal.mealName = tempName;
+              }
+              return meal;
+            })
+          );
+        }
+    }
+
 
     return (
       <div className="plan-detail-meal-card">
@@ -379,7 +397,7 @@ const PlanDetail = () => {
                       aria-labelledby="composition-button"
                       onKeyDown={handleListKeyDown}
                     >
-                      <MenuItem onClick={() => setChangeName(true)}>
+                      <MenuItem onClick={() => { setTempName(props.mealName); setChangeName(true) }}>
                         Change meal name
                       </MenuItem>
                       <MenuItem onClick={() => setAddNewRecipe(true)}>
@@ -427,6 +445,35 @@ const PlanDetail = () => {
             </div>
           )}
         </Droppable>
+
+        <Dialog
+          header="Change your meal name"
+          visible={changeName}
+          onHide={() => setChangeName(false)}
+          style={{ width: "50vw" }}
+          breakpoints={{ "960px": "75vw", "641px": "100vw" }}
+        >
+          <div className="flex flex-column gap-2 mb-3">
+            <label htmlFor="mealName" style={isErrorTempName ? { color: "red" } : null}>Meal name</label>
+            <InputText
+              id="mealName"
+              name="mealName"
+              type="text"
+              className="p-inputtext-sm p-d-block"
+              onChange={(e) => { setTempName(e.target.value) }}
+              value={tempName}
+            />
+            {isErrorTempName && <p style={{ color: "red" }}>Required*</p>}
+          </div>
+          <button
+            className="add-plan-submit"
+            onClick = {() => handleChangeMealName(props.mealId)}
+          >
+            Submit
+          </button>
+        </Dialog>
+
+
       </div>
     );
   };
@@ -452,39 +499,10 @@ const PlanDetail = () => {
             style={{ width: "50vw" }}
             breakpoints={{ "960px": "75vw", "641px": "100vw" }}
           >
-
+            
             
           </Dialog>
-          <Dialog
-            header="Change your meal name"
-            visible={changeName}
-            onHide={() => setChangeName(false)}
-            style={{ width: "50vw" }}
-            breakpoints={{ "960px": "75vw", "641px": "100vw" }}
-          >
-            <div className="flex flex-column gap-2 mb-3">
-              <label htmlFor="mealName">Meal name</label>
-              <InputText
-                id="mealName"
-                name="mealName"
-                type="text"
-                className="p-inputtext-sm p-d-block"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.mealName}
-              />
-              {formik.touched.mealName && formik.errors.mealName ? (
-                <small className="p-error">{formik.errors.mealName}</small>
-              ) : null}
-            </div>
-            <button
-              className="add-plan-submit"
-              type="submit"
-              onClick={formik.handleSubmit}
-            >
-              Submit
-            </button>
-          </Dialog>
+
           <Dialog
             header="Shopping List"
             visible={shopVisible}
@@ -581,7 +599,7 @@ const PlanDetail = () => {
                         value={formik.values.maxCalories}
                       />
                       {formik.touched.maxCalories &&
-                      formik.errors.maxCalories ? (
+                        formik.errors.maxCalories ? (
                         <small className="p-error">
                           {formik.errors.maxCalories}
                         </small>
@@ -638,7 +656,7 @@ const PlanDetail = () => {
                     <p>No meal</p>
                   ) : (
                     renderMeal.map((item) => (
-                      <MealCard key={item.mealId} props={item} />
+                      <MealCard key={item.mealId} props={item} renderMeal={renderMeal} setRenderMeal={setRenderMeal}/>
                     ))
                   )}
                 </div>

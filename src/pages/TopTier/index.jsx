@@ -28,13 +28,7 @@ const TopTier = () => {
           Explore the world of gastronomy with this diverse recipe compilation,
           catering to all tastes and occasions. From appetizers to desserts, and
           everything in between, discover a vast array of culinary delights that
-          are sure to tantalize your taste buds. Whether you're a seasoned chef
-          or a cooking enthusiast, this collection offers step-by-step
-          instructions and expert tips for creating delectable dishes from
-          different cuisines and cultures. From comforting classics to
-          innovative twists, embark on a culinary journey that celebrates the
-          art of cooking and the joy of sharing delicious meals with family and
-          friends.
+          are sure to tantalize your taste buds. 
         </div>
       </div>
       {isLoading ? (

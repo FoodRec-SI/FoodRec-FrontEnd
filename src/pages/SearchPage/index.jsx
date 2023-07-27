@@ -9,11 +9,13 @@ import { handleLogError } from "../../utills/Helper";
 import Loading from "../../components/Loading/Loading";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { Dialog } from 'primereact/dialog';
 
 const SearchPage = () => {
   const { keycloak } = useKeycloak();
   const  {searchName}  = useParams();
   const [recipeName, setRecipeName] = useState(searchName);
+  const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
 
   const handleResetSearch = (e) => {
@@ -154,7 +156,14 @@ const SearchPage = () => {
               
             }}>
               <div className="search-content-recipe-title">Popular Recipes</div>
-              
+              <div className="filter" onClick={() => setVisible(true)}>
+                <div>Filter</div>
+                <i className="pi pi-sliders-v"></i>
+              </div>
+              <Dialog header="Filter" visible={visible} onHide={() => setVisible(false)}
+                style={{ width: '50vw' }} breakpoints={{ '960px': '75vw', '641px': '100vw' }}>
+                  
+              </Dialog>
             </div>
               <RecipeCardList
                 props={
@@ -167,7 +176,6 @@ const SearchPage = () => {
             </>
           ) : (
             <div className="search-nothing-content">
-             
               <div className="empty-title">We don't find anything matching your search.</div>
               <div className="empty-content">Try another search or reove your filter</div>
               <button className="reset-button" onClick={handleResetSearch}>Reset Search</button>
