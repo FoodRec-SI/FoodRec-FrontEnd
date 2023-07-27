@@ -36,6 +36,11 @@ function AppRoutes() {
       title: "Discover",
     },
     {
+      path: "/top-list",
+      element: <Discover />,
+      title: "Top List",
+    },
+    {
       path: "/meal",
       element: isLogin  ? <Meal /> : <Login />,
       title: "Meal",
