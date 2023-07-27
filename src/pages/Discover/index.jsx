@@ -7,6 +7,8 @@ import { PostApi } from "../../api/PostApi";
 import { TagApi } from "../../api/TagApi";
 import { useKeycloak } from "@react-keycloak/web";
 import { useQuery, useInfiniteQuery } from "react-query";
+import { handleLogError } from "../../utills/Helper";
+import Loading from "../../components/Loading/Loading";
 
 
 
@@ -18,9 +20,14 @@ const Discover = () => {
   const [tagId, setTagId] = useState("");
 
   const fetchRecipes = async ({ pageParam, pageSize,sortPost , sortType }) => {
+    try{
     const response = await PostApi.getPosts(pageParam, pageSize,sortPost , sortType);
     // console.log(response.data);
     return response.data;
+    }
+    catch(error){
+      handleLogError(error);
+    }
   };
 
   const { data, fetchNextPage, hasNextPage, status } = useInfiniteQuery(
@@ -41,13 +48,18 @@ const Discover = () => {
   };
 
   const fetchPostByTag = async (tagId) => {
+    try{
     const response = await TagApi.getPostByTag(tagId, keycloak.token);
     return response.data;
+    }
+    catch(error){
+      handleLogError(error);
+    }
   };
 
   const shouldFetchData = Boolean(tagId);
 
-  const { data: posts } = useQuery(
+  const { data: posts ,isLoading } = useQuery(
     ["posts", tagId],
     () => fetchPostByTag(tagId),
     {
@@ -99,14 +111,14 @@ const Discover = () => {
   return (
     <>
       {isLogin ? <LoginBanner onItemClick={handleItemSelection} /> : <Banner />}
+      { isLoading ? (<Loading />) : 
       <div style={{ width: "100%", margin: "0 auto" , maxWidth: "1200px" }}>
          <RecipeCardList
           props={posts && posts.content ? posts.content : data.pages.flatMap((page) => page.content)}
           pending={""}
-        /> 
-        
-       
+        />      
       </div>
+}
       {/* {hasNextPage && (
         <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
           {isFetchingNextPage ? "Loading more..." : "Load more"}

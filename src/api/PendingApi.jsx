@@ -61,13 +61,21 @@ function getUpdatedPendingRecipes(token, page, size) {
 
     instance.interceptors.response.use(response => {
         return response;
-    }, function (error) {
-        if (error.response.status === 404) {
-            return { status: error.response.status };
+      }, function (error) {
+        if (error.response && error.response.status === 400) {
+          return { status: error.response.status };
         }
         return Promise.reject(error.response);
-    }
-    );
+      });
+      
+      instance.interceptors.request.use(
+        config => {
+          return config;
+        },
+        error => {
+          return Promise.reject(error);
+        }
+      );
 
     function bearerAuth(token) {
         return `Bearer ${token}`;

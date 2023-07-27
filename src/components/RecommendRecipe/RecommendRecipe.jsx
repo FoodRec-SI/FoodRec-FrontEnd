@@ -1,13 +1,12 @@
 import "./RecommendRecipe.css";
 import { PostApi } from "../../api/PostApi";
 import { useQuery } from "react-query";
-import { useNavigate } from "react-router-dom";
 import { useKeycloak } from "@react-keycloak/web";
 import Loading from "../Loading/Loading";
 import RecipeCard from "../RecipeCard/RecipeCard";
 
 const RecommendRecipe = (props) => {
-  const navigate = useNavigate();
+ 
   const {keycloak} = useKeycloak();
   const tags = props.tags.map((tag) => tag.tagId);
   console.log(tags);
@@ -20,7 +19,7 @@ const RecommendRecipe = (props) => {
     };
 
     const { data: recommendRecipe, status } = useQuery(
-        "recommendRecipe",
+        ["recommendRecipe", { tags }],
         fetchRecommendRecipe
     );
 

@@ -6,6 +6,7 @@ import { CollectionApi } from "../../api/CollectionApi";
 import { useQuery } from "react-query";
 import { useKeycloak } from "@react-keycloak/web";
 import { useParams } from "react-router-dom";
+import { handleLogError } from "../../utills/Helper";
 
 
 
@@ -14,13 +15,17 @@ const CollectionDetail = () => {
   const { keycloak } = useKeycloak();
 
   const fetchCollectionList = async ({ pageParam = 0, pageSize = 10 }) => {
+    try{
     const response = await CollectionApi.getPostFromCollection(
       id,
       pageParam,
       pageSize,
       keycloak.token
     );
-    return response.data;
+    return response.data;}
+    catch(error){
+      handleLogError(error);
+    }
   };
 
   const {
