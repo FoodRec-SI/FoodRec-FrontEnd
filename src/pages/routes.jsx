@@ -71,6 +71,11 @@ function AppRoutes() {
       title: "Recipe Detail",
     },
     {
+      path: "/search/:searchName",
+      element: isLogin ? <SearchPage /> : <Login />,
+      title: "SearchPage",
+    },
+    {
       path: "/search",
       element: isLogin ? <SearchPage /> : <Login />,
       title: "SearchPage",

@@ -99,7 +99,7 @@ const Discover = () => {
   return (
     <>
       {isLogin ? <LoginBanner onItemClick={handleItemSelection} /> : <Banner />}
-      <div style={{ width: "90%", margin: "0 auto" , }}>
+      <div style={{ width: "100%", margin: "0 auto" , maxWidth: "1200px" }}>
          <RecipeCardList
           props={posts && posts.content ? posts.content : data.pages.flatMap((page) => page.content)}
           pending={""}

@@ -65,19 +65,18 @@ const RatingArea = () => {
         },
     );
 
-    const { mutate, onSuccess } = useMutation(
+    const { mutate } = useMutation(
         async () => {
             const response = await RatingApi.updateRating({ "postId": id, "score": value }, keycloak.token);
-            if(response.status === 200){
-                setOpen(false);
-                
-            }
+           
             return response;
         }, {
         onSuccess: () => {
+            setOpen(false);
             personalRatingRefetch();
             ratingDataRefetch();
             percentageRatingRefetch();
+
         }
     }
 
@@ -100,9 +99,9 @@ const RatingArea = () => {
                             readOnly
                             sx={{ paddingLeft: "15px" }}
                         />
-                        <p>{ratingData.average == null ? 0 : ratingData.average } out of 5</p>
+                        {ratingData && <p>{ratingData.average == null ? 0 : ratingData.average } out of 5</p>}
                     </div>
-                    <p>{ratingData.raters== null ? 0 : ratingData.raters } Customers rating</p>
+                    {ratingData &&<p>{ratingData.raters== null ? 0 : ratingData.raters } Customers rating</p>}
                 </div>}
                 <br />
                 
