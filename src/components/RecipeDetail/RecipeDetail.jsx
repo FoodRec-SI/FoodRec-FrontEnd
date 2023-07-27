@@ -35,7 +35,7 @@ import { PostApi } from "../../api/PostApi";
 import { PendingApi } from "../../api/PendingApi";
 import { LikeApi } from "../../api/LikeApi";
 import { PersonalRecipeApi } from "../../api/PersonalRecipeApi";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useQuery, useMutation } from "react-query";
 import { useKeycloak } from "@react-keycloak/web";
 import {
   FacebookShareButton,
@@ -51,13 +51,7 @@ const RecipeDetail = ({ recipeId }) => {
   const { keycloak } = useKeycloak();
   const isLogin = keycloak?.authenticated;
 
-  if(isLogin == false){
-    return (
-      <>
-        <PleaseLogin/>
-      </>
-    )
-  }
+  
 
   let postId = null;
   const location = useLocation();
@@ -109,6 +103,13 @@ const RecipeDetail = ({ recipeId }) => {
 
   const { data: post, isSuccess: isPostSuccess, status, refetch: refetchRecipeDetail } = useQuery(["post", postId], fetchPostById);
 
+  if(isLogin == false){
+    return (
+      <>
+        <PleaseLogin/>
+      </>
+    )
+  }
   if (status === "loading") {
     return (
       <>
@@ -203,7 +204,6 @@ function Introduction({ props, isMyRecipe, recipeId, refetchRecipeDetail }) {
   const { keycloak } = useKeycloak();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
-  const queryClient = useQueryClient();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const navigate = useNavigate();
@@ -257,6 +257,7 @@ function Introduction({ props, isMyRecipe, recipeId, refetchRecipeDetail }) {
         postId: props.postId,
       },
       keycloak.token)
+    return response.status;
   };
 
 

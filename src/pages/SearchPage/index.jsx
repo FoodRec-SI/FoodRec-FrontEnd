@@ -9,7 +9,7 @@ import { handleLogError } from "../../utills/Helper";
 import Loading from "../../components/Loading/Loading";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { Dialog } from "primereact/dialog";
+
 
 
 
@@ -18,7 +18,7 @@ const SearchPage = ({ isAddToPlan, renderMeal, setRenderMeal, mealId }) => {
   const { keycloak } = useKeycloak();
   const { searchName } = useParams();
   const [recipeName, setRecipeName] = useState(searchName);
-  const [visible, setVisible] = useState(false);
+ 
   const navigate = useNavigate();
 
   let AddToPlan = "";
@@ -101,17 +101,12 @@ const SearchPage = ({ isAddToPlan, renderMeal, setRenderMeal, mealId }) => {
   const fetchSearchRecipes = async ({
     pageNumber,
     pageSize,
-    sortPost,
-    sortType,
   }) => {
     try {
       const response = await PostApi.getPostsByName(
         recipeName,
         pageNumber,
         pageSize,
-        sortPost,
-        sortType,
-        keycloak.token
       );
       return response.data.content;
     } catch (error) {
@@ -122,16 +117,13 @@ const SearchPage = ({ isAddToPlan, renderMeal, setRenderMeal, mealId }) => {
   const {
     data: recipes,
     isLoading,
-    refetch,
   } = useQuery(
     ["recipes", recipeName],
 
     ({
       pageNumber = 0,
       pageSize = 99,
-      sortPost = "CREATED_TIME",
-      sortType = "ACCENDING",
-    }) => fetchSearchRecipes(pageNumber, pageSize, sortPost, sortType),
+    }) => fetchSearchRecipes(pageNumber, pageSize),
     {
       enabled: Boolean(recipeName),
     }
@@ -139,10 +131,6 @@ const SearchPage = ({ isAddToPlan, renderMeal, setRenderMeal, mealId }) => {
 
 
 
-  const handleSortChange = (sortPost, sortType) => {
-    // Fetch data with the new sorting options
-    refetch({ sortPost, sortType });
-  };
 
   if (postStatus === "loading") {
     return <div>Loading...</div>;
@@ -190,48 +178,11 @@ const SearchPage = ({ isAddToPlan, renderMeal, setRenderMeal, mealId }) => {
                 <div className="search-content-recipe-title">
                   Popular Recipes
                 </div>
-                <div className="filter" onClick={() => setVisible(true)}>
+                {/* <div className="filter" onClick={() => setVisible(true)}>
                   <div>Filter</div>
                   <i className="pi pi-sliders-v"></i>
-                </div>
-                <Dialog
-                  header="Filter"
-                  visible={visible}
-                  onHide={() => setVisible(false)}
-                  style={{ width: "50vw" }}
-                  breakpoints={{ "960px": "75vw", "641px": "100vw" }}
-                >
-                  <div className="sort-buttons">
-                    <button
-                      onClick={() =>
-                        handleSortChange("CREATED_TIME", "ASCENDING")
-                      }
-                    >
-                      Sort by Created Time (Ascending)
-                    </button>
-                    <button
-                      onClick={() =>
-                        handleSortChange("CREATED_TIME", "DESCENDING")
-                      }
-                    >
-                      Sort by Created Time (Descending)
-                    </button>
-                    <button
-                      onClick={() =>
-                        handleSortChange("AVERAGE_SCORE", "ASCENDING")
-                      }
-                    >
-                      Sort by Average Score (Ascending)
-                    </button>
-                    <button
-                      onClick={() =>
-                        handleSortChange("AVERAGE_SCORE", "DESCENDING")
-                      }
-                    >
-                      Sort by Average Score (Descending)
-                    </button>
-                  </div>
-                </Dialog>
+                </div> */}
+                
               </div>
               <RecipeCardList
                 props={

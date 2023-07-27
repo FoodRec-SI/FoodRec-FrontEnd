@@ -20,7 +20,7 @@ const Discover = () => {
   const isLogin = keycloak.authenticated;
   const [tagId, setTagId] = useState("");
 
-  if (!isLogin) {
+ 
 
     const fetchRecipes = async ({ pageParam, pageSize, sortPost, sortType }) => {
       const response = await PostApi.getPosts(pageParam, pageSize, sortPost, sortType);
@@ -80,18 +80,7 @@ const Discover = () => {
       return <div>Error fetching recipes</div>;
     }
 
-    return (
-      <>
-        <Banner />
-        <div style={{ width: "100%", margin: "0 auto", maxWidth: "1200px" }}>
-          <RecipeCardList
-            props={data.pages.flatMap((page) => page.content)}
-            pending={""}
-          />
-        </div>
-      </>
-    );
-  } else {
+  
 
     const handleItemSelection = (item) => {
       setTagId(item.tagId);
@@ -156,8 +145,8 @@ const Discover = () => {
 
 
     return (
-      <>
-        {posts && <div>
+      <>{ isLogin ? (
+        posts && <div>
           <LoginBanner onItemClick={handleItemSelection} />
           <div style={{ width: "100%", margin: "0 auto", maxWidth: "1200px" }}>
             <RecipeCardList
@@ -165,10 +154,19 @@ const Discover = () => {
               pending={""}
             />
           </div>
-        </div>}
+        </div> ) : (
+          <>
+        <Banner />
+        <div style={{ width: "100%", margin: "0 auto", maxWidth: "1200px" }}>
+          <RecipeCardList
+            props={data.pages.flatMap((page) => page.content)}
+            pending={""}
+          />
+        </div>
       </>
+        )}</>
     )
   }
-};
+
 
 export default Discover;

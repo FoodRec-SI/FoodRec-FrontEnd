@@ -126,18 +126,18 @@ const PlanDetail = () => {
   
 
   const createMeal = async (data) => {
-    // try {
+    try {
     const response = await PlanApi.createMeal(data, keycloak.token);
     setMeal([...(!meal.mealSet ? meal : meal.mealSet), response.data]);
     setRenderMeal(
       generatedMeal([...(!meal.mealSet ? meal : meal.mealSet), response.data])
     );
     return response.data;
-    // }
-    // catch(error){
-    //   toast.current.show({ severity: 'error', summary: 'Error', detail: 'Your Meal Calories not suitable ', life: 3000 });
-    //   handleLogError(error);
-    // }
+    }
+    catch(error){
+      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Your Meal Calories not suitable ', life: 3000 });
+      handleLogError(error);
+    }
   };
 
   const { mutate: createNewPlan } = useMutation(createMeal);
