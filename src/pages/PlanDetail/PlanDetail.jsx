@@ -1,6 +1,6 @@
 import "./PlanDetail.css";
 import { useState, useRef, useEffect } from "react";
-import { Menu as PrimeMenu} from "primereact/menu";
+import { Menu as PrimeMenu } from "primereact/menu";
 import { Dialog } from "primereact/dialog";
 import { MultiSelect } from "primereact/multiselect";
 import { InputText } from "primereact/inputtext";
@@ -18,13 +18,12 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Loading from "../../components/Loading/Loading";
-import ClickAwayListener from '@mui/material/ClickAwayListener';
-import Grow from '@mui/material/Grow';
-import Paper from '@mui/material/Paper';
-import Popper from '@mui/material/Popper';
-import MenuItem from '@mui/material/MenuItem';
-import MenuList from '@mui/material/MenuList';
-
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import Grow from "@mui/material/Grow";
+import Paper from "@mui/material/Paper";
+import Popper from "@mui/material/Popper";
+import MenuItem from "@mui/material/MenuItem";
+import MenuList from "@mui/material/MenuList";
 
 const PlanDetail = () => {
   const { mealId } = useParams();
@@ -34,6 +33,8 @@ const PlanDetail = () => {
   const [renderMeal, setRenderMeal] = useState([]);
   const [shopVisible, setShopVisible] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [changeName, setChangeName] = useState(false);
+  const [addNewRecipe, setAddNewRecipe] = useState(false);
 
   const menu1 = useRef(null);
 
@@ -309,39 +310,38 @@ const PlanDetail = () => {
       </div>
     );
   };
-
+  
   const MealCard = ({ props }) => {
     const [open, setOpen] = useState(false);
     const anchorRef = useRef(null);
-  
+
     const handleToggle = () => {
       setOpen((prevOpen) => !prevOpen);
     };
-  
+
     const handleClose = (event) => {
       if (anchorRef.current && anchorRef.current.contains(event.target)) {
         return;
       }
-  
       setOpen(false);
     };
-  
+
     function handleListKeyDown(event) {
-      if (event.key === 'Tab') {
+      if (event.key === "Tab") {
         event.preventDefault();
         setOpen(false);
-      } else if (event.key === 'Escape') {
+      } else if (event.key === "Escape") {
         setOpen(false);
       }
     }
-  
+
     // return focus to the button when we transitioned from !open -> open
     const prevOpen = useRef(open);
     useEffect(() => {
       if (prevOpen.current === true && open === false) {
         anchorRef.current.focus();
       }
-  
+
       prevOpen.current = open;
     }, [open]);
 
@@ -351,22 +351,6 @@ const PlanDetail = () => {
       );
       console.log(mealId);
     };
-
-    // const mealItems = [
-    //   {
-    //     label: "Change meal name",
-    //     icon: "pi pi-refresh",
-    //   },
-    //   {
-    //     label: "Add new recipe",
-    //     icon: "pi pi-fw pi-plus",
-    //   },
-    //   {
-    //     label: "Delete this meal",
-    //     icon: "pi pi-trash",
-    //     command: () => deleteMeal(),
-    //   },
-    // ];
 
     const totalCalories = props.postDTOList.reduce(
       (total, item) => total + item.calories,
@@ -384,8 +368,8 @@ const PlanDetail = () => {
             className="meal-card-header-button"
             ref={anchorRef}
             id="composition-button"
-            aria-controls={open ? 'composition-menu' : undefined}
-            aria-expanded={open ? 'true' : undefined}
+            aria-controls={open ? "composition-menu" : undefined}
+            aria-expanded={open ? "true" : undefined}
             aria-haspopup="true"
             onClick={handleToggle}
           >
@@ -394,42 +378,48 @@ const PlanDetail = () => {
             </IconButton>
           </div>
           <Popper
-          open={open}
-          anchorEl={anchorRef.current}
-          role={undefined}
-          placement="top-start"
-          transition
-          disablePortal
-          
-        >
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{
-                transformOrigin:
-                  placement === 'bottom-start' ? 'left top' : 'left bottom',
-                
-              }}
-            >
-              <Paper >
-                <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList
-                    autoFocusItem={open}
-                    id="composition-menu"
-                    aria-labelledby="composition-button"
-                    onKeyDown={handleListKeyDown}
-                  >
-                    <MenuItem onClick={handleClose}>Change meal name</MenuItem>
-                    <MenuItem onClick={handleClose}>Add new recipe</MenuItem>
-                  <MenuItem onClick={() =>{
-                    deleteMeal(props.mealId)
-                  }}>Delete this meal</MenuItem>
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
+            open={open}
+            anchorEl={anchorRef.current}
+            role={undefined}
+            placement="top-start"
+            transition
+            disablePortal
+          >
+            {({ TransitionProps, placement }) => (
+              <Grow
+                {...TransitionProps}
+                style={{
+                  transformOrigin:
+                    placement === "bottom-start" ? "left top" : "left bottom",
+                }}
+              >
+                <Paper>
+                  <ClickAwayListener onClickAway={handleClose}>
+                    <MenuList
+                      autoFocusItem={open}
+                      id="composition-menu"
+                      aria-labelledby="composition-button"
+                      onKeyDown={handleListKeyDown}
+                    >
+                      <MenuItem onClick={() => setChangeName(true)}>
+                        Change meal name
+                      </MenuItem>
+                      <MenuItem onClick={() => setAddNewRecipe(true)}>
+                        Add new recipe
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => {
+                          deleteMeal(props.mealId);
+                        }}
+                      >
+                        Delete this meal
+                      </MenuItem>
+                    </MenuList>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Popper>
         </div>
         <Droppable droppableId={props.mealId}>
           {(provided) => (
@@ -477,6 +467,45 @@ const PlanDetail = () => {
           >
             Shop
           </span> */}
+          <Dialog
+            header="Add new recipe"
+            visible={addNewRecipe}
+            onHide={() => setAddNewRecipe(false)}
+            style={{ width: "50vw" }}
+            breakpoints={{ "960px": "75vw", "641px": "100vw" }}
+          >
+            
+          </Dialog>
+          <Dialog
+            header="Change your meal name"
+            visible={changeName}
+            onHide={() => setChangeName(false)}
+            style={{ width: "50vw" }}
+            breakpoints={{ "960px": "75vw", "641px": "100vw" }}
+          >
+            <div className="flex flex-column gap-2 mb-3">
+              <label htmlFor="mealName">Meal name</label>
+              <InputText
+                id="mealName"
+                name="mealName"
+                type="text"
+                className="p-inputtext-sm p-d-block"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.mealName}
+              />
+              {formik.touched.mealName && formik.errors.mealName ? (
+                <small className="p-error">{formik.errors.mealName}</small>
+              ) : null}
+            </div>
+            <button
+              className="add-plan-submit"
+              type="submit"
+              onClick={formik.handleSubmit}
+            >
+              Submit
+            </button>
+          </Dialog>
           <Dialog
             header="Shopping List"
             visible={shopVisible}
