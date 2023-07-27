@@ -20,155 +20,132 @@ const Discover = () => {
   const isLogin = keycloak.authenticated;
   const [tagId, setTagId] = useState("");
 
-  if (!isLogin) {
 
-    const fetchRecipes = async ({ pageParam, pageSize, sortPost, sortType }) => {
-      const response = await PostApi.getPosts(pageParam, pageSize, sortPost, sortType);
-  
+  const { data: profileData, isLoading: loadingProfile, refetch, isSuccess: successLoadProfile, isError: errorLoadProfile } = useQuery({
+    queryKey: ["profile"],
+    queryFn: async () => {
+      const data = await ProfileApi.getProfile(keycloak.token, keycloak.tokenParsed.sub);
+      return data.data;
+    },
+  });
+
+  let handleFetchPosts = null;
+
+
+  if (successLoadProfile) {
+    if (profileData.tagsCollection == null) {
+      handleFetchPosts = async () => {
+        const response = await PostApi.getPosts(0, 8, "CREATED_TIME", "ACCENDING");
+        console.log(response.data);
+        return response.data;
+      };
+    }
+    else {
+      const tempTagArray = profileData.tagsCollection.map((tag) => tag.tagId);
+      const tagIdsString = tempTagArray.join(',');
+      handleFetchPosts = async () => {
+        const response = await PostApi.getPostsByTags(tagIdsString, 0, 8, keycloak.token);
+        console.log(response.data);
+        return response.data;
+      };
+    }
+  }
+
+  if (errorLoadProfile) {
+    handleFetchPosts = async ({ pageParam, pageSize, sortPost, sortType }) => {
+      const response = await PostApi.getPosts(0, 8, "CREATED_TIME", "ACCENDING");
+      console.log(response.data);
       return response.data;
     };
+  }
 
-    const { data, fetchNextPage, hasNextPage, status } = useInfiniteQuery(
-      "posts",
-      ({ pageParam = 0, pageSize = 8, sortPost = "CREATED_TIME", sortType = "ACCENDING" }) => fetchRecipes({ pageParam, pageSize, sortPost, sortType }),
-      {
-        getNextPageParam: (lastPage) => {
-          const maxPages = lastPage.totalElements / 5;
-          const nextPage = lastPage.number + 1;
-          return nextPage <= maxPages ? nextPage : undefined;
-        },
-      }
-    );
+  const { data: posts, isLoading: loadingPosts } = useQuery({
+    queryKey: ["posts"],
+    queryFn: handleFetchPosts,
+  });
 
 
-    useEffect(() => {
-      const onScroll = (event) => {
-        let fetching = false;
-        const { scrollTop, clientHeight, scrollHeight } =
-          event.target.scrollingElement;
+  const fetchPostByTag = async (tagId) => {
+    const response = await TagApi.getPostByTag(tagId, keycloak.token);
+    return response.data.content;
+  };
 
-        if (!fetching && scrollHeight - scrollTop <= clientHeight * 1.5) {
-          fetching = true;
-          if (hasNextPage) {
-            fetchNextPage();
-          }
-          // console.log("fetching");
-          fetching = false;
-        }
-      };
+  const shouldFetchData = Boolean(tagId);
 
-      document.addEventListener("scroll", onScroll);
-      return () => {
-        document.removeEventListener("scroll", onScroll);
-      };
-    }, [hasNextPage, fetchNextPage]);
+  const { data: postsbyTag } = useQuery(
+    ["posts", tagId],
+    () => fetchPostByTag(tagId),
+    {
+      enabled: shouldFetchData,
+    }
+  );
 
-    if (status === "loading") {
-      return (
+
+  const handleItemSelection = (item) => {
+    setTagId(item.tagId);
+  };
+
+  if (loadingPosts) {
+    <>
+      {isLogin ? <LoginBanner onItemClick={handleItemSelection} /> : <Banner />}
+      <div style={{ width: "90%", margin: "0 auto" }}>
+        <SkeletonCardList />
+      </div>
+    </>
+  }
+
+  // useEffect(() => {
+  //   const onScroll = (event) => {
+  //     let fetching = false;
+  //     const { scrollTop, clientHeight, scrollHeight } =
+  //       event.target.scrollingElement;
+
+  //     if (!fetching && scrollHeight - scrollTop <= clientHeight * 1.5) {
+  //       fetching = true;
+  //       if (hasNextPage) {
+  //         fetchNextPage();
+  //       }
+  //       // console.log("fetching");
+  //       fetching = false;
+  //     }
+  //   };
+
+  //   document.addEventListener("scroll", onScroll);
+  //   return () => {
+  //     document.removeEventListener("scroll", onScroll);
+  //   };
+  // }, [hasNextPage, fetchNextPage]);
+
+
+
+  return (
+
+    isLogin == true ?
+      (
         <>
-
-          <Banner />
-
-          <div style={{ width: "90%", margin: "0 auto" }}>
-            <SkeletonCardList />
-          </div>
-        </>
-      );
-    }
-
-    if (status === "error") {
-      return <div>Error fetching recipes</div>;
-    }
-
-    return (
-      <>
-        <Banner />
-        <div style={{ width: "100%", margin: "0 auto", maxWidth: "1200px" }}>
-          <RecipeCardList
-            props={data.pages.flatMap((page) => page.content)}
-            pending={""}
-          />
-        </div>
-      </>
-    );
-  } else {
-
-    const handleItemSelection = (item) => {
-      setTagId(item.tagId);
-    };
-
-    const { data: profileData, isLoading: loadingProfile, refetch } = useQuery({
-      queryKey: ["profile"],
-      queryFn: async () => {
-        const data = await ProfileApi.getProfile(keycloak.token, keycloak.tokenParsed.sub);
-        return data.data;
-      },
-    });
-
-    const { data: posts, isLoading: loadingPosts, isSuccess } = useQuery({
-      queryKey: ["posts"],
-      queryFn: async () => {
-        if (profileData.tagsCollection == null) {
-          const data = await PostApi.getPosts(0, 16, "CREATED_TIME", "ACCENDING");
-          
-          return data.data.content;
-        }
-        else {
-          const tempTagArray = profileData.tagsCollection.map((tag) => tag.tagId);
-          const tagIdsString = tempTagArray.join(',');
-          const data = await PostApi.getPostsByTags(tagIdsString, 0, 16, keycloak.token);
-          return data.data.content;
-        }
-      },
-      enabled: profileData!=null,
-
-    });
-
-    if (loadingPosts) {
-      <>
-
-        {isLogin ? <LoginBanner onItemClick={handleItemSelection} /> : <Banner />}
-
-        <div style={{ width: "90%", margin: "0 auto" }}>
-          <SkeletonCardList />
-        </div>
-      </>
-    }
-
-
-    
-
-    const fetchPostByTag = async (tagId) => {
-      const response = await TagApi.getPostByTag(tagId, keycloak.token);
-      return response.data.content;
-    };
-
-    const shouldFetchData = Boolean(tagId);
-
-    const { data: postsbyTag } = useQuery(
-      ["posts", tagId],
-      () => fetchPostByTag(tagId),
-      {
-        enabled: shouldFetchData,
-      }
-    );
-
-
-
-    return (
-      <>
-        {posts && <div>
           <LoginBanner onItemClick={handleItemSelection} />
           <div style={{ width: "100%", margin: "0 auto", maxWidth: "1200px" }}>
-            <RecipeCardList
-              props={postsbyTag ? postsbyTag : posts}
-              pending={""}
-            />
-          </div>
+          {posts && <RecipeCardList
+            props={ postsbyTag ? postsbyTag : posts.content}
+            pending={""}
+          />}
+        </div>
+        </>
+      )
+      :
+      ( 
+        <>
+          <Banner />
+          {posts && <div style={{ width: "100%", margin: "0 auto", maxWidth: "1200px" }}>
+          <RecipeCardList
+            props={posts.content}
+            pending={""}
+          />
         </div>}
-      </>
-    )
-  }
+        </>
+      )
+
+  )
 };
 
 export default Discover;
