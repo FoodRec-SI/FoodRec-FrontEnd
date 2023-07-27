@@ -7,6 +7,8 @@ import { PostApi } from "../../api/PostApi";
 import { TagApi } from "../../api/TagApi";
 import { useKeycloak } from "@react-keycloak/web";
 import { useQuery, useInfiniteQuery } from "react-query";
+import { handleLogError } from "../../utills/Helper";
+import Loading from "../../components/Loading/Loading";
 
 import { ProfileApi } from "../../api/ProfileApi";
 
@@ -22,7 +24,7 @@ const Discover = () => {
 
     const fetchRecipes = async ({ pageParam, pageSize, sortPost, sortType }) => {
       const response = await PostApi.getPosts(pageParam, pageSize, sortPost, sortType);
-      console.log(response.data);
+  
       return response.data;
     };
 
@@ -108,7 +110,7 @@ const Discover = () => {
       queryFn: async () => {
         if (profileData.tagsCollection == null) {
           const data = await PostApi.getPosts(0, 16, "CREATED_TIME", "ACCENDING");
-          console.log(data.data);
+        
           return data.data.content;
         }
         else {

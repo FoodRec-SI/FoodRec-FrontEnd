@@ -9,7 +9,6 @@ import MenuList from "@mui/material/MenuList";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import { useKeycloak } from "@react-keycloak/web";
 import { useMutation } from "react-query";
 import { CollectionApi } from "../../api/CollectionApi";
@@ -84,7 +83,7 @@ const LikedRecipe = (props) => {
   );
 
   if (status === "error") {
-    console.log("error");
+    return <div>error</div>;
   }
 
   const unlikePost = async () => {
@@ -176,12 +175,7 @@ const LikedRecipe = (props) => {
                       </ListItemIcon>
                       Remove
                     </MenuItem>
-                    <MenuItem onClick={handleClose}>
-                      <ListItemIcon>
-                        <ShareOutlinedIcon fontSize="small" />
-                      </ListItemIcon>
-                      Share
-                    </MenuItem>
+                    
                   </MenuList>
                 </ClickAwayListener>
               </Paper>

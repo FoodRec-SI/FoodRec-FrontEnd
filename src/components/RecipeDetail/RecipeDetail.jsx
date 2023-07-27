@@ -37,6 +37,14 @@ import { LikeApi } from "../../api/LikeApi";
 import { PersonalRecipeApi } from "../../api/PersonalRecipeApi";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { useKeycloak } from "@react-keycloak/web";
+import {
+  FacebookShareButton,
+  FacebookIcon,
+  TwitterShareButton,
+  TwitterIcon,
+  FacebookMessengerShareButton,
+  FacebookMessengerIcon,
+} from "react-share";
 
 const RecipeDetail = ({ recipeId }) => {
 
@@ -302,6 +310,9 @@ function Introduction({ props, isMyRecipe, recipeId, refetchRecipeDetail }) {
 
   const { mutate: deleteRecipe } = useMutation(deletePost);
 
+  const shareUrl = window.location.href;
+
+
 
   return (
     <>
@@ -383,6 +394,27 @@ function Introduction({ props, isMyRecipe, recipeId, refetchRecipeDetail }) {
                 Like
               </Button>
             </Tooltip>
+
+            <Tooltip title="Facebook" placement="top">
+              <FacebookShareButton url={shareUrl} quote={props.recipeName}>
+                <FacebookIcon size={30} round={true} />
+              </FacebookShareButton>
+            </Tooltip>
+
+            <Tooltip title="Twitter" placement="top">
+              <TwitterShareButton url={shareUrl} title={props.recipeName}>
+                <TwitterIcon size={30} round={true} />
+              </TwitterShareButton> 
+
+            </Tooltip>
+
+            <Tooltip title="Messenger" placement="top">
+              <FacebookMessengerShareButton url={shareUrl} appId="521270401588372">
+                <FacebookMessengerIcon size={30} round={true} />
+              </FacebookMessengerShareButton>
+
+            </Tooltip>
+
 
             {/* <Tooltip title="Share recipe" placement="top">
               <IconButton aria-label="shareRecipe">

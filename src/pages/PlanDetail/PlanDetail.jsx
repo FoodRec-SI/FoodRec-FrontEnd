@@ -24,8 +24,14 @@ import Paper from "@mui/material/Paper";
 import Popper from "@mui/material/Popper";
 import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+import ControlPointDuplicateIcon from '@mui/icons-material/ControlPointDuplicate';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import { handleLogError } from "../../utills/Helper";
 import SearchPage from "../SearchPage";
 
+import { Toast } from 'primereact/toast';
 const PlanDetail = () => {
   const { mealId } = useParams();
   const { keycloak } = useKeycloak();
@@ -35,12 +41,12 @@ const PlanDetail = () => {
   const [shopVisible, setShopVisible] = useState(false);
   const [saved, setSaved] = useState(false);
   
-
+  // const [addNewRecipe, setAddNewRecipe] = useState(false);
 
 
 
   const menu1 = useRef(null);
-
+  const toast = useRef(null);
   const formik = useFormik({
     initialValues: {
       mealName: "",
@@ -117,13 +123,21 @@ const PlanDetail = () => {
     }
   }, [data]);
 
+  
+
   const createMeal = async (data) => {
+    // try {
     const response = await PlanApi.createMeal(data, keycloak.token);
     setMeal([...(!meal.mealSet ? meal : meal.mealSet), response.data]);
     setRenderMeal(
       generatedMeal([...(!meal.mealSet ? meal : meal.mealSet), response.data])
     );
     return response.data;
+    // }
+    // catch(error){
+    //   toast.current.show({ severity: 'error', summary: 'Error', detail: 'Your Meal Calories not suitable ', life: 3000 });
+    //   handleLogError(error);
+    // }
   };
 
   const { mutate: createNewPlan } = useMutation(createMeal);
@@ -324,15 +338,17 @@ const PlanDetail = () => {
 
       prevOpen.current = open;
     }, [open]);
+    
 
-    const deleteMeal = async (mealId) => {
-      await setRenderMeal((prevMeals) =>
-        prevMeals.filter((meal) => meal.mealId !== mealId)
-      );
-      handleUpdatePlan();
-      console.log(mealId);
+    const deleteMeal = (mealId) => {
+      setRenderMeal((prevMeals) =>{
+       const testMeal = prevMeals.filter((meal) => meal.mealId !== mealId)
+        return testMeal;
+    });
+      // Remove the deleted meal from the `meal` state as well.
+      setMeal([...(!meal.mealSet ? meal : meal.mealSet)].filter((meal) => meal.mealId !== mealId))
+
     };
-
     const totalCalories = props.postDTOList&&props.postDTOList.reduce(
       (total, item) => total + item.calories,
       0
@@ -402,16 +418,26 @@ const PlanDetail = () => {
                         setChangeName(true) 
                         setTempName(props.mealName)
                         }}>
+                          <ListItemIcon>
+                        <DriveFileRenameOutlineIcon fontSize="small" />
+                      </ListItemIcon>
                         Change meal name
                       </MenuItem>
                       <MenuItem onClick={() => setAddNewRecipe(true)}>
+                      <ListItemIcon>
+                        <ControlPointDuplicateIcon fontSize="small" />
+                      </ListItemIcon>
                         Add new recipe
                       </MenuItem>
                       <MenuItem
                         onClick={() => {
                           deleteMeal(props.mealId);
+                           
                         }}
                       >
+                        <ListItemIcon>
+                        <DeleteForeverOutlinedIcon fontSize="small" />
+                      </ListItemIcon>
                         Delete this meal
                       </MenuItem>
                     </MenuList>
@@ -428,7 +454,7 @@ const PlanDetail = () => {
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {props.postDTOList.map((item, index) => (
+              {props.postDTOList&&props.postDTOList.map((item, index) => (
                 <Draggable key={item.id} draggableId={item.id} index={index}>
                   {(provided) => (
                     <div
@@ -471,10 +497,7 @@ const PlanDetail = () => {
           </div>
           <button
             className="add-plan-submit"
-            onClick={(e) => {
-              e.preventDefault();
-              handleChangeMealName(props.mealId); // Call the function here
-            }}
+            onClick = {handleChangeMealName}
           >
             Submit
           </button>
@@ -493,9 +516,16 @@ const PlanDetail = () => {
     );
   };
 
+  const totalCaloriesInPlan = renderMeal.reduce(
+    (totalCalories, meal) =>
+      totalCalories +
+      meal.postDTOList&&meal.postDTOList.reduce((total, post) => total + post.calories, 0),
+    0
+  );
 
   return (
     <div className="plan-detail">
+      <Toast ref={toast} />
       <div className="plan-detail-container">
         <div className="plan-detail-header">
           {/* <span
@@ -646,7 +676,7 @@ const PlanDetail = () => {
 
             <div className="plan-deatil-calories">
               <span className="calo">
-                Total Calories : {data && data.calories}
+                Total Calories : {totalCaloriesInPlan}
               </span>
             </div>
           </div>

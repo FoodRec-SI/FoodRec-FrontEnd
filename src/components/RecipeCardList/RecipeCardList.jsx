@@ -9,7 +9,7 @@ const RecipeCardList = ({ props, pending, renderMeal, setRenderMeal, mealId }) =
   return (
     <div className="recipe-list-wrapper">
       <div className="recipe-list">
-        {props.map((item, index) => (
+        {props&&props.map((item, index) => (
           <RecipeCard
             key={index}
             props={item}
