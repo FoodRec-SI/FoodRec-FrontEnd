@@ -78,12 +78,12 @@ function AppRoutes() {
     },
     {
       path: "/search/:searchName",
-      element: isLogin ? <SearchPage /> : <Login />,
+      element:  <SearchPage /> ,
       title: "SearchPage",
     },
     {
       path: "/search",
-      element: isLogin ? <SearchPage /> : <Login />,
+      element:  <SearchPage /> ,
       title: "SearchPage",
     },
     {

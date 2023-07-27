@@ -9,11 +9,11 @@ import { handleLogError } from "../../utills/Helper";
 import Loading from "../../components/Loading/Loading";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { Dialog } from 'primereact/dialog';
+import { Dialog } from "primereact/dialog";
 
 const SearchPage = () => {
   const { keycloak } = useKeycloak();
-  const  {searchName}  = useParams();
+  const { searchName } = useParams();
   const [recipeName, setRecipeName] = useState(searchName);
   const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const SearchPage = () => {
     e.preventDefault();
     setRecipeName("");
     navigate(`/search`);
-  }
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -47,7 +47,6 @@ const SearchPage = () => {
     fetchNextPage,
     hasNextPage,
     status: postStatus,
-    
   } = useInfiniteQuery(
     "posts",
     ({
@@ -88,30 +87,54 @@ const SearchPage = () => {
       document.removeEventListener("scroll", onScroll);
     };
   }, [hasNextPage, fetchNextPage]);
-  // useEffect(() => {
-  //   PostApi.getPostsByName(recipeName, keycloak.token).then((response) => {
-  //     setRecipes(response.data.content);
-  //   });
-  // }, [recipeName]);
 
-  const fetchSearchRecipes = async () => {
+  //search
+
+  const fetchSearchRecipes = async ({
+    pageNumber,
+    pageSize,
+    sortPost,
+    sortType,
+  }) => {
     try {
-      const response = await PostApi.getPostsByName(recipeName, keycloak.token);
+      const response = await PostApi.getPostsByName(
+        recipeName,
+        pageNumber,
+        pageSize,
+        sortPost,
+        sortType,
+        keycloak.token
+      );
       return response.data.content;
     } catch (error) {
       handleLogError(error);
     }
   };
 
-  const {  data: recipes , isLoading } = useQuery(
+  const {
+    data: recipes,
+    isLoading,
+    refetch,
+  } = useQuery(
     ["recipes", recipeName],
-    fetchSearchRecipes,
+
+    ({
+      pageNumber = 0,
+      pageSize = 99,
+      sortPost = "CREATED_TIME",
+      sortType = "ACCENDING",
+    }) => fetchSearchRecipes(pageNumber, pageSize, sortPost, sortType),
     {
       enabled: Boolean(recipeName),
     }
   );
 
   
+
+  const handleSortChange = (sortPost, sortType) => {
+    // Fetch data with the new sorting options
+    refetch({ sortPost, sortType });
+  };
 
   if (postStatus === "loading") {
     return <div>Loading...</div>;
@@ -146,25 +169,61 @@ const SearchPage = () => {
         <div className="search-content-recipe">
           {isLoading ? (
             <Loading />
-          ) :
-          !recipes && !recipeName ? (
+          ) : !recipes && !recipeName ? (
             <>
-            <div style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              
-            }}>
-              <div className="search-content-recipe-title">Popular Recipes</div>
-              <div className="filter" onClick={() => setVisible(true)}>
-                <div>Filter</div>
-                <i className="pi pi-sliders-v"></i>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <div className="search-content-recipe-title">
+                  Popular Recipes
+                </div>
+                <div className="filter" onClick={() => setVisible(true)}>
+                  <div>Filter</div>
+                  <i className="pi pi-sliders-v"></i>
+                </div>
+                <Dialog
+                  header="Filter"
+                  visible={visible}
+                  onHide={() => setVisible(false)}
+                  style={{ width: "50vw" }}
+                  breakpoints={{ "960px": "75vw", "641px": "100vw" }}
+                >
+                  <div className="sort-buttons">
+                    <button
+                      onClick={() =>
+                        handleSortChange("CREATED_TIME", "ASCENDING")
+                      }
+                    >
+                      Sort by Created Time (Ascending)
+                    </button>
+                    <button
+                      onClick={() =>
+                        handleSortChange("CREATED_TIME", "DESCENDING")
+                      }
+                    >
+                      Sort by Created Time (Descending)
+                    </button>
+                    <button
+                      onClick={() =>
+                        handleSortChange("AVERAGE_SCORE", "ASCENDING")
+                      }
+                    >
+                      Sort by Average Score (Ascending)
+                    </button>
+                    <button
+                      onClick={() =>
+                        handleSortChange("AVERAGE_SCORE", "DESCENDING")
+                      }
+                    >
+                      Sort by Average Score (Descending)
+                    </button>
+                  </div>
+                </Dialog>
               </div>
-              <Dialog header="Filter" visible={visible} onHide={() => setVisible(false)}
-                style={{ width: '50vw' }} breakpoints={{ '960px': '75vw', '641px': '100vw' }}>
-                  
-              </Dialog>
-            </div>
               <RecipeCardList
                 props={
                   !recipes
@@ -176,13 +235,17 @@ const SearchPage = () => {
             </>
           ) : (
             <div className="search-nothing-content">
-              <div className="empty-title">We don't find anything matching your search.</div>
-              <div className="empty-content">Try another search or reove your filter</div>
-              <button className="reset-button" onClick={handleResetSearch}>Reset Search</button>
+              <div className="empty-title">
+                We don't find anything matching your search.
+              </div>
+              <div className="empty-content">
+                Try another search or reove your filter
+              </div>
+              <button className="reset-button" onClick={handleResetSearch}>
+                Reset Search
+              </button>
             </div>
-          )} 
-
-
+          )}
         </div>
       </div>
     </div>

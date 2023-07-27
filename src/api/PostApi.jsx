@@ -7,6 +7,7 @@ export const PostApi = {
   getPostById,
   createRecipe,
   getTopPost,
+  getPostsByTags,
 };
 
 //http://localhost:8080/api/member/recipe
@@ -34,17 +35,23 @@ function getPostById(postId, token) {
   });
 }
 
-function getPostsByName(recipeName, token) {
+function getPostsByName(recipeName,pageNumber,pageSize ,sortPost,sortType) {
   return instance.get(`/api/public/posts/search`,  {
-    params: { recipeName },
+    params: { keyword : recipeName, pageNumber , pageSize , sortPost , sortType }
+  });
+}
+
+function getTopPost(token) {
+  return instance.get(`/api/public/posts/average-score`, {
     headers: {
       Authorization: bearerAuth(token),
     },
   });
 }
 
-function getTopPost(token) {
-  return instance.get(`/api/public/posts/average-score`, {
+function getPostsByTags(tagIds, pageNumber, pageSize, token) {
+  return instance.get(`/api/public/posts/tag/tagIds`, {
+    params: { tagIds , pageNumber, pageSize },
     headers: {
       Authorization: bearerAuth(token),
     },

@@ -10,7 +10,7 @@ function updateStatusPost(data, token) {
     `/api/moderator/post`,
     {
       'postId': data.postId,
-      'status': data.isApprove,
+      'status': data.status,
     },
     {
       headers: {

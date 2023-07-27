@@ -112,6 +112,8 @@ const RecipeDetail = ({ recipeId }) => {
 
 
 
+
+
   return (
     isPostSuccess &&
     <div className="recipeDetail__wrapper">
@@ -178,7 +180,7 @@ const RecipeDetail = ({ recipeId }) => {
         </div>}
       </div>
       {isPending === false && isMyRecipe == false && <div className="recommendRecipe">
-        {/* <RecommendeRcipe /> */}
+        <RecommendeRcipe tags={post.tagDTOList}/>
       </div>}
     </div>
   );
@@ -277,6 +279,19 @@ function Introduction({ props, isMyRecipe, recipeId, refetchRecipeDetail }) {
     },
   });
 
+  const unlikePost = async () => {
+    const response = await LikeApi.unlikePost({
+      postId: props.postId,
+    }, keycloak.token);
+    return response.status;
+  }
+
+  const { mutate: unlike } = useMutation(unlikePost, {
+    onSuccess: () => {
+      refetchRecipeDetail();
+    },
+  });
+
   const deletePost = async () => {
     const response = await PersonalRecipeApi.deletePersonalRecipe(keycloak.token, props.recipeId);
     if (response.status === 200) {
@@ -359,7 +374,9 @@ function Introduction({ props, isMyRecipe, recipeId, refetchRecipeDetail }) {
 
             <Tooltip title={props.liked ? "Liked" : "Add to favorite"} placement="top">
               <Button aria-label="addToFavorite"
-                onClick={like}
+                onClick={
+                  props.liked ? () => { unlike() } : () => { like() }
+                }
                 startIcon={props.liked ? <FavoriteIcon fontSize="large" color="error" /> : <FavoriteBorderIcon fontSize="large" />}
                 sx={{ color: "black" }}
               >
