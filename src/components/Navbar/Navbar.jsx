@@ -86,11 +86,11 @@ const Navbar = ({ toggle }) => {
             <span className="pi pi-bell"></span>
           </Tooltip>
         </div> : ""} */}
-        {keycloak.authenticated ? <div className="settings-icon">
+        {/* {keycloak.authenticated ? <div className="settings-icon">
           <Tooltip title="Settings">
             <span className="pi pi-spin pi-cog"></span>
           </Tooltip>
-        </div> : ""}
+        </div> : ""} */}
         {!keycloak.authenticated ? <div className="login-btn" onClick={handleLogInOut}>
           Sign in
         </div> : ""}
