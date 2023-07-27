@@ -122,7 +122,7 @@ const RatingArea = ({ refetchRecipeDetail, isPostSuccess }) => {
                     header="Rating"
                     visible={open}
                     style={{ width: '50vw' }}
-                    onHide={() => { setOpen(false), setValue(personalRatingData.rating ? personalRatingData.rating : 0) }}
+                    onHide={() => { setOpen(false)}}
                 >
                     <div className="rating_area_yourPoint">
                         <div style={{ display: "flex", alignItems: "center", }}>
@@ -159,7 +159,7 @@ const RatingArea = ({ refetchRecipeDetail, isPostSuccess }) => {
 
 function CountRatingPoint({ value, star }) {
     return (
-        <div className="rating_area_countRatingPoint">
+        <div className="rating_area_countRatingPoint" >
             <p>{star} stars</p>
             <div style={{ width: '70%', }}>
                 <ProgressBar
