@@ -114,5 +114,13 @@
 @media (max-width: 900px) {
     .playlist-header {
         position: static;
+        margin-bottom: 20px;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    .liked-recipe-list-container {
+        margin-left: 0px;
+        margin-right: 0px;
     }
 }

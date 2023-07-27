@@ -24,6 +24,7 @@ const CollectionCards = () => {
 
   const handleCancel = () => {
     setIsEditing(false);
+    setCollectionName("");
   };
 
   const handleSave = async (e) => {

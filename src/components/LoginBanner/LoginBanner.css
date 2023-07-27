@@ -4,10 +4,11 @@
   flex-direction: column;
   align-items: center;
   margin: 0 auto;
+  
 }
 
-.block{
-  content: '';
+.block {
+  content: "";
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -21,36 +22,48 @@
 
 .user-banner {
   width: 100%;
-  height: 25rem; /* use em or rem unit for height */
+  height: 30rem; /* use em or rem unit for height */
   border: 1px solid #e9e7e7;
   display: flex;
   align-items: center;
   position: relative;
-  background-image: url("https://assets.bonappetit.com/photos/57aceacc1b3340441497532d/master/w_2700,h_1621,c_limit/double-rl-ranch-burger.jpg");
+  background-image: url("/assets/New.jpg");
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center center;
+  background-position: center;
   cursor: pointer;
+  
 }
 
 .user-banner:hover {
-  background-image: url("https://assets.bonappetit.com/photos/57aceacc1b3340441497532d/master/w_2700,h_1621,c_limit/double-rl-ranch-burger.jpg");
+  background-image: url("/assets/New.jpg");
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center center;
+  background-position: center;
+}
+.banner-wrapper {
+  width: 100%;
+  margin: 0 auto;
+  max-width: 1200px;
+  min-width: 328px;
+  display: flex;
+  flex-direction: column-reverse;
+  position: relative;
+  height: 100%;
+ 
+}
+
+.weekly-content {
+  margin-bottom: 150px;
+  width: 50%;
 }
 
 .popular {
-  position: absolute;
-  width: 10rem; /* use em or rem unit for width */
-  height: 3rem; /* use em or rem unit for height */
-  left: 2rem; /* use em or rem unit for position */
-  top: 2rem; /* use em or rem unit for position */
+  background-color: #ffffff;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  max-width: 120px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #ffffff;
-  border-radius: 5px;
 }
 
 h6 {
@@ -59,26 +72,49 @@ h6 {
   font-size: 1.5rem; /* use em or rem unit for font size */
   line-height: 1.563rem; /* use em or rem unit for line height */
   color: #0f1b3e;
+  padding: 3px 8px;
 }
 
 .banner-info {
-  position: absolute;
-  bottom: 2rem; /* use em or rem unit for position */
-  left: 2.5rem; /* use em or rem unit for position */
   display: flex;
   flex-direction: column;
-  gap: 0.625rem; /* use em or rem unit for gap */
+  gap: 0.625rem;
+}
+
+.weekly-button {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-top: 24px;
+}
+
+.button-text {
+  padding: 13px 43px;
+  border-radius: 22px;
+  background: #ff9d1c;
+  color: #ffff;
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 700;
 }
 
 .recipe-name {
   color: #ffffff;
 }
 
-
-.search-bar-container-in-home{
+.search-bar-container-in-home {
   box-sizing: border-box;
-    width: 100%;
-    max-width: 1000px;
-    margin-top: 32px;
-    height: 64px;
+  width: 100%;
+  max-width: 1200px;
+  height: 64px;
+}
+
+.search-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  left: 50%;
+  transform: translateX(-50%);
+  position: absolute;
+  bottom: 24px;
+  z-index: 2;
 }

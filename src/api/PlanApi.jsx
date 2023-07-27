@@ -6,6 +6,9 @@ export const PlanApi = {
   createPlan,
   getPlanDetail,
   deletePlan,
+  createMeal,
+  updatePlan,
+  generateIngredientList,
 };
 
 function getPlan(startDate, EndDate, token) {
@@ -29,8 +32,9 @@ function createPlan(data, token) {
     {
       planName: data.planName,
       planDescription: data.planDescription,
-      planDate: data.planDate,
-    },
+      planDate: data.day,
+    }
+    ,
     {
       headers: {
         Authorization: bearerAuth(token),
@@ -55,6 +59,46 @@ function deletePlan(planId, token) {
     },
   });
 }
+
+function createMeal(data, token) {
+  return instance.post(
+    `/api/member/meal`,
+    {
+      mealName: data.mealName,
+      maxCalories: data.maxCalories,
+      tagIds: data.tagIds,
+    },
+    {
+      headers: {
+        Authorization: bearerAuth(token),
+      },
+    }
+  );
+}
+
+function updatePlan (data, token) {
+  return instance.put(
+    `/api/member/plan`,
+    
+       data
+    ,
+    {
+      headers: {
+        Authorization: bearerAuth(token),
+        "Content-Type": "application/json",
+      },
+    }
+  );
+}
+
+function generateIngredientList(planId, token) {
+  return instance.get(`/api/member/plan/ingredient/${planId}`, {
+    headers: {
+      Authorization: bearerAuth(token),
+    },
+  });
+}
+
 
 
 const instance = axios.create({

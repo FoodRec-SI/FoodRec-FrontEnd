@@ -2,7 +2,6 @@ import "./Navbar.css";
 import 'primeicons/primeicons.css';
 import DehazeOutlinedIcon from "@mui/icons-material/DehazeOutlined";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import { useKeycloak } from "@react-keycloak/web";
 import { useQuery } from "react-query";
 
@@ -14,6 +13,10 @@ import { isModerator } from "../../utills/Helper";
 const Navbar = ({ toggle }) => {
   const { keycloak } = useKeycloak();
   const navigate = useNavigate();
+
+  const handleBacktoHome = () => {
+    navigate("/");
+  }
 
   const handleLogInOut = () => {
     if (keycloak.authenticated) {
@@ -42,7 +45,7 @@ const Navbar = ({ toggle }) => {
     }
   };
 
-  const { status, refetch } = useQuery("createAccount", createAccount, {
+  const { status } = useQuery("createAccount", createAccount, {
     enabled: keycloak.authenticated,
   });
 
@@ -56,12 +59,15 @@ const Navbar = ({ toggle }) => {
 
   return (
     <header className="navbar-container">
+      <div className="navbar-wrapper">
       <div className="navbar-start">
         <div className="bars" onClick={toggle}>
           <DehazeOutlinedIcon sx={{ fontSize: "1.5rem" }} />
         </div>
+        <div className="logo" onClick={handleBacktoHome}>
         <span className="food">Food</span>
         <span className="rec">Rec.</span>
+        </div>
       </div>
       <div className="navbar-end">
         {isModerator == true ? "" :
@@ -75,11 +81,11 @@ const Navbar = ({ toggle }) => {
               <span className="pi pi-search"></span>
             </Tooltip>}
           </div>}
-        {keycloak.authenticated ? <div className="notification-icon">
+        {/* {keycloak.authenticated ? <div className="notification-icon">
           <Tooltip title="Notifications">
             <span className="pi pi-bell"></span>
           </Tooltip>
-        </div> : ""}
+        </div> : ""} */}
         {keycloak.authenticated ? <div className="settings-icon">
           <Tooltip title="Settings">
             <span className="pi pi-spin pi-cog"></span>
@@ -88,6 +94,7 @@ const Navbar = ({ toggle }) => {
         {!keycloak.authenticated ? <div className="login-btn" onClick={handleLogInOut}>
           Sign in
         </div> : ""}
+      </div>
       </div>
     </header>
   );
