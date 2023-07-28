@@ -291,7 +291,7 @@ function Introduction({ props, isMyRecipe, recipeId, refetchRecipeDetail }) {
     return response.status;
   }
 
-  const { mutate: unlike } = useMutation(unlikePost, {
+  const { mutate: unlike  } = useMutation(unlikePost, {
     onSuccess: () => {
       refetchRecipeDetail();
     },
@@ -379,19 +379,32 @@ function Introduction({ props, isMyRecipe, recipeId, refetchRecipeDetail }) {
             {/* <Button variant="outlined" startIcon={<DeleteIcon />}>
               Delete
             </Button> */}
-
+            {
+              props.liked ? (
             <Tooltip title={props.liked ? "Liked" : "Add to favorite"} placement="top">
               <Button aria-label="addToFavorite"
                 onClick={
-                  props.liked ? () => { unlike() } : () => { like() }
+                  () => { unlike() } 
                 }
-                startIcon={props.liked ? <FavoriteIcon fontSize="large" color="error" /> : <FavoriteBorderIcon fontSize="large" />}
+                startIcon={ <FavoriteIcon fontSize="large" color="error" /> }
                 sx={{ color: "black" }}
               >
                 Like
               </Button>
-            </Tooltip>
+            </Tooltip>) : (
+              <Tooltip title={props.liked ? "Liked" : "Add to favorite"} placement="top">
+              <Button aria-label="addToFavorite"
+                onClick={
+                    () => { like() }
+                }
+                startIcon={<FavoriteBorderIcon fontSize="large" />}
+                sx={{ color: "black" }}
+              >
+                Like
+              </Button>
+            </Tooltip>)
 
+} 
             <Tooltip title="Facebook" placement="top">
               <FacebookShareButton url={shareUrl} quote={props.recipeName}>
                 <FacebookIcon size={30} round={true} />

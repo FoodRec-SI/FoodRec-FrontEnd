@@ -35,9 +35,9 @@ function getPostById(postId) {
   });
 }
 
-function getPostsByName(recipeName,pageNumber,pageSize ) {
+function getPostsByName(data) {
   return instance.get(`/api/public/posts/search`,  {
-    params: { keyword : recipeName, pageNumber , pageSize },
+    params: { ...data, sortPost: "AVERAGE_SCORE" , sortType: "ACCENDING" },
   });
 
 }

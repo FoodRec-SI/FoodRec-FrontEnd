@@ -98,15 +98,10 @@ const SearchPage = ({ isAddToPlan, renderMeal, setRenderMeal, mealId }) => {
 
   //search
 
-  const fetchSearchRecipes = async ({
-    pageNumber,
-    pageSize,
-  }) => {
+  const fetchSearchRecipes = async () => {
     try {
       const response = await PostApi.getPostsByName(
-        recipeName,
-        pageNumber,
-        pageSize,
+        {pageParam : 0, pageSize : 99 , keyword : recipeName}
       );
       return response.data.content;
     } catch (error) {
@@ -120,15 +115,14 @@ const SearchPage = ({ isAddToPlan, renderMeal, setRenderMeal, mealId }) => {
   } = useQuery(
     ["recipes", recipeName],
 
-    ({
-      pageNumber = 0,
-      pageSize = 99,
-    }) => fetchSearchRecipes(pageNumber, pageSize),
+    () => fetchSearchRecipes(),
     {
       enabled: Boolean(recipeName),
     }
   );
 
+
+  console.log(recipes );
 
 
 
@@ -166,7 +160,7 @@ const SearchPage = ({ isAddToPlan, renderMeal, setRenderMeal, mealId }) => {
         {data.pages && <div className="search-content-recipe">
           {isLoading ? (
             <Loading />
-          ) : !recipes && !recipeName ? (
+          ) : recipes && recipeName ? (
             <>
               <div
                 style={{
@@ -186,9 +180,7 @@ const SearchPage = ({ isAddToPlan, renderMeal, setRenderMeal, mealId }) => {
               </div>
               <RecipeCardList
                 props={
-                  !recipes
-                    ? data && data.pages.flatMap((page) => page.content)
-                    : recipes
+                  recipes ? recipes : data && data.pages.flatMap((page) => page.content)
                 }
                 pending={AddToPlan}
                 renderMeal={renderMeal}
@@ -197,17 +189,26 @@ const SearchPage = ({ isAddToPlan, renderMeal, setRenderMeal, mealId }) => {
               />
             </>
           ) : (
-            <div className="search-nothing-content">
-              <div className="empty-title">
-                We don't find anything matching your search.
-              </div>
-              <div className="empty-content">
-                Try another search or reove your filter
-              </div>
-              <button className="reset-button" onClick={handleResetSearch}>
-                Reset Search
-              </button>
-            </div>
+            // <div className="search-nothing-content">
+            //   <div className="empty-title">
+            //     We don't find anything matching your search.
+            //   </div>
+            //   <div className="empty-content">
+            //     Try another search or reove your filter
+            //   </div>
+            //   <button className="reset-button" onClick={handleResetSearch}>
+            //     Reset Search
+            //   </button>
+            // </div>
+            <RecipeCardList
+                props={
+                  recipes ? recipes : data && data.pages.flatMap((page) => page.content)
+                }
+                pending={AddToPlan}
+                renderMeal={renderMeal}
+                setRenderMeal={setRenderMeal}
+                mealId={mealId}
+                />
           )}
         </div>}
       </div>
