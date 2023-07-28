@@ -41,9 +41,10 @@ const Navbar = ({ toggle }) => {
   // }, [keycloak.authenticated]);
 
   const createAccount = async () => {
+    
     const response = await AccountApi.createAccount(keycloak.token);
     if (response.status === 409) {
-      console.log("Account already exists");
+
     }
     if (response.status === 200) {
       return response.data;
@@ -55,11 +56,7 @@ const Navbar = ({ toggle }) => {
   });
 
   if (status === "error") {
-    console.log("error");
-  }
 
-  if(isFirstTime === "New"){
-      setOpen(true);
   }
 
   // const getLogInOutText = () => {

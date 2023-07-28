@@ -25,7 +25,8 @@ import Loading from '../Loading/Loading';
 import RecipeCardList from '../RecipeCardList/RecipeCardList'
 import AddRecipeForm from '../AddRecipeForm/AddRecipeForm';
 import './Profile.css'
-import { set } from 'date-fns';
+
+import { handleLogError } from "../../utills/Helper";
 
 const Profile = () => {
 
@@ -61,8 +62,13 @@ const Profile = () => {
    
 
     const fetchPersonalRecipe = async ({ pageParam, pageSize }) => {
+        try{
         const response = await PersonalRecipeApi.getPersonalRecipe(keycloak.token, pageParam, pageSize);
+
         return response.data;
+        }catch(error){
+            handleLogError(error)
+        }
     }
 
     const { data: personalRecipe, hasNextPage, fetchNextPage } = useInfiniteQuery({
@@ -87,7 +93,7 @@ const Profile = () => {
                 if (hasNextPage) {
                     fetchNextPage();
                 }
-                // console.log("fetching");
+
                 fetching = false;
             }
         };
@@ -170,7 +176,7 @@ const Profile = () => {
         handleUpdateProfileTag,
         {
             tagError: () => {
-                console.log("error")
+
             }
         }
     )
@@ -359,7 +365,7 @@ const Profile = () => {
                                 Add your recipe
                             </Button> */}
                             </div>
-                            {personalRecipe != null ? <RecipeCardList props={personalRecipe?.pages.flatMap((page) => page.content)} pending="myRecipe" /> : <div>Loading...</div>}
+                            {personalRecipe != null ? <RecipeCardList props={personalRecipe?.pages.flatMap((page) => page.content)} pending="myRecipe" /> : <div>There's nothing here !!!</div>}
                         </div>
                     </div>
                 </div>

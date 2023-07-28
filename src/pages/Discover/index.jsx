@@ -6,9 +6,8 @@ import Banner from "../../components/banner/Banner";
 import { PostApi } from "../../api/PostApi";
 import { TagApi } from "../../api/TagApi";
 import { useKeycloak } from "@react-keycloak/web";
-import { useQuery, useInfiniteQuery } from "react-query";
+import { useQuery } from "react-query";
 import { handleLogError } from "../../utills/Helper";
-import Loading from "../../components/Loading/Loading";
 
 import { ProfileApi } from "../../api/ProfileApi";
 
@@ -21,7 +20,7 @@ const Discover = () => {
   const [tagId, setTagId] = useState("");
 
 
-  const { data: profileData, isLoading: loadingProfile, refetch, isSuccess: successLoadProfile, isError: errorLoadProfile } = useQuery({
+  const { data: profileData, isSuccess: successLoadProfile } = useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
       const data = await ProfileApi.getProfile(keycloak.token, keycloak.tokenParsed.sub);
@@ -29,39 +28,38 @@ const Discover = () => {
     },
   });
 
-  let handleFetchPosts = null;
 
 
-  if (successLoadProfile) {
-    if (profileData.tagsCollection == null) {
-      handleFetchPosts = async () => {
-        const response = await PostApi.getPosts(0, 8, "CREATED_TIME", "ACCENDING");
-        console.log(response.data);
-        return response.data;
-      };
-    }
-    else {
-      const tempTagArray = profileData.tagsCollection.map((tag) => tag.tagId);
-      const tagIdsString = tempTagArray.join(',');
-      handleFetchPosts = async () => {
-        const response = await PostApi.getPostsByTags(tagIdsString, 0, 8, keycloak.token);
-        console.log(response.data);
-        return response.data;
-      };
-    }
-  }
-
-  if (errorLoadProfile) {
-    handleFetchPosts = async ({ pageParam, pageSize, sortPost, sortType }) => {
+  const handleFetchPosts = async () => {
+    try {
       const response = await PostApi.getPosts(0, 8, "CREATED_TIME", "ACCENDING");
-      console.log(response.data);
       return response.data;
-    };
-  }
+    } catch (error) {
+      handleLogError(error)
+    }
+  };
+
+
+  const handleFetchPostsByTag = async () => {
+    const tempTagArray = profileData.tagsCollection.map((tag) => tag.tagId);
+    const tagIdsString = tempTagArray.join(',');
+    try {
+      const response = await PostApi.getPostsByTags(tagIdsString, 0, 8, keycloak.token);
+      return response.data.content;
+    } catch (error) {
+      handleLogError(error)
+    }
+  };
 
   const { data: posts, isLoading: loadingPosts } = useQuery({
     queryKey: ["posts"],
     queryFn: handleFetchPosts,
+  });
+
+  const { data: postsByTagUser, isLoading: loadingPostsByTag } = useQuery({
+    queryKey: ["postsByTag"],
+    queryFn: handleFetchPostsByTag,
+    enabled: successLoadProfile,
   });
 
 
@@ -94,30 +92,6 @@ const Discover = () => {
     </>
   }
 
-  // useEffect(() => {
-  //   const onScroll = (event) => {
-  //     let fetching = false;
-  //     const { scrollTop, clientHeight, scrollHeight } =
-  //       event.target.scrollingElement;
-
-  //     if (!fetching && scrollHeight - scrollTop <= clientHeight * 1.5) {
-  //       fetching = true;
-  //       if (hasNextPage) {
-  //         fetchNextPage();
-  //       }
-  //       // console.log("fetching");
-  //       fetching = false;
-  //     }
-  //   };
-
-  //   document.addEventListener("scroll", onScroll);
-  //   return () => {
-  //     document.removeEventListener("scroll", onScroll);
-  //   };
-  // }, [hasNextPage, fetchNextPage]);
-
-
-
   return (
 
     isLogin == true ?
@@ -125,23 +99,23 @@ const Discover = () => {
         <>
           <LoginBanner onItemClick={handleItemSelection} />
           <div style={{ width: "100%", margin: "0 auto", maxWidth: "1200px" }}>
-          {posts && <RecipeCardList
-            props={ postsbyTag ? postsbyTag : posts.content}
-            pending={""}
-          />}
-        </div>
+            {posts && <RecipeCardList
+              props={postsbyTag ? postsbyTag : (postsByTagUser ? postsByTagUser : posts.content)}
+              pending={""}
+            />}
+          </div>
         </>
       )
       :
-      ( 
+      (
         <>
           <Banner />
           {posts && <div style={{ width: "100%", margin: "0 auto", maxWidth: "1200px" }}>
-          <RecipeCardList
-            props={posts.content}
-            pending={""}
-          />
-        </div>}
+            <RecipeCardList
+              props={posts.content}
+              pending={""}
+            />
+          </div>}
         </>
       )
 
