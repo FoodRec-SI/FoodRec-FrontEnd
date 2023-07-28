@@ -1,7 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import RecipeCardList from "../../components/RecipeCardList/RecipeCardList";
 import { PostApi } from "../../api/PostApi";
-import { useKeycloak } from "@react-keycloak/web";
 import { useQuery } from "react-query";
 import { useInfiniteQuery } from "react-query";
 import { useState, useEffect } from "react";
@@ -9,13 +8,12 @@ import { handleLogError } from "../../utills/Helper";
 import Loading from "../../components/Loading/Loading";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
+import SearchIcon from '@mui/icons-material/Search';
 
 
 
 
 const SearchPage = ({ isAddToPlan, renderMeal, setRenderMeal, mealId }) => {
-  const { keycloak } = useKeycloak();
   const { searchName } = useParams();
   const [recipeName, setRecipeName] = useState(searchName);
  
@@ -139,7 +137,9 @@ const SearchPage = ({ isAddToPlan, renderMeal, setRenderMeal, mealId }) => {
     <div className="search-page">
       <div className="search-bar-container">
         <div className="search-bar">
-          <span id="search-icon" className="pi pi-search"></span>
+        <span id="search-icon">
+            <SearchIcon/>
+           </span>
           <form className="search-bar-form" onSubmit={handleSearch}>
             <input
               className="in-search-bar"

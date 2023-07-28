@@ -9,10 +9,11 @@ import {Dialog} from 'primereact/dialog';
 import { useState } from "react";
 
 import { Tooltip } from "@mui/material";
+import SearchIcon from '@mui/icons-material/Search';
 import { AccountApi } from "../../api/AccountApi";
 
 import { isModerator } from "../../utills/Helper";
-import { set } from "date-fns";
+
 
 const Navbar = ({ toggle }) => {
   const { keycloak } = useKeycloak();
@@ -93,7 +94,7 @@ const Navbar = ({ toggle }) => {
             }
           >
             {<Tooltip title="Search">
-              <span className="pi pi-search"></span>
+               <SearchIcon/>
             </Tooltip>}
           </div>}
         {/* {keycloak.authenticated ? <div className="notification-icon">

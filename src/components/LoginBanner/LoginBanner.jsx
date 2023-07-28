@@ -7,6 +7,7 @@ import { Rating } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SearchIcon from '@mui/icons-material/Search';
 
 
 const LoginBanner = (props) => {
@@ -53,7 +54,9 @@ const LoginBanner = (props) => {
       <div className="search-wrapper">
       <div className="search-bar-container-in-home">
         <div className="search-bar">
-          <span id="search-icon" className="pi pi-search"></span>
+           <span id="search-icon">
+            <SearchIcon/>
+           </span>
           <form className="search-bar-form" onSubmit={handleSearch}>
             <input
               className="in-search-bar"

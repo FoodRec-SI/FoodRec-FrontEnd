@@ -4,6 +4,7 @@ import { useQuery } from "react-query";
 import { useKeycloak } from "@react-keycloak/web";
 import Loading from "../Loading/Loading";
 import RecipeCard from "../RecipeCard/RecipeCard";
+import { handleLogError } from "../../utills/Helper";
 
 const RecommendRecipe = (props) => {
  
@@ -13,9 +14,14 @@ const RecommendRecipe = (props) => {
 
 
     const fetchRecommendRecipe = async () => {
+      try{
         const tagIdsString = tags.join(',');
         const response = await PostApi.getPostsByTags(tagIdsString, 0, 4, keycloak.token);
         return response.data;
+      }
+      catch(error){
+         handleLogError(error);
+      }
     };
 
     const { data: recommendRecipe, status } = useQuery(
@@ -33,7 +39,7 @@ const RecommendRecipe = (props) => {
     <div className="recommend_recipe">
       <h2>Recommend Recipe</h2>
       <div className="recommend-recipe__list">
-        {recommendRecipe.content.map((recipe, index) => (
+        {recommendRecipe&&recommendRecipe.content.map((recipe, index) => (
            <RecipeCard key={index} props={recipe} pending=""/>      
         ))}
       </div>

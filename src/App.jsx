@@ -6,10 +6,6 @@ import { BrowserRouter } from "react-router-dom";
 import AppRoutes from "./pages/routes";
 import "primereact/resources/primereact.min.css";
 
-import "primeicons/primeicons.css";
-import "primeflex/primeflex.css";
-import "primereact/resources/themes/lara-light-indigo/theme.css"; // theme
-import "primereact/resources/primereact.css";
 
 
 function App() {

@@ -8,6 +8,11 @@ import { CircularProgress, Box } from "@mui/material";
 import {QueryClient , QueryClientProvider} from 'react-query'
 import {ReactQueryDevtools} from 'react-query/devtools'
 
+import 'primeicons/primeicons.css'; 
+import "primeflex/primeflex.css";
+import "primereact/resources/themes/lara-light-indigo/theme.css"; 
+import "primereact/resources/primereact.css";
+
 
 
 

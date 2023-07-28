@@ -30,6 +30,9 @@ import ControlPointDuplicateIcon from '@mui/icons-material/ControlPointDuplicate
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import { handleLogError } from "../../utills/Helper";
 import SearchPage from "../SearchPage";
+import SaveAltOutlinedIcon from '@mui/icons-material/SaveAltOutlined';
+import CachedOutlinedIcon from '@mui/icons-material/CachedOutlined';
+import ShoppingCartCheckoutOutlinedIcon from '@mui/icons-material/ShoppingCartCheckoutOutlined';
 
 import { Toast } from 'primereact/toast';
 const PlanDetail = () => {
@@ -91,17 +94,17 @@ const PlanDetail = () => {
   const planItems = [
     {
       label: "Save plan",
-      icon: "pi pi-save",
+      icon: <SaveAltOutlinedIcon/>,
       command: () => setSaved(true),
     },
     {
       label: "Generate new meal",
-      icon: "pi pi-sync",
+      icon: <CachedOutlinedIcon/>,
       command: () => setVisible(true),
     },
     {
       label: "Generate shopping list",
-      icon: "pi pi-shopping-bag",
+      icon: <ShoppingCartCheckoutOutlinedIcon/>,
       command: () => handleGeneratedIngredientList(),
     },
   ];
