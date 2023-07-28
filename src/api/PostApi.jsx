@@ -35,10 +35,11 @@ function getPostById(postId) {
   });
 }
 
-function getPostsByName(recipeName,pageNumber,pageSize ,sortPost,sortType) {
+function getPostsByName(data) {
   return instance.get(`/api/public/posts/search`,  {
-    params: { keyword : recipeName, pageNumber , pageSize , sortPost , sortType }
+    params: { ...data, sortPost: "AVERAGE_SCORE" , sortType: "ACCENDING" },
   });
+
 }
 
 function getTopPost(token) {

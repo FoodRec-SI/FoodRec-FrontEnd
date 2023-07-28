@@ -35,7 +35,7 @@ import { PostApi } from "../../api/PostApi";
 import { PendingApi } from "../../api/PendingApi";
 import { LikeApi } from "../../api/LikeApi";
 import { PersonalRecipeApi } from "../../api/PersonalRecipeApi";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useQuery, useMutation } from "react-query";
 import { useKeycloak } from "@react-keycloak/web";
 import {
   FacebookShareButton,
@@ -51,13 +51,7 @@ const RecipeDetail = ({ recipeId }) => {
   const { keycloak } = useKeycloak();
   const isLogin = keycloak?.authenticated;
 
-  if(isLogin == false){
-    return (
-      <>
-        <PleaseLogin/>
-      </>
-    )
-  }
+  
 
   let postId = null;
   const location = useLocation();
@@ -109,6 +103,13 @@ const RecipeDetail = ({ recipeId }) => {
 
   const { data: post, isSuccess: isPostSuccess, status, refetch: refetchRecipeDetail } = useQuery(["post", postId], fetchPostById);
 
+  if(isLogin == false){
+    return (
+      <>
+        <PleaseLogin/>
+      </>
+    )
+  }
   if (status === "loading") {
     return (
       <>
@@ -116,10 +117,6 @@ const RecipeDetail = ({ recipeId }) => {
       </>
     )
   }
-
-
-
-
 
 
   return (
@@ -207,7 +204,6 @@ function Introduction({ props, isMyRecipe, recipeId, refetchRecipeDetail }) {
   const { keycloak } = useKeycloak();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
-  const queryClient = useQueryClient();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const navigate = useNavigate();
@@ -261,6 +257,7 @@ function Introduction({ props, isMyRecipe, recipeId, refetchRecipeDetail }) {
         postId: props.postId,
       },
       keycloak.token)
+    return response.status;
   };
 
 
@@ -294,7 +291,7 @@ function Introduction({ props, isMyRecipe, recipeId, refetchRecipeDetail }) {
     return response.status;
   }
 
-  const { mutate: unlike } = useMutation(unlikePost, {
+  const { mutate: unlike  } = useMutation(unlikePost, {
     onSuccess: () => {
       refetchRecipeDetail();
     },
@@ -382,19 +379,32 @@ function Introduction({ props, isMyRecipe, recipeId, refetchRecipeDetail }) {
             {/* <Button variant="outlined" startIcon={<DeleteIcon />}>
               Delete
             </Button> */}
-
+            {
+              props.liked ? (
             <Tooltip title={props.liked ? "Liked" : "Add to favorite"} placement="top">
               <Button aria-label="addToFavorite"
                 onClick={
-                  props.liked ? () => { unlike() } : () => { like() }
+                  () => { unlike() } 
                 }
-                startIcon={props.liked ? <FavoriteIcon fontSize="large" color="error" /> : <FavoriteBorderIcon fontSize="large" />}
+                startIcon={ <FavoriteIcon fontSize="large" color="error" /> }
                 sx={{ color: "black" }}
               >
                 Like
               </Button>
-            </Tooltip>
+            </Tooltip>) : (
+              <Tooltip title={props.liked ? "Liked" : "Add to favorite"} placement="top">
+              <Button aria-label="addToFavorite"
+                onClick={
+                    () => { like() }
+                }
+                startIcon={<FavoriteBorderIcon fontSize="large" />}
+                sx={{ color: "black" }}
+              >
+                Like
+              </Button>
+            </Tooltip>)
 
+} 
             <Tooltip title="Facebook" placement="top">
               <FacebookShareButton url={shareUrl} quote={props.recipeName}>
                 <FacebookIcon size={30} round={true} />

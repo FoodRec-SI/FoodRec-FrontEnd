@@ -17,6 +17,8 @@ const initOptions = {
   checkLoginIframe: false,
 };
 
+console.log("keycloak", keycloak);
+
 const loadingComponent = (
   <Box sx={{ 
   display: 'flex',
